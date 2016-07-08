@@ -16,22 +16,26 @@ docker run -d --name mariadb -e MARIADB_ROOT_PASSWORD=secret webhippie/mariadb:l
 Then start ownCloud web server:
 
 ```bash
-docker run -ti \
+docker run -d -ti \
   --name owncloud \
   --link mariadb:mariadb --link redis:redis \
   -p 443:443 \
   owncloud/server
 ```
 
+For automatic installation run:
+
+```bash
+docker exec -ti owncloud container-config.sh
+```
+
 
 ## Versions
 
 * [latest](https://github.com/owncloud-docker/server/tree/master)
-  available as ```owncloud/server:latest``` at
-  [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:latest``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
 * [9.0.3](https://github.com/owncloud-docker/server/tree/9.0.3)
-  available as ```owncloud/server:9.0.3``` at
-  [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
 
 
 ## Available environment variables
