@@ -6,6 +6,22 @@ Docker image for ownCloud web server running on
 
 ## Usage
 
+### Use docker-compose
+
+Create and start ownCloud stack
+
+```bash
+docker-compose up -d
+```
+
+Install ownCloud
+
+```bash
+docker-compose exec owncloud container-config.sh
+```
+
+### Manual startup
+
 Needs DB and Redis, you can start these with:
 
 ```bash

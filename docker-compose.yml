@@ -1,0 +1,26 @@
+version: '2'
+services:
+  mariadb:
+    image: webhippie/mariadb
+    environment: 
+      - MARIADB_ROOT_PASSWORD=secret
+    labels: 
+      traefik.enable: 'false'
+  redis:
+    image: webhippie/redis
+    labels: 
+      traefik.enable: 'false'
+  owncloud:
+    image: "owncloud/server:${VERSION}"
+    ports:
+      - "443:443"
+      - "80:80"
+    links:
+      - mariadb
+      - redis
+    labels:
+      - traefik.port=80 
+      - traefik.frontend.passHostHeader=true
+    environment:
+      - MARIADB_ENV_MARIADB_ROOT_PASSWORD=secret
+      - OWNCLOUD_DOMAIN=mycloud.domain.com
