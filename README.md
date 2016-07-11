@@ -33,6 +33,9 @@ Access ownCloud:
 
 ```
 https://localhost/
+user: admin
+pw: password
+(as set in container-config.sh)
 ```
 
 ## Versions
