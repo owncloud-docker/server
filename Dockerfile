@@ -26,10 +26,7 @@ RUN curl -sLo - ${OWNCLOUD_TARBALL} | tar xfj - -C /var/www/
 
 ADD src/richdocuments.zip /var/www/owncloud/apps/
 RUN unzip -q /var/www/owncloud/apps/richdocuments.zip -d /var/www/owncloud/apps/
-RUN rm /var/www/owncloud/apps/richdocuments.zip
 
-RUN mkdir -p /var/www/owncloud/assets
-RUN mkdir -p /var/www/owncloud/updater
 RUN mkdir -p /mnt/data
 
 RUN chsh -s /bin/bash www-data

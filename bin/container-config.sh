@@ -21,12 +21,15 @@ IP=$(hostname -i)
 sed -i "s_0 => 'localhost',_0 => 'localhost', 1 => '${OWNCLOUD_DOMAIN}', 2 => '$IP',_" /var/www/owncloud/config/config.php
 occ config:system:set overwrite.cli.url --value https://${OWNCLOUD_DOMAIN}
 
+# Caching
+occ 'config:system:set memcache.local --value "\OC\Memcache\APCu"'
+
 # Configure Redis 
 occ config:system:set redis --value FIXME
 sed -i "s_'FIXME'_['host' => 'redis','port' => 6379,'timeout' => 0.0]_" /var/www/owncloud/config/config.php
 
-occ 'config:system:set memcache.locking --value "\OC\Memcache\Redis"'
+# switch filelocking on later
+# occ 'config:system:set memcache.locking --value "\OC\Memcache\Redis"'
 occ config:system:set filelocking.enabled --value true
 
-occ 'config:system:set memcache.local --value "\OC\Memcache\APCu"'
 
