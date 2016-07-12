@@ -45,6 +45,14 @@ For automatic installation run:
 docker exec -ti owncloud container-config.sh
 ```
 
+Access ownCloud:
+
+```
+https://localhost/
+user: admin
+pw: password
+(as set in bin/container-config.sh)
+```
 
 ## Versions
 
