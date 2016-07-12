@@ -10,6 +10,8 @@ services:
     image: webhippie/redis
     labels: 
       traefik.enable: 'false'
+    environment:
+      - REDIS_OPTS=--protected-mode no
   owncloud:
     image: "owncloud/server:${VERSION}"
     ports:
