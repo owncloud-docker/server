@@ -17,7 +17,7 @@ docker-compose up -d
 Install ownCloud
 
 ```bash
-docker-compose exec owncloud container-config.sh
+docker-compose exec owncloud owncloud-config.sh
 ```
 
 ### Manual startup
@@ -42,17 +42,16 @@ docker run -d -ti \
 For automatic installation run:
 
 ```bash
-docker exec -ti owncloud container-config.sh
+docker exec -ti owncloud owncloud-config.sh
 ```
 
-Access ownCloud:
+### Access ownCloud
 
-```
 https://localhost/
-user: admin
-pw: password
-(as set in bin/container-config.sh)
-```
+
+- user: admin
+- pass: password	(as set in bin/container-config.sh)
+
 
 ## Versions
 
