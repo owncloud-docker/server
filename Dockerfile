@@ -19,6 +19,7 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y \
   php-apcu \
   php-redis \
   smbclient \
+  php-smbclient \
   mysql-client
 
 # apache modules oc needs as documented
@@ -29,6 +30,10 @@ RUN a2enmod dir
 RUN a2enmod mime
 RUN a2enmod ssl
 RUN a2ensite default-ssl
+
+# Load php-libsmbclient
+RUN echo "extension=smbclient.so" > /etc/php/7.0/cli/conf.d/20-smbclint.ini
+RUN echo "extension=smbclient.so" > /etc/php/7.0/apache2/conf.d/20-smbclint.ini
 
 # Upload of big files
 RUN sed -i 's|upload_max_filesize = 2M|upload_max_filesize = 20G|' /etc/php/7.0/apache2/php.ini
