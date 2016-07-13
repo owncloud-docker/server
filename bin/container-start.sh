@@ -3,5 +3,5 @@
 # Start apache
 service apache2 start
 
-touch /mnt/data/owncloud.log
+su www-data -s /bin/bash -c "touch /mnt/data/owncloud.log"
 tail -F /mnt/data/owncloud.log
