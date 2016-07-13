@@ -25,7 +25,7 @@ docker-compose exec owncloud owncloud-config.sh
 Needs DB and Redis, you can start these with:
 
 ```bash
-docker run -d --name redis webhippie/redis:latest
+docker run -d --name redis -e REDIS_OPTS="--protected-mode no" webhippie/redis:latest
 docker run -d --name mariadb -e MARIADB_ROOT_PASSWORD=secret webhippie/mariadb:latest
 ```
 
