@@ -56,8 +56,8 @@ https://localhost/
 ## Versions
 
 ### Testing
-* [9.1.0-rc1](https://github.com/owncloud-docker/server/tree/9.1.0-rc1)
-  available as ```owncloud/server:9.1.0-rc1``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+* [9.1.0RC2](https://github.com/owncloud-docker/server/tree/9.1.0RC2)
+  available as ```owncloud/server:9.1.0RC2``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
 
 ### Stable
 * [latest](https://github.com/owncloud-docker/server/tree/master)
