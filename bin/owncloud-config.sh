@@ -29,7 +29,7 @@ occ config:system:set redis --value FIXME
 sed -i "s_'FIXME'_['host' => 'redis','port' => 6379,'timeout' => 0.0]_" /var/www/owncloud/config/config.php
 
 # switch filelocking on later
-# occ 'config:system:set memcache.locking --value "\OC\Memcache\Redis"'
+occ 'config:system:set memcache.locking --value "\OC\Memcache\Redis"'
 occ config:system:set filelocking.enabled --value true
 
 
