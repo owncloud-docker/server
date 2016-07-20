@@ -42,7 +42,7 @@ RUN sed -i 's|post_max_size = 8M|post_max_size = 20G|' /etc/php/7.0/apache2/php.
 RUN sed -i 's|post_max_size = 8M|post_max_size = 20G|' /etc/php/7.0/cli/php.ini
 
 # download ownCloud
-ARG VERSION=9.0.3
+ARG VERSION=9.0.4
 ARG OWNCLOUD_TARBALL=https://download.owncloud.org/community/owncloud-$VERSION.tar.bz2
 RUN curl -sLo - ${OWNCLOUD_TARBALL} | tar xfj - -C /var/www/
 
