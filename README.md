@@ -35,15 +35,15 @@ docker-compose down
 ```
 
 
-### Manual Build with script
+### Manual Build with build script
 
 Building Version 9.0.4, run
 ```bash
 ./build.sh 9.0.4
 ```
 
-Version is optional. Find default version in .env file.
-Build script always pulls latest base image.
+- Version is optional. Find default version in .env file.
+- Build script always pulls latest base image.
 
 
 ### Manual Startup
@@ -96,8 +96,8 @@ docker run -d -ti \
 
 Find certificates here
 ```
-SSLCertificateFile	/etc/ssl/certs/ssl-cert-snakeoil.pem
-SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+SSLCertificateFile	/etc/ssl/certs/ssl-cert.pem
+SSLCertificateKeyFile /etc/ssl/private/ssl-cert.key
 ```
 
 Add your own certificates to running container with 
@@ -106,7 +106,7 @@ docker cp mycertfile server_owncloud_1:/etc/ssl/certs/ssl-cert.pem
 docker cp mycertkeyfile server_owncloud_1:/etc/ssl/private/ssl-cert.key
 ```
 
-Add your own certificates on build time, append to the Dockerfile
+Or add your own certificates on build time, append to the Dockerfile
 ```
 ADD mycertfile:/etc/ssl/certs/ssl-cert.pem
 ADD mycertkeyfile:/etc/ssl/private/ssl-cert.key 
@@ -116,18 +116,20 @@ ADD mycertkeyfile:/etc/ssl/private/ssl-cert.key
 ### Port forwarding in compose file
 
 By default Port 80 (HTTP) and 433(HTTPS) are open and forwarded.
+
 If you use a proxy or loadbalancer with ssl offloading, you want to only use Port 80.
+
 Otherwise, you can restrict access to Port 443 for higher security.
 
 Tested with Traefik Proxy and HaProxy Loadbalancer
-- https://hub.docker.com/r/webhippie/traefik/
-- https://hub.docker.com/r/webhippie/haproxy/
+- [Traefik Image](https://hub.docker.com/r/webhippie/traefik/)
+- [HaProxy Image](https://hub.docker.com/r/webhippie/haproxy/)
 
 
 ## Versions
 ### Testing
-* [9.1.0RC4](https://github.com/owncloud-docker/server/tree/9.1.0RC3)
-  available as ```owncloud/server:9.1.0RC3``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+* [9.1.0](https://github.com/owncloud-docker/server/tree/9.1.0)
+  available as ```owncloud/server:9.1.0``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
 
 ### Stable
 * [latest](https://github.com/owncloud-docker/server/tree/master)
