@@ -1,4 +1,0 @@
-#!/bin/bash
-cd /var/www/owncloud
-ARGS="$@"
-su www-data -s /bin/bash -c "php /var/www/owncloud/occ ${ARGS}"

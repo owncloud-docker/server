@@ -30,6 +30,8 @@ services:
     environment:
       - MARIADB_ENV_MARIADB_ROOT_PASSWORD=secret
       - OWNCLOUD_DOMAIN=mycloud.domain.com
+    volumes:
+      - ./data:/mnt/data
 networks:
   default:
     ipam:
