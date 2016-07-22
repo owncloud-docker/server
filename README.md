@@ -129,15 +129,15 @@ Tested with Traefik Proxy and HaProxy Loadbalancer
 ## Versions
 ### Testing
 * [9.1.0](https://github.com/owncloud-docker/server/tree/9.1.0)
-  available as ```owncloud/server:9.1.0``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:9.1.0``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
 
 ### Stable
 * [latest](https://github.com/owncloud-docker/server/tree/master)
-  available as ```owncloud/server:latest``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:latest``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
 * [9.0.4](https://github.com/owncloud-docker/server/tree/9.0.4)
-  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
 * [9.0.3](https://github.com/owncloud-docker/server/tree/9.0.3)
-  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/ubuntu/)
+  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
 
 
 ## Available environment variables
