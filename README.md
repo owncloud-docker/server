@@ -34,6 +34,11 @@ docker-compose start
 docker-compose down
 ```
 
+By default 
+
+- starts redis, mariadb and owncloud container
+- data volume is mounted with files and config
+- ports 80 and 443 forwarded
 
 ### Manual Build with build script
 
@@ -80,7 +85,7 @@ Note: After first startup, ownCloud installs automatically, this takes a few sec
 ### Data Folder persistence on Host
 
 You can just add a volume to the container on startup
-See: [Docker Compose Volume Docs](https://docs.docker.com/compose/compose-file/#/volumes-volume-driver)
+
 
 ```bash
 docker run -d -ti \
