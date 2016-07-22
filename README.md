@@ -75,7 +75,7 @@ https://localhost/
 
 ### Data Folder persistence on Host
 
-Add a Volume to the container
+You can just add a volume to the container on startup
 See: [Docker Compose Volume Docs](https://docs.docker.com/compose/compose-file/#/volumes-volume-driver)
 
 ```bash
