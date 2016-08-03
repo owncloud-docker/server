@@ -122,9 +122,8 @@ ADD mycertkeyfile:/etc/ssl/private/ssl-cert.key
 
 By default Port 80 (HTTP) and 433(HTTPS) are open and forwarded.
 
-If you use a proxy or loadbalancer with ssl offloading, you want to only use Port 80.
-
-Otherwise, you can restrict access to Port 443 for higher security.
+- If you use a proxy or loadbalancer with ssl offloading, you want to only use Port 80.
+- Otherwise, you can restrict access to Port 443 for higher security.
 
 Tested with Traefik Proxy and HaProxy Loadbalancer
 - [Traefik Image](https://hub.docker.com/r/webhippie/traefik/)
