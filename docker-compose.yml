@@ -4,6 +4,7 @@ services:
     image: webhippie/mariadb
     environment: 
       - MARIADB_ROOT_PASSWORD=secret
+      - MARIADB_USERNAME=root
     labels: 
       traefik.enable: 'false'
   redis:
