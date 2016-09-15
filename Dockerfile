@@ -8,5 +8,5 @@ ARG APP_TARBALL=https://github.com/owncloud/richdocuments/releases/download/1.1.
 RUN curl -sLo - ${OWNCLOUD_TARBALL} | tar xfj - -C /var/www/ \
   && chown -R www-data.www-data /var/www/owncloud
 
-RUN curl -sLo - ${APP_TARBALL} | tar xfj - -C/var/www/owncloud/apps/ \
+RUN curl -sLo - ${APP_TARBALL} | tar xfz - -C /var/www/owncloud/apps/ \
   && chown -R www-data.www-data /var/www/owncloud/apps
