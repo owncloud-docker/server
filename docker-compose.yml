@@ -1,5 +1,6 @@
 version: '2'
 services:
+
   mariadb:
     image: webhippie/mariadb
     environment: 
@@ -7,12 +8,14 @@ services:
       - MARIADB_USERNAME=root
     labels: 
       traefik.enable: 'false'
+
   redis:
     image: webhippie/redis
     labels: 
       traefik.enable: 'false'
     environment:
       - REDIS_OPTS=--protected-mode no
+
   owncloud:
     build:
       context: .
