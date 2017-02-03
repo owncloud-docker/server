@@ -21,7 +21,7 @@ RUN curl -sLo - ${RICHDOCUMENTS} | tar xfz - -C /var/www/owncloud/apps/ && \
 LABEL org.label-schema.version=$VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE
 LABEL org.label-schema.vcs-ref=$VCS_REF
-LABEL org.label-schema.vcs-url="https://github.com/owncloud-docker/community.git"
-LABEL org.label-schema.name="ownCloud Community"
+LABEL org.label-schema.vcs-url="https://github.com/owncloud-docker/server.git"
+LABEL org.label-schema.name="ownCloud Server"
 LABEL org.label-schema.vendor="ownCloud GmbH"
 LABEL org.label-schema.schema-version="1.0"

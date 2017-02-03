@@ -1,6 +1,6 @@
-# ownCloud: Community
+# ownCloud: Server
 
-[![](https://images.microbadger.com/badges/image/owncloud/community.svg)](https://microbadger.com/images/owncloud/community "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/owncloud/server.svg)](https://microbadger.com/images/owncloud/server "Get your own image badge on microbadger.com")
 
 This is our ownCloud image for the community edition, it is based on our [base container](https://registry.hub.docker.com/u/owncloud/base/). Additionally we have also preinstalled the richdocuments app.
 
@@ -10,7 +10,7 @@ This is our ownCloud image for the community edition, it is based on our [base c
 ```bash
 docker run -ti \
   --name owncloud \
-  owncloud/community:latest
+  owncloud/server:latest
 ```
 
 
@@ -53,7 +53,7 @@ docker run -d \
   -e OWNCLOUD_REDIS_ENABLED=true \
   -e OWNCLOUD_REDIS_HOST=redis \
   --volume ./data:/mnt/data:z \
-  owncloud/community:${VERSION}
+  owncloud/server:${VERSION}
 ```
 
 
@@ -84,7 +84,7 @@ The available versions should be already pushed to the Docker Hub, but in case y
 
 ```
 source .env
-IMAGE_NAME=owncloud/community:${VERSION} ./hooks/build
+IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 ```
 
 
@@ -108,7 +108,7 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 
 ## Versions
 
-* [latest](https://github.com/owncloud-docker/community/tree/master) available as ```owncloud/community:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/community/)
+* [latest](https://github.com/owncloud-docker/server/tree/master) available as ```owncloud/server:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 
 
 ## Volumes
@@ -154,7 +154,7 @@ OWNCLOUD_MEMCACHED_PORT 11211
 
 ## Issues, Feedback and Ideas
 
-Open an [Issue](https://github.com/owncloud-docker/community/issues)
+Open an [Issue](https://github.com/owncloud-docker/server/issues)
 
 
 ## Contributing
