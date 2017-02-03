@@ -1,32 +1,73 @@
-# ownCloud / server
+# ownCloud: Community
 
-Docker image for ownCloud web server Standard Edition
-running on [owncloud/owncloud-base](https://hub.docker.com/r/owncloud/owncloud-base/)
-running on [owncloud/ubuntu](https://hub.docker.com/r/owncloud/ubuntu/)
+[![](https://images.microbadger.com/badges/image/owncloud/community.svg)](https://microbadger.com/images/owncloud/community "Get your own image badge on microbadger.com")
 
-## Image Description
-
-- Ubuntu 16.04 with PHP7
-- Caching with APCu and Redis support
-- HTTPS access by default with self-signed certs, add your certificates optionally 
-- ownCloud installation and updates automatically
-- ownCloud logs to docker log
-- Large baseimage, so low storage needs for each version
-- Data persistence on host with docker volumes
-- docker-compose file to easy start full stack or even clustered setup (wip)
-- more to come ...
+This is our ownCloud image for the community edition, it is based on our [base container](https://registry.hub.docker.com/u/owncloud/base/). Additionally we have also preinstalled the richdocuments app.
 
 
 ## Usage
-### Use Docker Compose
-
-Create and start ownCloud stack
 
 ```bash
+docker run -ti \
+  --name owncloud \
+  owncloud/community:latest
+```
+
+
+### Launch with plain `docker`
+
+First of all you have to start the required MariaDB and Redis:
+
+```bash
+docker run -d --name redis -webhippie/redis:latest
+
+docker run -d \
+  --name mariadb \
+  -e MARIADB_ROOT_PASSWORD=owncloud \
+  -e MARIADB_USERNAME=owncloud \
+  -e MARIADB_PASSWORD=owncloud \
+  -e MARIADB_DATABASE=owncloud \
+  --volume ./mysql:/var/lib/mysql \
+  webhippie/mariadb:latest
+```
+
+Then you can start the ownCloud web server, you can customize the used environment variables within the `.env` file:
+
+```bash
+source .env
+
+docker run -d \
+  --name owncloud \
+  --link mariadb:mariadb \
+  --link redis:redis \
+  -p 80:80 \
+  -p 443:443 \
+  -e OWNCLOUD_DOMAIN=${DOMAIN} \
+  -e OWNCLOUD_DB_TYPE=mysql \
+  -e OWNCLOUD_DB_NAME=owncloud \
+  -e OWNCLOUD_DB_USERNAME=owncloud \
+  -e OWNCLOUD_DB_PASSWORD=owncloud \
+  -e OWNCLOUD_DB_HOST=db \
+  -e OWNCLOUD_ADMIN_USERNAME=${ADMIN_USERNAME} \
+  -e OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD} \
+  -e OWNCLOUD_REDIS_ENABLED=true \
+  -e OWNCLOUD_REDIS_HOST=redis \
+  --volume ./data:/mnt/data:z \
+  owncloud/community:${VERSION}
+```
+
+
+### Launch with `docker-compose`
+
+Create and start the ownCloud stack based on these commands:
+
+```bash
+source .env
 docker-compose up -d
 ```
 
-More commands of interest
+More commands of interest:
+
 ```bash
 docker-compose exec owncloud bash
 docker-compose stop
@@ -34,141 +75,97 @@ docker-compose start
 docker-compose down
 ```
 
-By default 
+By default this will start redis, mariadb and ownCloud containers, the `data` directory gets used to store the content persistent. The container ports `80` and `443` are getting bound like it is confiogured within the `.env` file.
 
-- starts redis, mariadb and owncloud container
-- data volume is mounted with files and config
-- ports 80 and 443 forwarded
 
-### Manual Build with build script
+## Build locally
 
-Building Version 9.0.4, run
-```bash
-./build.sh 9.0.4
+The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command to get this image built locally:
+
 ```
-
-- Version is optional. Find default version in .env file.
-- Build script always pulls latest base image.
-
-
-### Manual Startup
-
-Needs DB and Redis, you can start these with:
-
-```bash
-docker run -d --name redis -e REDIS_OPTS="--protected-mode no" webhippie/redis:latest
-docker run -d --name mariadb -e MARIADB_USERNAME=root -e MARIADB_ROOT_PASSWORD=secret webhippie/mariadb:latest
-```
-
-Then start ownCloud web server:
-
-```bash
-docker run -d -ti \
-  --name owncloud \
-  --link mariadb:mariadb --link redis:redis \
-  -p 443:443 \
-  owncloud/server
+source .env
+IMAGE_NAME=owncloud/community:${VERSION} ./hooks/build
 ```
 
 
-### Access ownCloud
+### Custom certificates
 
-https://localhost/
-
-- user: admin
-- pass: password	(as set in bin/container-config.sh)
-
-Note: After first startup, ownCloud installs automatically, this takes a few seconds.
+By default we are generating self-signed certificates on startup of the containers, you can replace the certificates with your own certificates when you place them into `data/certs/ssl-cert.crt` and `data/certs/ssl-cert.key`, than they are getting used automatically.
 
 
-## Options and Configurations
-### Data Folder persistence on Host
+### Accessing the ownCloud
 
-You can just add a volume to the container on startup
-
-
-```bash
-docker run -d -ti \
-  --name owncloud \
-  --link mariadb:mariadb --link redis:redis \
-  -p 443:443 \
-  -v /yourDataDirectory:/mnt/data \
-  owncloud/server
-```
+By default you can access the ownCloud instance at [https://localhost/](https://localhost/) as long as you have not changed the port binding. The initial user gets set by the environment variables `ADMIN_USERNAME` and `ADMIN_PASSWORD`, per default it's set to `admin` for username and password.
 
 
-### Certificates
+### Build image from tarball
 
-Find certificates here
-```
-SSLCertificateFile	/etc/ssl/certs/ssl-cert.pem
-SSLCertificateKeyFile /etc/ssl/private/ssl-cert.key
-```
-
-Add your own certificates to running container with 
-```bash
-docker cp mycertfile server_owncloud_1:/etc/ssl/certs/ssl-cert.pem
-docker cp mycertkeyfile server_owncloud_1:/etc/ssl/private/ssl-cert.key
-```
-
-Or add your own certificates on build time, append to the Dockerfile
-```
-ADD mycertfile:/etc/ssl/certs/ssl-cert.pem
-ADD mycertkeyfile:/etc/ssl/private/ssl-cert.key 
-```
-
-
-### Port forwarding in compose file
-
-By default Port 80 (HTTP) and 433(HTTPS) are open and forwarded.
-
-- If you use a proxy or loadbalancer with ssl offloading, you want to only use Port 80.
-- Otherwise, you can restrict access to Port 443 for higher security.
-
-Tested with Traefik Proxy and HaProxy Loadbalancer
-- [Traefik Image](https://hub.docker.com/r/webhippie/traefik/)
-- [HaProxy Image](https://hub.docker.com/r/webhippie/haproxy/)
+1. Download ownCloud Community ```owncloud-9.1.4.tar.gz``` from the ownCloud downloads page.
+2. Comment out the `curl` command for downloading the tarball from the URL within the `Dockerfile`
+3. Remove the comments from the `ADD` and `RUN` commands within the `Dockerfile`
+4. Build the ownCloud Community docker image based on the `Dockerfile` as mentioned above.
 
 
 ## Versions
-### Testing
-* [9.1.0](https://github.com/owncloud-docker/server/tree/9.1.0)
-  available as ```owncloud/server:9.1.0``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
 
-### Stable
-* [latest](https://github.com/owncloud-docker/server/tree/master)
-  available as ```owncloud/server:latest``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
-* [9.0.4](https://github.com/owncloud-docker/server/tree/9.0.4)
-  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
-* [9.0.3](https://github.com/owncloud-docker/server/tree/9.0.3)
-  available as ```owncloud/server:9.0.3``` at [Docker Hub](https://hub.docker.com/r/owncloud/server/)
+* [latest](https://github.com/owncloud-docker/community/tree/master) available as ```owncloud/community:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/community/)
+
+
+## Volumes
+
+* /mnt/data
+
+
+## Ports
+
+* 80
+* 443
 
 
 ## Available environment variables
 
-- none
+**None**
 
 
-## Inherited environment variables
+## Available environment variables
 
-- OWNCLOUD_DOMAIN
-  - Set your domain to configure trusted domains
-- MARIADB_ENV_MARIADB_ROOT_PASSWORD 
-  - Password to access DB
+```
+OWNCLOUD_DOMAIN ${HOSTNAME}
+OWNCLOUD_IPADDRESS $(hostname -i)
+OWNCLOUD_LOGLEVEL 0
+OWNCLOUD_DB_TYPE sqlite
+OWNCLOUD_DB_HOST
+OWNCLOUD_DB_NAME owncloud
+OWNCLOUD_DB_USERNAME
+OWNCLOUD_DB_PASSWORD
+OWNCLOUD_DB_PREFIX
+OWNCLOUD_DB_TIMEOUT 180
+OWNCLOUD_DB_FAIL true
+OWNCLOUD_ADMIN_USERNAME admin
+OWNCLOUD_ADMIN_PASSWORD admin
+OWNCLOUD_REDIS_ENABLED false
+OWNCLOUD_REDIS_HOST redis
+OWNCLOUD_REDIS_PORT 6379
+OWNCLOUD_MEMCACHED_ENABLED false
+OWNCLOUD_MEMCACHED_HOST memcached
+OWNCLOUD_MEMCACHED_PORT 11211
+```
+
+
+## Issues, Feedback and Ideas
+
+Open an [Issue](https://github.com/owncloud-docker/community/issues)
 
 
 ## Contributing
 
 Fork -> Patch -> Push -> Pull Request
 
-## Issues, Feedback and Ideas
-
-Open an [Issue](https://github.com/owncloud-docker/server/issues)
-
 
 ## Authors
 
-* [Felix Böhm](https://github.com/felixboehm)
+* [Felix Boehm](https://github.com/felixboehm)
+* [Thomas Boerger](https://github.com/tboerger)
 
 
 ## License
@@ -179,5 +176,5 @@ MIT
 ## Copyright
 
 ```
-Copyright (c) 2016 Felix Böhm <http://owncloud.org>
+Copyright (c) 2017 Felix Böhm <felix@owncloud.com>
 ```

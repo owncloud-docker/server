@@ -1,12 +1,27 @@
-FROM owncloud/owncloud-base:latest
+FROM owncloud/base:latest
+MAINTAINER ownCloud DevOps <devops@owncloud.com>
 
-ARG VERSION=9.0.4
-ARG OWNCLOUD_TARBALL=https://download.owncloud.org/community/owncloud-$VERSION.tar.bz2
-ARG APP_TARBALL=https://github.com/owncloud/richdocuments/releases/download/1.1.3/richdocuments.tar.gz
+ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
 
-# download ownCloud
-RUN curl -sLo - ${OWNCLOUD_TARBALL} | tar xfj - -C /var/www/ \
-  && chown -R www-data.www-data /var/www/owncloud
+ARG TARBALL
+ARG RICHDOCUMENTS
 
-RUN curl -sLo - ${APP_TARBALL} | tar xfz - -C /var/www/owncloud/apps/ \
-  && chown -R www-data.www-data /var/www/owncloud/apps
+RUN curl -sLo - ${TARBALL} | tar xfj - -C /var/www/ && \
+  chown -R www-data:www-data /var/www/owncloud
+
+#ADD owncloud-${VERSION}.tar.bz2 /var/www/
+#RUN chown -R www-data:www-data /var/www/owncloud
+
+RUN curl -sLo - ${RICHDOCUMENTS} | tar xfz - -C /var/www/owncloud/apps/ && \
+  mv /var/www/owncloud/apps/richdocuments-* /var/www/owncloud/apps/richdocuments && \
+  chown -R www-data:www-data /var/www/owncloud/apps
+
+LABEL org.label-schema.version=$VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.label-schema.vcs-url="https://github.com/owncloud-docker/community.git"
+LABEL org.label-schema.name="ownCloud Community"
+LABEL org.label-schema.vendor="ownCloud GmbH"
+LABEL org.label-schema.schema-version="1.0"

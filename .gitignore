@@ -1,2 +1,4 @@
-owncloud
-data
+/data
+/mysql
+
+/owncloud-*.tar.gz
