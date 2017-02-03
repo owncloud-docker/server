@@ -19,7 +19,7 @@ docker run -ti \
 First of all you have to start the required MariaDB and Redis:
 
 ```bash
-docker run -d --name redis -webhippie/redis:latest
+docker run -d --name redis webhippie/redis:latest
 
 docker run -d \
   --name mariadb \
