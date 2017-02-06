@@ -109,6 +109,20 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 ## Versions
 
 * [latest](https://github.com/owncloud-docker/server/tree/master) available as ```owncloud/server:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.1.4](https://github.com/owncloud-docker/server/tree/9.1.4) available as ```owncloud/server:9.1.4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.1.3](https://github.com/owncloud-docker/server/tree/9.1.3) available as ```owncloud/server:9.1.3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.1.2](https://github.com/owncloud-docker/server/tree/9.1.2) available as ```owncloud/server:9.1.2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.1.1](https://github.com/owncloud-docker/server/tree/9.1.1) available as ```owncloud/server:9.1.1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.1.0](https://github.com/owncloud-docker/server/tree/9.1.0) available as ```owncloud/server:9.1.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.8](https://github.com/owncloud-docker/server/tree/9.0.8) available as ```owncloud/server:9.0.8``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.7](https://github.com/owncloud-docker/server/tree/9.0.7) available as ```owncloud/server:9.0.7``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.6](https://github.com/owncloud-docker/server/tree/9.0.6) available as ```owncloud/server:9.0.6``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.5](https://github.com/owncloud-docker/server/tree/9.0.5) available as ```owncloud/server:9.0.5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.4](https://github.com/owncloud-docker/server/tree/9.0.4) available as ```owncloud/server:9.0.4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.3](https://github.com/owncloud-docker/server/tree/9.0.3) available as ```owncloud/server:9.0.3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.2](https://github.com/owncloud-docker/server/tree/9.0.2) available as ```owncloud/server:9.0.2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.1](https://github.com/owncloud-docker/server/tree/9.0.1) available as ```owncloud/server:9.0.1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [9.0.0](https://github.com/owncloud-docker/server/tree/9.0.0) available as ```owncloud/server:9.0.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 
 
 ## Volumes
