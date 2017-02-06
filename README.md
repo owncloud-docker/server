@@ -101,8 +101,8 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 ### Build image from tarball
 
 1. Download ownCloud Community ```owncloud-9.1.4.tar.gz``` from the ownCloud downloads page.
-2. Comment out the `curl` command for downloading the tarball from the URL within the `Dockerfile`
-3. Remove the comments from the `ADD` and `RUN` commands within the `Dockerfile`
+2. Comment out the first `curl` command for downloading the tarball from the URL within the `Dockerfile`
+3. Remove the comment from the `ADD` command within the `Dockerfile`
 4. Build the ownCloud Community docker image based on the `Dockerfile` as mentioned above.
 
 
