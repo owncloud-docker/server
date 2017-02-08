@@ -14,7 +14,7 @@ RUN curl -sLo - ${TARBALL} | tar xfj - -C /var/www/
 RUN curl -sLo - ${RICHDOCUMENTS} | tar xfz - -C /var/www/owncloud/apps/ && \
   mv /var/www/owncloud/apps/richdocuments-* /var/www/owncloud/apps/richdocuments
 
-RUN chown -R www-data:www-data /var/www/owncloud
+RUN find /var/www/owncloud \( \! -user www-data -o \! -group www-data \) -print0 | xargs -r -0 chown www-data:www-data
 
 LABEL org.label-schema.version=$VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE
