@@ -147,6 +147,7 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 OWNCLOUD_DOMAIN ${HOSTNAME}
 OWNCLOUD_IPADDRESS $(hostname -i)
 OWNCLOUD_LOGLEVEL 0
+OWNCLOUD_DEFAULT_LANGUAGE en
 OWNCLOUD_DB_TYPE sqlite
 OWNCLOUD_DB_HOST
 OWNCLOUD_DB_NAME owncloud
