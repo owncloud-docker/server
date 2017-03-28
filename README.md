@@ -67,7 +67,7 @@ docker run -d \
 The installation of `docker-compose` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of docker you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, than we are downloading the required `docker-compose.yml` file:
 
 ```bash
-cat << EOF > docker-compose.yml
+cat << EOF > .env
 VERSION=9.1.4 # The ownCloud version to launch
 DOMAIN=localhost
 ADMIN_USERNAME=admin
