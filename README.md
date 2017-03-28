@@ -16,7 +16,7 @@ docker run -ti \
 
 ### Launch with plain `docker`
 
-First of all you have to start the required MariaDB and Redis:
+The installation of `docker` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/engine/installation/). After the installation of docker you can continue with the required MariaDB and Redis container:
 
 ```bash
 docker run -d --name redis webhippie/redis:latest
@@ -31,10 +31,15 @@ docker run -d \
   webhippie/mariadb:latest
 ```
 
-Then you can start the ownCloud web server, you can customize the used environment variables within the `.env` file:
+Then you can start the ownCloud web server, you can customize the used environment variables as needed:
 
 ```bash
-source .env
+export OWNCLOUD_VERSION=9.1.4 # The ownCloud version to launch
+export OWNCLOUD_DOMAIN=localhost
+export OWNCLOUD_ADMIN_USERNAME=admin
+export OWNCLOUD_ADMIN_PASSWORD=admin
+export OWNCLOUD_HTTP_PORT=80
+export OWNCLOUD_HTTPS_PORT=443
 
 docker run -d \
   --name owncloud \
@@ -42,27 +47,38 @@ docker run -d \
   --link redis:redis \
   -p 80:80 \
   -p 443:443 \
-  -e OWNCLOUD_DOMAIN=${DOMAIN} \
+  -e OWNCLOUD_DOMAIN=${OWNCLOUD_DOMAIN} \
   -e OWNCLOUD_DB_TYPE=mysql \
   -e OWNCLOUD_DB_NAME=owncloud \
   -e OWNCLOUD_DB_USERNAME=owncloud \
   -e OWNCLOUD_DB_PASSWORD=owncloud \
   -e OWNCLOUD_DB_HOST=db \
-  -e OWNCLOUD_ADMIN_USERNAME=${ADMIN_USERNAME} \
-  -e OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD} \
+  -e OWNCLOUD_ADMIN_USERNAME=${OWNCLOUD_ADMIN_USERNAME} \
+  -e OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD} \
   -e OWNCLOUD_REDIS_ENABLED=true \
   -e OWNCLOUD_REDIS_HOST=redis \
   --volume ./data:/mnt/data:z \
-  owncloud/server:${VERSION}
+  owncloud/server:${OWNCLOUD_VERSION}
 ```
 
 
 ### Launch with `docker-compose`
 
-Create and start the ownCloud stack based on these commands:
+The installation of `docker-compose` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of docker you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, than we are downloading the required `docker-compose.yml` file:
 
 ```bash
-source .env
+cat << EOF > docker-compose.yml
+VERSION=9.1.4 # The ownCloud version to launch
+DOMAIN=localhost
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin
+HTTP_PORT=80
+HTTPS_PORT=443
+EOF
+
+wget -O docker-compose.yml https://raw.githubusercontent.com/owncloud-docker/server/master/docker-compose.yml
+
+# Finally start the containers in the background
 docker-compose up -d
 ```
 
@@ -73,9 +89,10 @@ docker-compose exec owncloud bash
 docker-compose stop
 docker-compose start
 docker-compose down
+docker-compose logs
 ```
 
-By default this will start redis, mariadb and ownCloud containers, the `data` directory gets used to store the content persistent. The container ports `80` and `443` are getting bound like it is confiogured within the `.env` file.
+By default this will start Redis, MariaDB and ownCloud containers, the `data` directory gets used to store the content persistent. The container ports `80` and `443` are getting bound like it is confiogured within the `.env` file.
 
 
 ## Build locally
@@ -87,6 +104,10 @@ source .env
 IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 ```
 
+
+### Upgrade to newer version
+
+In order to upgrade an existing container-based installation you just need to shutdown the setup and replace the used container version. While booting the containers the upgrade process gets automatically triggered, so you don't need to perform any other manual step.
 
 ### Custom certificates
 
