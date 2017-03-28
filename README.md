@@ -2,8 +2,9 @@
 
 [![](https://images.microbadger.com/badges/image/owncloud/server.svg)](https://microbadger.com/images/owncloud/server "Get your own image badge on microbadger.com")
 
-This is our ownCloud image for the community edition, it is based on our [base container](https://registry.hub.docker.com/u/owncloud/base/). Additionally we have also preinstalled the richdocuments app.
+This is our ownCloud image for the community edition, it is based on our [base container](https://registry.hub.docker.com/u/owncloud/base/). Additionally we have preinstalled the richdocuments app.
 
+This ownCloud server is designed to work with a data volume in the host filesystem and with separate MariaDB and Redis containers.
 
 ## Usage
 
@@ -16,7 +17,7 @@ docker run -ti \
 
 ### Launch with plain `docker`
 
-The installation of `docker` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/engine/installation/). After the installation of docker you can continue with the required MariaDB and Redis container:
+The installation of `docker` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/engine/installation/). After the installation of docker you can continue with the required MariaDB and Redis containers:
 
 ```bash
 docker run -d --name redis webhippie/redis:latest
@@ -64,7 +65,7 @@ docker run -d \
 
 ### Launch with `docker-compose`
 
-The installation of `docker-compose` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of docker you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, than we are downloading the required `docker-compose.yml` file:
+The installation of `docker-compose` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of docker you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, then we are downloading the required `docker-compose.yml` file. The `.env` and `docker-compose.yml` are expected in the current working directory, when running `docker-compose` commands:
 
 ```bash
 cat << EOF > .env
@@ -82,7 +83,7 @@ wget -O docker-compose.yml https://raw.githubusercontent.com/owncloud-docker/ser
 docker-compose up -d
 ```
 
-More commands of interest:
+More commands of interest (try adding `-h` for help):
 
 ```bash
 docker-compose exec owncloud bash
@@ -92,12 +93,12 @@ docker-compose down
 docker-compose logs
 ```
 
-By default this will start Redis, MariaDB and ownCloud containers, the `data` directory gets used to store the content persistent. The container ports `80` and `443` are getting bound like it is confiogured within the `.env` file.
+By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the `./data` directory is used to store the contents persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
 
 
 ## Build locally
 
-The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command to get this image built locally:
+The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a github checkout directory) to get an image built locally:
 
 ```
 source .env
@@ -109,9 +110,13 @@ IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 
 In order to upgrade an existing container-based installation you just need to shutdown the setup and replace the used container version. While booting the containers the upgrade process gets automatically triggered, so you don't need to perform any other manual step.
 
+### Custom apps
+
+Apps installed (or config.php changes) inside the docker container are retained across stop/start, but are reset by down/up.
+
 ### Custom certificates
 
-By default we are generating self-signed certificates on startup of the containers, you can replace the certificates with your own certificates when you place them into `data/certs/ssl-cert.crt` and `data/certs/ssl-cert.key`, than they are getting used automatically.
+By default we generate self-signed certificates on startup of the containers, you can replace the certificates with your own certificates. Place them into `data/certs/ssl-cert.crt` and `data/certs/ssl-cert.key`.
 
 
 ### Accessing the ownCloud
@@ -158,10 +163,6 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 * 80
 * 443
 
-
-## Available environment variables
-
-**None**
 
 
 ## Available environment variables
