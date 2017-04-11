@@ -135,6 +135,7 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 ## Versions
 
 * [latest](https://github.com/owncloud-docker/server/tree/master) available as ```owncloud/server:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [10.0.0beta2](https://github.com/owncloud-docker/server/tree/10.0.0beta2) available as ```owncloud/server:10.0.0beta2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [10.0.0beta](https://github.com/owncloud-docker/server/tree/10.0.0beta) available as ```owncloud/server:10.0.0beta``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [10.0.0alpha](https://github.com/owncloud-docker/server/tree/10.0.0alpha) available as ```owncloud/server:10.0.0alpha``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [9.1.4](https://github.com/owncloud-docker/server/tree/9.1.4) available as ```owncloud/server:9.1.4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
