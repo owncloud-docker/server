@@ -42,7 +42,7 @@ export OWNCLOUD_HTTPS_PORT=443
 
 docker run -d \
   --name owncloud \
-  --link mariadb:mariadb \
+  --link mariadb:db \
   --link redis:redis \
   -p 80:80 \
   -p 443:443 \
