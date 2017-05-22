@@ -135,6 +135,10 @@ By default you can access the ownCloud instance at [https://localhost/](https://
 ## Versions
 
 * [latest](https://github.com/owncloud-docker/server/tree/master) available as ```owncloud/server:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [10.0.1RC4](https://github.com/owncloud-docker/server/tree/10.0.1RC4) available as ```owncloud/server:10.0.1RC4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [10.0.1RC3](https://github.com/owncloud-docker/server/tree/10.0.1RC3) available as ```owncloud/server:10.0.1RC3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [10.0.1RC2](https://github.com/owncloud-docker/server/tree/10.0.1RC2) available as ```owncloud/server:10.0.1RC2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
+* [10.0.1RC1](https://github.com/owncloud-docker/server/tree/10.0.1RC1) available as ```owncloud/server:10.0.1RC1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [10.0.0](https://github.com/owncloud-docker/server/tree/10.0.0) available as ```owncloud/server:10.0.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [10.0.0RC5](https://github.com/owncloud-docker/server/tree/10.0.0RC5) available as ```owncloud/server:10.0.0RC5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
 * [10.0.0RC4](https://github.com/owncloud-docker/server/tree/10.0.0RC4) available as ```owncloud/server:10.0.0RC4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
