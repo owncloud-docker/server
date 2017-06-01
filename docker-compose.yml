@@ -1,30 +1,7 @@
 version: '2'
 
 services:
-  db:
-    image: webhippie/mariadb
-    labels:
-      - traefik.enable=false
-    environment:
-      - MARIADB_ROOT_PASSWORD=owncloud
-      - MARIADB_USERNAME=owncloud
-      - MARIADB_PASSWORD=owncloud
-      - MARIADB_DATABASE=owncloud
-    volumes:
-      - ./mysql:/var/lib/mysql:z
-
-  redis:
-    image: webhippie/redis
-    labels:
-      - traefik.enable=false
-
   owncloud:
-    # build:
-    #   context: .
-    #   args:
-    #     - MAJOR=${MAJOR}
-    #     - VERSION=${VERSION}
-    #     - TARBALL=${TARBALL}
     image: owncloud/server:${VERSION}
     ports:
       - ${HTTPS_PORT}:443
@@ -48,3 +25,20 @@ services:
       - OWNCLOUD_REDIS_HOST=redis
     volumes:
       - ./data:/mnt/data:z
+
+  db:
+    image: webhippie/mariadb
+    labels:
+      - traefik.enable=false
+    environment:
+      - MARIADB_ROOT_PASSWORD=owncloud
+      - MARIADB_USERNAME=owncloud
+      - MARIADB_PASSWORD=owncloud
+      - MARIADB_DATABASE=owncloud
+    volumes:
+      - ./mysql:/var/lib/mysql:z
+
+  redis:
+    image: webhippie/redis
+    labels:
+      - traefik.enable=false

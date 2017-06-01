@@ -2,7 +2,35 @@
 
 [![](https://images.microbadger.com/badges/image/owncloud/server.svg)](https://microbadger.com/images/owncloud/server "Get your own image badge on microbadger.com")
 
-This is our ownCloud image for the community edition, it is based on our [base container](https://registry.hub.docker.com/u/owncloud/base/). Additionally we have preinstalled the richdocuments app. This ownCloud server is designed to work with a data volume in the host filesystem and with separate MariaDB and Redis containers.
+This is the official ownCloud image for the community edition, it is built from our [base container](https://registry.hub.docker.com/u/owncloud/base/). This ownCloud image is designed to work with a data volume in the host filesystem and with separate MariaDB and Redis containers.
+
+
+## Versions
+
+To get an overview about the available versions please take a look at the [GitHub branches](https://github.com/owncloud-docker/server/branches/all) or our [Docker Hub tags](https://hub.docker.com/r/owncloud/server/tags/), these lists are always up to date. Please note that release candidates or alpha/beta versions are only temporary available, they will be removed after the final release of a version.
+
+
+## Volumes
+
+* /mnt/data
+
+
+## Ports
+
+* 80
+* 443
+
+## Available environment variables
+
+```
+
+```
+
+## Inherited environment variables
+
+* [owncloud/base](https://github.com/owncloud-docker/base#available-environment-variables)
+* [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#available-environment-variables)
+
 
 ## Usage
 
@@ -18,7 +46,9 @@ docker run -ti \
 The installation of `docker` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/engine/installation/). After the installation of docker you can continue with the required MariaDB and Redis containers:
 
 ```bash
-docker run -d --name redis webhippie/redis:latest
+docker run -d \
+  --name redis \
+  webhippie/redis:latest
 
 docker run -d \
   --name mariadb \
@@ -33,7 +63,7 @@ docker run -d \
 Then you can start the ownCloud web server, you can customize the used environment variables as needed:
 
 ```bash
-export OWNCLOUD_VERSION=9.1.4 # The ownCloud version to launch
+export OWNCLOUD_VERSION=10.0.2 # The ownCloud version to launch
 export OWNCLOUD_DOMAIN=localhost
 export OWNCLOUD_ADMIN_USERNAME=admin
 export OWNCLOUD_ADMIN_PASSWORD=admin
@@ -63,11 +93,11 @@ docker run -d \
 
 ### Launch with `docker-compose`
 
-The installation of `docker-compose` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of `docker-compose` you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, then we are downloading the required `docker-compose.yml` file. The `.env` and `docker-compose.yml` are expected in the current working directory, when running `docker-compose` commands:
+The installation of `docker-compose` is not covered by these instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of `docker-compose` you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, then we are downloading the required `docker-compose.yml` file. The `.env` and `docker-compose.yml` are expected in the current working directory, when running `docker-compose` commands:
 
 ```bash
 cat << EOF > .env
-VERSION=9.1.4 # The ownCloud version to launch
+VERSION=10.0.2 # The ownCloud version to launch
 DOMAIN=localhost
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin
@@ -91,128 +121,36 @@ docker-compose down
 docker-compose logs
 ```
 
-By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the `./data` directory is used to store the contents persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
+By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the `./data` and `./mysql` directories are used to store the contents persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
 
 
-## Build locally
-
-The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a cloned Git repository) to get an image built locally:
-
-```
-source .env
-IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
-```
-
-
-## Upgrade to newer version
+### Upgrade to newer version
 
 In order to upgrade an existing container-based installation you just need to shutdown the setup and replace the used container version. While booting the containers the upgrade process gets automatically triggered, so you don't need to perform any other manual step.
 
 
-## Custom apps
+### Custom apps
 
-Installed apps or config.php changes inside the docker container are retained across stop/start.
+Installed apps or config.php changes inside the docker container are retained across stop/start as long as you keep the volumes configured.
 
 
-## Custom certificates
+### Custom certificates
 
 By default we generate self-signed certificates on startup of the containers, you can replace the certificates with your own certificates. Place them into `./data/certs/ssl-cert.crt` and `./data/certs/ssl-cert.key`.
 
 
-## Accessing the ownCloud
+### Accessing the ownCloud
 
 By default you can access the ownCloud instance at [https://localhost/](https://localhost/) as long as you have not changed the port binding. The initial user gets set by the environment variables `ADMIN_USERNAME` and `ADMIN_PASSWORD`, per default it's set to `admin` for username and password.
 
 
-## Build image from tarball
+## Build locally
 
-1. Download ownCloud Community ```owncloud-9.1.4.tar.gz``` from the ownCloud downloads page.
-2. Comment out the first `curl` command for downloading the tarball from the URL within the `Dockerfile`
-3. Remove the comment from the `ADD` command within the `Dockerfile`
-4. Build the ownCloud Community docker image based on the `Dockerfile` as mentioned above.
-
-
-## Versions
-
-* [latest](https://github.com/owncloud-docker/server/tree/master) available as ```owncloud/server:latest``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.1RC5](https://github.com/owncloud-docker/server/tree/10.0.1RC5) available as ```owncloud/server:10.0.1RC5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.1RC4](https://github.com/owncloud-docker/server/tree/10.0.1RC4) available as ```owncloud/server:10.0.1RC4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.1RC3](https://github.com/owncloud-docker/server/tree/10.0.1RC3) available as ```owncloud/server:10.0.1RC3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.1RC2](https://github.com/owncloud-docker/server/tree/10.0.1RC2) available as ```owncloud/server:10.0.1RC2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.1RC1](https://github.com/owncloud-docker/server/tree/10.0.1RC1) available as ```owncloud/server:10.0.1RC1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0](https://github.com/owncloud-docker/server/tree/10.0.0) available as ```owncloud/server:10.0.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0RC5](https://github.com/owncloud-docker/server/tree/10.0.0RC5) available as ```owncloud/server:10.0.0RC5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0RC4](https://github.com/owncloud-docker/server/tree/10.0.0RC4) available as ```owncloud/server:10.0.0RC4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0RC3](https://github.com/owncloud-docker/server/tree/10.0.0RC3) available as ```owncloud/server:10.0.0RC3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0RC2](https://github.com/owncloud-docker/server/tree/10.0.0RC2) available as ```owncloud/server:10.0.0RC2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0RC1](https://github.com/owncloud-docker/server/tree/10.0.0RC1) available as ```owncloud/server:10.0.0RC1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0beta2](https://github.com/owncloud-docker/server/tree/10.0.0beta2) available as ```owncloud/server:10.0.0beta2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0beta](https://github.com/owncloud-docker/server/tree/10.0.0beta) available as ```owncloud/server:10.0.0beta``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [10.0.0alpha](https://github.com/owncloud-docker/server/tree/10.0.0alpha) available as ```owncloud/server:10.0.0alpha``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.5](https://github.com/owncloud-docker/server/tree/9.1.5) available as ```owncloud/server:9.1.5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.4](https://github.com/owncloud-docker/server/tree/9.1.4) available as ```owncloud/server:9.1.4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.3](https://github.com/owncloud-docker/server/tree/9.1.3) available as ```owncloud/server:9.1.3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.2](https://github.com/owncloud-docker/server/tree/9.1.2) available as ```owncloud/server:9.1.2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.1](https://github.com/owncloud-docker/server/tree/9.1.1) available as ```owncloud/server:9.1.1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.1.0](https://github.com/owncloud-docker/server/tree/9.1.0) available as ```owncloud/server:9.1.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.9](https://github.com/owncloud-docker/server/tree/9.0.9) available as ```owncloud/server:9.0.9``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.8](https://github.com/owncloud-docker/server/tree/9.0.8) available as ```owncloud/server:9.0.8``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.7](https://github.com/owncloud-docker/server/tree/9.0.7) available as ```owncloud/server:9.0.7``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.6](https://github.com/owncloud-docker/server/tree/9.0.6) available as ```owncloud/server:9.0.6``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.5](https://github.com/owncloud-docker/server/tree/9.0.5) available as ```owncloud/server:9.0.5``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.4](https://github.com/owncloud-docker/server/tree/9.0.4) available as ```owncloud/server:9.0.4``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.3](https://github.com/owncloud-docker/server/tree/9.0.3) available as ```owncloud/server:9.0.3``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.2](https://github.com/owncloud-docker/server/tree/9.0.2) available as ```owncloud/server:9.0.2``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.1](https://github.com/owncloud-docker/server/tree/9.0.1) available as ```owncloud/server:9.0.1``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-* [9.0.0](https://github.com/owncloud-docker/server/tree/9.0.0) available as ```owncloud/server:9.0.0``` at [Docker Hub](https://registry.hub.docker.com/u/owncloud/server/)
-
-
-## Volumes
-
-* /mnt/data
-
-
-## Ports
-
-* 80
-* 443
-
-
-
-## Available environment variables
+The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a cloned GitHub repository) to get an image built locally:
 
 ```
-OWNCLOUD_DOMAIN ${HOSTNAME}
-OWNCLOUD_IPADDRESS $(hostname -i)
-OWNCLOUD_LOGLEVEL 0
-OWNCLOUD_DEFAULT_LANGUAGE en
-OWNCLOUD_DB_TYPE sqlite
-OWNCLOUD_DB_HOST
-OWNCLOUD_DB_NAME owncloud
-OWNCLOUD_DB_USERNAME
-OWNCLOUD_DB_PASSWORD
-OWNCLOUD_DB_PREFIX
-OWNCLOUD_DB_TIMEOUT 180
-OWNCLOUD_DB_FAIL true
-OWNCLOUD_ADMIN_USERNAME admin
-OWNCLOUD_ADMIN_PASSWORD admin
-OWNCLOUD_REDIS_ENABLED false
-OWNCLOUD_REDIS_HOST redis
-OWNCLOUD_REDIS_PORT 6379
-OWNCLOUD_MEMCACHED_ENABLED false
-OWNCLOUD_MEMCACHED_HOST memcached
-OWNCLOUD_MEMCACHED_PORT 11211
-OWNCLOUD_OBJECTSTORE_ENABLED false
-OWNCLOUD_OBJECTSTORE_CLASS OCA\\ObjectStore\\S3
-OWNCLOUD_OBJECTSTORE_BUCKET owncloud
-OWNCLOUD_OBJECTSTORE_AUTOCREATE true
-OWNCLOUD_OBJECTSTORE_VERSION 2006-03-01
-OWNCLOUD_OBJECTSTORE_REGION us-east-1
-OWNCLOUD_OBJECTSTORE_KEY
-OWNCLOUD_OBJECTSTORE_SECRET
-OWNCLOUD_OBJECTSTORE_ENDPOINT s3-${OWNCLOUD_OBJECTSTORE_REGION}.amazonaws.com
-OWNCLOUD_OBJECTSTORE_PATHSTYLE false
-OWNCLOUD_CACHING_CLASS \\OC\\Memcache\\APCu
+source .env
+IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 ```
 
 
@@ -228,8 +166,8 @@ Fork -> Patch -> Push -> Pull Request
 
 ## Authors
 
-* [Felix Boehm](https://github.com/felixboehm)
 * [Thomas Boerger](https://github.com/tboerger)
+* [Felix Boehm](https://github.com/felixboehm)
 
 
 ## License
@@ -240,5 +178,5 @@ MIT
 ## Copyright
 
 ```
-Copyright (c) 2017 Felix Böhm <felix@owncloud.com>
+Copyright (c) 2017 Thomas Boerger <tboerger@owncloud.com>
 ```
