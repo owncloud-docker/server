@@ -123,6 +123,20 @@ docker-compose logs
 
 By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the `./data` and `./mysql` directories are used to store the contents persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
 
+### Commandline commands
+
+You can run `occ` commands inside the ownCloud docker image, without caring for sudo and apache user, as the command is wrapped in a little script caring for that. Just run:
+
+```
+occ user:report
+```
+
+You can also run commands via `docker exec`, or `docker-compse exec`:
+
+```
+docker exec -ti example_owncloud_1 occ user:report
+docker-compose exec owncloud occ user:report
+```
 
 ### Upgrade to newer version
 
