@@ -63,7 +63,7 @@ docker run -d \
 Then you can start the ownCloud web server, you can customize the used environment variables as needed:
 
 ```bash
-export OWNCLOUD_VERSION=10.0.2 # The ownCloud version to launch
+export OWNCLOUD_VERSION=10.0.2
 export OWNCLOUD_DOMAIN=localhost
 export OWNCLOUD_ADMIN_USERNAME=admin
 export OWNCLOUD_ADMIN_PASSWORD=admin
@@ -97,7 +97,7 @@ The installation of `docker-compose` is not covered by these instructions, pleas
 
 ```bash
 cat << EOF > .env
-VERSION=10.0.2 # The ownCloud version to launch
+VERSION=10.0.2
 DOMAIN=localhost
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin
