@@ -1,17 +1,15 @@
-version: '2'
+version: '3'
 
 services:
   owncloud:
     image: owncloud/server:${VERSION}
+    restart: always
     ports:
       - ${HTTPS_PORT}:443
       - ${HTTP_PORT}:80
-    links:
+    depends_on:
       - db
       - redis
-    labels:
-      - traefik.port=80
-      - traefik.frontend.passHostHeader=true
     environment:
       - OWNCLOUD_DOMAIN=${DOMAIN}
       - OWNCLOUD_DB_TYPE=mysql
@@ -23,22 +21,41 @@ services:
       - OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - OWNCLOUD_REDIS_ENABLED=true
       - OWNCLOUD_REDIS_HOST=redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/status.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
-      - ./data:/mnt/data:z
+      - ./data:/mnt/data
 
   db:
-    image: webhippie/mariadb
-    labels:
-      - traefik.enable=false
+    image: webhippie/mariadb:latest
+    restart: always
     environment:
       - MARIADB_ROOT_PASSWORD=owncloud
       - MARIADB_USERNAME=owncloud
       - MARIADB_PASSWORD=owncloud
       - MARIADB_DATABASE=owncloud
+      - MARIADB_MAX_ALLOWED_PACKET=128M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
-      - ./mysql:/var/lib/mysql:z
+      - ./mysql:/var/lib/mysql
 
   redis:
-    image: webhippie/redis
-    labels:
-      - traefik.enable=false
+    image: webhippie/redis:latest
+    restart: always
+    environment:
+      - REDIS_MAXCONN=10000
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./redis:/var/lib/redis

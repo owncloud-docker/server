@@ -32,12 +32,13 @@ To get an overview about the available versions please take a look at the [GitHu
 * [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#available-environment-variables)
 
 
-## Usage
+## Build locally
 
-```bash
-docker run -ti \
-  --name owncloud \
-  owncloud/server:latest
+The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a cloned GitHub repository) to get an image built locally:
+
+```
+source .env
+IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 ```
 
 
@@ -56,14 +57,14 @@ docker run -d \
   -e MARIADB_USERNAME=owncloud \
   -e MARIADB_PASSWORD=owncloud \
   -e MARIADB_DATABASE=owncloud \
-  --volume ./mysql:/var/lib/mysql \
+  --volume $(pwd)/mysql:/var/lib/mysql \
   webhippie/mariadb:latest
 ```
 
-Then you can start the ownCloud web server, you can customize the used environment variables as needed:
+Then you can start the ownCloud web server, you can customize the used environment variables as needed, for the ownCloud version you can choose any of the available tags:
 
 ```bash
-export OWNCLOUD_VERSION=10.0.2
+export OWNCLOUD_VERSION=10.0
 export OWNCLOUD_DOMAIN=localhost
 export OWNCLOUD_ADMIN_USERNAME=admin
 export OWNCLOUD_ADMIN_PASSWORD=admin
@@ -86,18 +87,18 @@ docker run -d \
   -e OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD} \
   -e OWNCLOUD_REDIS_ENABLED=true \
   -e OWNCLOUD_REDIS_HOST=redis \
-  --volume ./data:/mnt/data:z \
+  --volume $(pwd)/data:/mnt/data \
   owncloud/server:${OWNCLOUD_VERSION}
 ```
 
 
 ### Launch with `docker-compose`
 
-The installation of `docker-compose` is not covered by these instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of `docker-compose` you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, then we are downloading the required `docker-compose.yml` file. The `.env` and `docker-compose.yml` are expected in the current working directory, when running `docker-compose` commands:
+The installation of `docker-compose` is not covered by these instructions, please follow the [official installation instructions](https://docs.docker.com/compose/install/). After the installation of `docker-compose` you can continue with the following commands to start the ownCloud stack. First we are defining some required environment variables, then we are downloading the required `docker-compose.yml` file. The `.env` and `docker-compose.yml` are expected in the current working directory, when running `docker-compose` commands, for the ownCloud version you can choose any of the available tags:
 
 ```bash
 cat << EOF > .env
-VERSION=10.0.2
+VERSION=10.0
 DOMAIN=localhost
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=admin
@@ -156,16 +157,6 @@ By default we generate self-signed certificates on startup of the containers, yo
 ### Accessing the ownCloud
 
 By default you can access the ownCloud instance at [https://localhost/](https://localhost/) as long as you have not changed the port binding. The initial user gets set by the environment variables `ADMIN_USERNAME` and `ADMIN_PASSWORD`, per default it's set to `admin` for username and password.
-
-
-## Build locally
-
-The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a cloned GitHub repository) to get an image built locally:
-
-```
-source .env
-IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
-```
 
 
 ## Issues, Feedback and Ideas
