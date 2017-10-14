@@ -40,6 +40,8 @@ services:
       - MARIADB_DATABASE=owncloud
       - MARIADB_MAX_ALLOWED_PACKET=128M
       - MARIADB_INNODB_LOG_FILE_SIZE=64M
+      - MARIADB_INNODB_LARGE_PREFIX=ON
+      - MARIADB_INNODB_FILE_FORMAT=Barracuda
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
