@@ -20,10 +20,11 @@ RUN curl -sLo user_ldap.tar.gz ${LDAP_TARBALL} && \
 
 RUN find /var/www/owncloud \( \! -user www-data -o \! -group www-data \) -print0 | xargs -r -0 chown www-data:www-data
 
-LABEL org.label-schema.version=$VERSION
-LABEL org.label-schema.build-date=$BUILD_DATE
-LABEL org.label-schema.vcs-ref=$VCS_REF
-LABEL org.label-schema.vcs-url="https://github.com/owncloud-docker/server.git"
-LABEL org.label-schema.name="ownCloud Server"
-LABEL org.label-schema.vendor="ownCloud GmbH"
-LABEL org.label-schema.schema-version="1.0"
+LABEL \
+  org.label-schema.version=$VERSION \
+  org.label-schema.build-date=$BUILD_DATE \
+  org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/owncloud-docker/server.git" \
+  org.label-schema.name="ownCloud Server" \
+  org.label-schema.vendor="ownCloud GmbH" \
+  org.label-schema.schema-version="1.0"
