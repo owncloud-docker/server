@@ -47,9 +47,16 @@ IMAGE_NAME=owncloud/server:${VERSION} ./hooks/build
 The installation of `docker` is not covered by this instructions, please follow the [official installation instructions](https://docs.docker.com/engine/installation/). After the installation of docker you can continue with the required MariaDB and Redis containers:
 
 ```bash
+docker volume create owncloud_redis
+
 docker run -d \
   --name redis \
+  -e REDIS_DATABASES=1 \
+  --volume owncloud_redis:/var/lib/redis \
   webhippie/redis:latest
+
+docker volume create owncloud_mysql
+docker volume create owncloud_backup
 
 docker run -d \
   --name mariadb \
@@ -57,7 +64,8 @@ docker run -d \
   -e MARIADB_USERNAME=owncloud \
   -e MARIADB_PASSWORD=owncloud \
   -e MARIADB_DATABASE=owncloud \
-  --volume $(pwd)/mysql:/var/lib/mysql \
+  --volume owncloud_mysql:/var/lib/mysql \
+  --volume owncloud_backup:/var/lib/backup \
   webhippie/mariadb:latest
 ```
 
@@ -70,6 +78,8 @@ export OWNCLOUD_ADMIN_USERNAME=admin
 export OWNCLOUD_ADMIN_PASSWORD=admin
 export OWNCLOUD_HTTP_PORT=80
 export OWNCLOUD_HTTPS_PORT=443
+
+docker volume create owncloud_files
 
 docker run -d \
   --name owncloud \
@@ -87,7 +97,7 @@ docker run -d \
   -e OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD} \
   -e OWNCLOUD_REDIS_ENABLED=true \
   -e OWNCLOUD_REDIS_HOST=redis \
-  --volume $(pwd)/data:/mnt/data \
+  --volume owncloud_files:/mnt/data \
   owncloud/server:${OWNCLOUD_VERSION}
 ```
 
@@ -122,7 +132,7 @@ docker-compose down
 docker-compose logs
 ```
 
-By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the `./data` and `./mysql` directories are used to store the contents persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
+By default `docker-compose up` will start Redis, MariaDB and ownCloud containers, the content gets stored in named volumes persistently. The container ports `80` and `443` are bound as configured in the `.env` file.
 
 ### Commandline commands
 
@@ -151,7 +161,7 @@ Installed apps or config.php changes inside the docker container are retained ac
 
 ### Custom certificates
 
-By default we generate self-signed certificates on startup of the containers, you can replace the certificates with your own certificates. Place them into `./data/certs/ssl-cert.crt` and `./data/certs/ssl-cert.key`.
+By default we generate self-signed certificates on startup of the containers, you can replace the certificates with your own certificates. You can use `docker cp` to place them into the directory, e.g. `docker cp ssl-cert.crt $(docker-compose ps -q owncloud):/mnt/data/certs/` and `docker cp ssl-cert.key $(docker-compose ps -q owncloud):/mnt/data/certs/`.
 
 
 ### Accessing the ownCloud

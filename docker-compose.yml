@@ -1,4 +1,14 @@
-version: '3'
+version: '2.1'
+
+volumes:
+  files:
+    driver: local
+  mysql:
+    driver: local
+  backup:
+    driver: local
+  redis:
+    driver: local
 
 services:
   owncloud:
@@ -23,12 +33,12 @@ services:
       - OWNCLOUD_REDIS_ENABLED=true
       - OWNCLOUD_REDIS_HOST=redis
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/status.php"]
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
       interval: 30s
       timeout: 10s
       retries: 5
     volumes:
-      - ./data:/mnt/data
+      - files:/mnt/data
 
   db:
     image: webhippie/mariadb:latest
@@ -48,17 +58,18 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
+      - backup:/var/lib/backup
 
   redis:
     image: webhippie/redis:latest
     restart: always
     environment:
-      - REDIS_MAXCONN=10000
+      - REDIS_DATABASES=1
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
       timeout: 10s
       retries: 5
     volumes:
-      - ./redis:/var/lib/redis
+      - redis:/var/lib/redis
