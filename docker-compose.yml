@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.1'
 
 volumes:
   files:
@@ -12,11 +12,11 @@ volumes:
 
 services:
   owncloud:
-    image: owncloud/server:${VERSION}
+    image: owncloud/server:${VERSION:-latest}
     restart: always
     ports:
-      - ${HTTPS_PORT}:443
-      - ${HTTP_PORT}:80
+      - ${HTTPS_PORT:-443}:443
+      - ${HTTP_PORT:-80}:80
     depends_on:
       - db
       - redis
@@ -26,8 +26,8 @@ services:
       - OWNCLOUD_DB_USERNAME=owncloud
       - OWNCLOUD_DB_PASSWORD=owncloud
       - OWNCLOUD_DB_HOST=db
-      - OWNCLOUD_ADMIN_USERNAME=${ADMIN_USERNAME}
-      - OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - OWNCLOUD_ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - OWNCLOUD_UTF8MB4_ENABLED=true
       - OWNCLOUD_REDIS_ENABLED=true
       - OWNCLOUD_REDIS_HOST=redis
