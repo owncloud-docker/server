@@ -66,8 +66,8 @@ pipeline:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - |
         for IMAGE in ${IMAGE_TAGS}; do
-          docker tag owncloud/owncloud:latest owncloud/owncloud:$IMAGE
-          docker push owncloud/owncloud:$IMAGE
+          docker tag owncloud/server:latest owncloud/server:$IMAGE
+          docker push owncloud/server:$IMAGE
         done
     when:
       event: [ push ]
