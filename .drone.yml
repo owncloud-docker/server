@@ -54,7 +54,7 @@ pipeline:
     pull: true
     commands:
       - wait-for-it -t 600 docker:8000
-      - curl -sSIf http://docker:8000/status.php
+      - curl -sSf http://docker:8000/status.php
 
   publish:
     image: toolhippie/docker:latest
