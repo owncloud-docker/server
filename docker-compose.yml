@@ -33,7 +33,7 @@ services:
       - OWNCLOUD_REDIS_ENABLED=true
       - OWNCLOUD_REDIS_HOST=redis
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
       timeout: 10s
       retries: 5
