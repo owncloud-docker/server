@@ -40,7 +40,7 @@ The available versions should be already pushed to the Docker Hub, but in case y
 
 ```
 wget https://download.owncloud.org/community/owncloud-10.0.7.tar.bz2
-wget https://github.com/owncloud/user_ldap/releases/download/0.10.0/user_ldap.tar.gz
+wget https://github.com/owncloud/user_ldap/releases/download/v0.11.0/user_ldap.tar.gz
 
 docker pull owncloud/base:latest
 docker build -t owncloud/server:latest .
