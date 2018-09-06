@@ -1,0 +1,103 @@
+workspace:
+  base: /drone
+  path: src/github.com/owncloud-docker/server
+
+branches:
+  - testing
+
+clone:
+  git:
+    image: plugins/git:1
+    pull: true
+
+pipeline:
+  tarball:
+    image: plugins/download:latest
+    pull: true
+    secrets: [ download_username, download_password ]
+    source: https://download.owncloud.org/community/testing/owncloud-${CORE_VERSION}.tar.bz2
+    sha256: ${CORE_CHECKSUM}
+
+  ldap:
+    image: plugins/download:latest
+    pull: true
+    source: https://github.com/owncloud/user_ldap/releases/download/${LDAP_VERSION}/user_ldap.tar.gz
+    sha256: ${LDAP_CHECKSUM}
+
+  wait:
+    image: owncloud/ubuntu:latest
+    pull: true
+    commands:
+      - wait-for-it -t 600 docker:2375
+
+  build:
+    image: toolhippie/docker:latest
+    pull: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker build -t owncloud/server:latest .
+
+  server:
+    image: toolhippie/docker:latest
+    pull: true
+    detach: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker run -p 8000:80 owncloud/server:latest
+
+  test:
+    image: owncloud/ubuntu:latest
+    pull: true
+    commands:
+      - wait-for-it -t 600 docker:8000
+      - curl -sSf http://docker:8000/status.php
+
+  publish:
+    image: toolhippie/docker:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - |
+        for IMAGE in ${IMAGE_TAGS}; do
+          docker tag owncloud/server:latest owncloud/server:$IMAGE
+          docker push owncloud/server:$IMAGE
+        done
+    when:
+      event: [ push ]
+
+  microbadger:
+    image: plugins/webhook:1
+    pull: true
+    secrets: [ webhook_urls ]
+    when:
+      local: false
+      event: [ push ]
+
+  slack:
+    image: plugins/slack:1
+    pull: true
+    secrets: [ slack_webhook ]
+    channel: docker
+    template: >
+      *{{build.status}}* <{{build.link}}|{{repo.owner}}/{{repo.name}}#{{truncate build.commit 8}}> @ ${CORE_VERSION}
+    when:
+      local: false
+      event: [ push ]
+      status: [ changed, failure ]
+
+services:
+  docker:
+    image: docker:18.04-dind
+
+matrix:
+  include:
+    - CORE_VERSION: 10.0.10RC1
+      CORE_CHECKSUM: c646fb71a212baea97d12235c187c81248ab3968984898a87f83f2f8588f15a0
+      LDAP_VERSION: v0.11.0
+      LDAP_CHECKSUM: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      IMAGE_TAGS: 10.0.10rc1
