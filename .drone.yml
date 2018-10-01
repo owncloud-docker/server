@@ -15,14 +15,14 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/owncloud-${CORE_VERSION}.tar.bz2
-    sha256: ${CORE_CHECKSUM}
+    source: https://download.owncloud.org/community/owncloud-10.0.10.tar.bz2
+    sha256: a2efe484678c1659b9640ea247746a2174d77870d29c7d60abd565c20eb5aa84
 
   ldap:
     image: plugins/download:1
     pull: true
-    source: https://github.com/owncloud/user_ldap/releases/download/${LDAP_VERSION}/user_ldap.tar.gz
-    sha256: ${LDAP_CHECKSUM}
+    source: https://github.com/owncloud/user_ldap/releases/download/v0.11.0/user_ldap.tar.gz
+    sha256: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
 
   wait:
     image: owncloud/ubuntu:latest
@@ -36,7 +36,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker build -t owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER} .
+      - docker build -t owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} .
 
   server:
     image: toolhippie/docker:latest
@@ -45,7 +45,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker run -p 8000:80 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
+      - docker run -p 8000:80 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
 
   test:
     image: owncloud/ubuntu:latest
@@ -62,7 +62,7 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker push owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
+      - docker push owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
     when:
       event: [ push, pull_request ]
 
@@ -78,7 +78,7 @@ pipeline:
       - CLAIR_ADDR=clair.owncloud.com
       - CLAIR_OUTPUT=High
     commands:
-      - klar owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
+      - klar owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
     when:
       event: [ push, pull_request ]
 
@@ -90,11 +90,12 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - |
-        for IMAGE in ${IMAGE_TAGS}; do
-          docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER} owncloud/server:$IMAGE
-          docker push owncloud/server:$IMAGE
-        done
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest
+      - docker push owncloud/server:latest
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0
+      - docker push owncloud/server:10.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0.10
+      - docker push owncloud/server:10.0.10
     when:
       event: [ push ]
 
@@ -105,7 +106,7 @@ pipeline:
     commands:
       - |
         TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
-        curl -sSf -o /dev/null -H "Authorization: JWT $TOKEN" -H "Content-Type: application/json" -X DELETE https://hub.docker.com/v2/repositories/owncloud/server/tags/${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}/
+        curl -sSf -o /dev/null -H "Authorization: JWT $TOKEN" -H "Content-Type: application/json" -X DELETE https://hub.docker.com/v2/repositories/owncloud/server/tags/${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}/
     when:
       event: [ push, pull_request ]
       status: [ success, failure ]
@@ -131,53 +132,3 @@ pipeline:
 services:
   docker:
     image: docker:18.04-dind
-
-matrix:
-  include:
-    - CORE_VERSION: 10.0.9
-      CORE_CHECKSUM: 767faedf7b236b469e71ad73a70c6250fc33fd493708d95cf31b0b58b4710973
-      LDAP_VERSION: v0.11.0
-      LDAP_CHECKSUM: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
-      IMAGE_TAGS: 10.0.9 10.0 latest
-
-    - CORE_VERSION: 10.0.8
-      CORE_CHECKSUM: 9eef77a171cf69fc89b0628b083b4b1dd15eec375599c7eb5ac0b6d37ab6f903
-      LDAP_VERSION: v0.11.0
-      LDAP_CHECKSUM: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
-      IMAGE_TAGS: 10.0.8
-
-    - CORE_VERSION: 10.0.7
-      CORE_CHECKSUM: 7c822aa163182391ae3213a5465151d7cc7dd0990666315da0d8e118269d0fb0
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.7
-
-    - CORE_VERSION: 10.0.6
-      CORE_CHECKSUM: de5153f059a7cecf5f191de053ff3ab4dea21ffba2b3ef207309e58443a6e6c4
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.6
-
-    - CORE_VERSION: 10.0.4
-      CORE_CHECKSUM: e150f0b413376b0da5225dcdc372938c49ca702cab3759e59db2d3ab79b2bcb8
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.4
-
-    - CORE_VERSION: 10.0.3
-      CORE_CHECKSUM: f489e072090d51e47b390109297d7aaee56dd39c42d8d149fb0b7d002c3ac38d
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.3
-
-    - CORE_VERSION: 10.0.2
-      CORE_CHECKSUM: 3645214d6b9527dc218b4cdcbbf1d01809aaba14435d644b545bee0274c88fd0
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.2
-
-    - CORE_VERSION: 10.0.1
-      CORE_CHECKSUM: ae69444e0eabd085682fd8abc8f4addfcaa5213b5d40819f83dd8aa5f8dad896
-      LDAP_VERSION: v0.10.0
-      LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
-      IMAGE_TAGS: 10.0.1

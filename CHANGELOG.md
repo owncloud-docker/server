@@ -5,4 +5,7 @@
 * Added
   * Integrate clair vuln checks
 * Changed
-  * Refer to 10.0.9 within readme
+  * Upgrade ownCloud from 10.0.9 to 10.0.10
+  * Switch base image from xenial to bionic
+* Removed
+  * Dropped matrix builds
