@@ -12,14 +12,14 @@ clone:
 
 pipeline:
   tarball:
-    image: plugins/download:latest
+    image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
     source: https://download.owncloud.org/community/owncloud-${CORE_VERSION}.tar.bz2
     sha256: ${CORE_CHECKSUM}
 
   ldap:
-    image: plugins/download:latest
+    image: plugins/download:1
     pull: true
     source: https://github.com/owncloud/user_ldap/releases/download/${LDAP_VERSION}/user_ldap.tar.gz
     sha256: ${LDAP_CHECKSUM}
@@ -36,7 +36,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker build -t owncloud/server:latest .
+      - docker build -t owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER} .
 
   server:
     image: toolhippie/docker:latest
@@ -45,7 +45,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker run -p 8000:80 owncloud/server:latest
+      - docker run -p 8000:80 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
 
   test:
     image: owncloud/ubuntu:latest
@@ -54,6 +54,34 @@ pipeline:
       - wait-for-it -t 600 docker:8000
       - curl -sSf http://docker:8000/status.php
 
+  prepublish:
+    image: toolhippie/docker:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - docker push owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
+    when:
+      event: [ push, pull_request ]
+
+  clair:
+    image: toolhippie/klar:latest
+    pull: true
+    secrets:
+      - source: docker_username
+        target: docker_user
+      - source: docker_password
+        target: docker_password
+    environment:
+      - CLAIR_ADDR=clair.owncloud.com
+      - CLAIR_OUTPUT=High
+    commands:
+      - klar owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}
+    when:
+      event: [ push, pull_request ]
+
   publish:
     image: toolhippie/docker:latest
     pull: true
@@ -61,14 +89,26 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
       - |
         for IMAGE in ${IMAGE_TAGS}; do
-          docker tag owncloud/server:latest owncloud/server:$IMAGE
+          docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER} owncloud/server:$IMAGE
           docker push owncloud/server:$IMAGE
         done
     when:
       event: [ push ]
+
+  cleanup:
+    image: toolhippie/jq:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    commands:
+      - |
+        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+        curl -sSf -o /dev/null -H "Authorization: JWT $TOKEN" -H "Content-Type: application/json" -X DELETE https://hub.docker.com/v2/repositories/owncloud/server/tags/${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}-${DRONE_JOB_NUMBER}/
+    when:
+      event: [ push, pull_request ]
+      status: [ success, failure ]
 
   microbadger:
     image: plugins/webhook:1
@@ -83,8 +123,6 @@ pipeline:
     pull: true
     secrets: [ slack_webhook ]
     channel: docker
-    template: >
-      *{{build.status}}* <{{build.link}}|{{repo.owner}}/{{repo.name}}#{{truncate build.commit 8}}> @ ${CORE_VERSION}
     when:
       local: false
       event: [ push ]
@@ -97,15 +135,15 @@ services:
 matrix:
   include:
     - CORE_VERSION: 10.0.9
-      CORE_CHECKSUM: 9eef77a171cf69fc89b0628b083b4b1dd15eec375599c7eb5ac0b6d37ab6f903
+      CORE_CHECKSUM: 767faedf7b236b469e71ad73a70c6250fc33fd493708d95cf31b0b58b4710973
       LDAP_VERSION: v0.11.0
-      LDAP_CHECKSUM: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      LDAP_CHECKSUM: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
       IMAGE_TAGS: 10.0.9 10.0 latest
 
     - CORE_VERSION: 10.0.8
       CORE_CHECKSUM: 9eef77a171cf69fc89b0628b083b4b1dd15eec375599c7eb5ac0b6d37ab6f903
       LDAP_VERSION: v0.11.0
-      LDAP_CHECKSUM: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      LDAP_CHECKSUM: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
       IMAGE_TAGS: 10.0.8
 
     - CORE_VERSION: 10.0.7
@@ -143,9 +181,3 @@ matrix:
       LDAP_VERSION: v0.10.0
       LDAP_CHECKSUM: a779b3d435c170d74365853b66962e8020712c7775a0a2399519eea4bf93585d
       IMAGE_TAGS: 10.0.1
-
-    # - CORE_VERSION: 10.0.0
-    #   CORE_CHECKSUM: 488fc136a8000b42c447e224e69f16f5c31a231eea3038614fdea5e0c2218457
-    #   LDAP_VERSION: v10.0.0RC2
-    #   LDAP_CHECKSUM: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    #   IMAGE_TAGS: 10.0.0

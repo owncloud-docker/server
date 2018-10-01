@@ -31,6 +31,7 @@ To get an overview about the available versions please take a look at the [GitHu
 ## Inherited environment variables
 
 * [owncloud/base](https://github.com/owncloud-docker/base#available-environment-variables)
+* [owncloud/php](https://github.com/owncloud-docker/php#available-environment-variables)
 * [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#available-environment-variables)
 
 
@@ -39,7 +40,7 @@ To get an overview about the available versions please take a look at the [GitHu
 The available versions should be already pushed to the Docker Hub, but in case you want to try a change locally you can always execute the following command (run from a cloned GitHub repository) to get an image built locally:
 
 ```
-wget https://download.owncloud.org/community/owncloud-10.0.8.tar.bz2
+wget https://download.owncloud.org/community/owncloud-10.0.10.tar.bz2
 wget https://github.com/owncloud/user_ldap/releases/download/v0.11.0/user_ldap.tar.gz
 
 docker pull owncloud/base:xenial
