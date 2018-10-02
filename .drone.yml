@@ -1,0 +1,123 @@
+workspace:
+  base: /drone
+  path: src/github.com/owncloud-docker/server
+
+branches:
+  - daily-stable10
+
+clone:
+  git:
+    image: plugins/git:1
+    pull: true
+
+pipeline:
+  tarball:
+    image: plugins/download:1
+    pull: true
+    secrets: [ download_username, download_password ]
+    source: https://download.owncloud.org/community/owncloud-daily-stable10.tar.bz2
+
+  wait:
+    image: owncloud/ubuntu:latest
+    pull: true
+    commands:
+      - wait-for-it -t 600 docker:2375
+
+  build:
+    image: toolhippie/docker:latest
+    pull: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker build -t owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} .
+
+  server:
+    image: toolhippie/docker:latest
+    pull: true
+    detach: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker run -p 8000:80 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+
+  test:
+    image: owncloud/ubuntu:latest
+    pull: true
+    commands:
+      - wait-for-it -t 600 docker:8000
+      - curl -sSf http://docker:8000/status.php
+
+  prepublish:
+    image: toolhippie/docker:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - docker push owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+    when:
+      event: [ push, pull_request ]
+
+  clair:
+    image: toolhippie/klar:latest
+    pull: true
+    secrets:
+      - source: docker_username
+        target: docker_user
+      - source: docker_password
+        target: docker_password
+    environment:
+      - CLAIR_ADDR=clair.owncloud.com
+      - CLAIR_OUTPUT=High
+    commands:
+      - klar owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+    when:
+      event: [ push, pull_request ]
+
+  publish:
+    image: toolhippie/docker:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:daily-stable10
+      - docker push owncloud/server:daily-stable10
+    when:
+      event: [ push ]
+
+  cleanup:
+    image: toolhippie/jq:latest
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    commands:
+      - |
+        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+        curl -sSf -o /dev/null -H "Authorization: JWT $TOKEN" -H "Content-Type: application/json" -X DELETE https://hub.docker.com/v2/repositories/owncloud/server/tags/${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}/
+    when:
+      event: [ push, pull_request ]
+      status: [ success, failure ]
+
+  microbadger:
+    image: plugins/webhook:1
+    pull: true
+    secrets: [ webhook_urls ]
+    when:
+      local: false
+      event: [ push ]
+
+  slack:
+    image: plugins/slack:1
+    pull: true
+    secrets: [ slack_webhook ]
+    channel: docker
+    when:
+      local: false
+      event: [ push ]
+      status: [ changed, failure ]
+
+services:
+  docker:
+    image: docker:18.04-dind
