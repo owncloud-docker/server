@@ -92,10 +92,14 @@ pipeline:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest
       - docker push owncloud/server:latest
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0
-      - docker push owncloud/server:10.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest-$(date '+%Y%m%d')
+      - docker push owncloud/server:latest-$(date '+%Y%m%d')
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0.10
       - docker push owncloud/server:10.0.10
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0.10-$(date '+%Y%m%d')
+      - docker push owncloud/server:10.0.10-$(date '+%Y%m%d')
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0
+      - docker push owncloud/server:10.0
     when:
       event: [ push ]
 
