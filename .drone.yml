@@ -38,7 +38,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker run -p 8000:80 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+      - docker run -p 8000:8080 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
 
   test:
     image: owncloud/ubuntu:latest
