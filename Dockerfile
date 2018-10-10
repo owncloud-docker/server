@@ -7,5 +7,7 @@ LABEL maintainer="ownCloud DevOps <devops@owncloud.com>" \
 
 ADD owncloud-*.tar.bz2 /var/www/
 ADD user_ldap.tar.gz /var/www/owncloud/apps/
+COPY rootfs /
 
-RUN find /var/www/owncloud \( \! -user www-data -o \! -group www-data \) -print0 | xargs -r -0 chown www-data:www-data
+RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \
+  chmod g+w /var/www/owncloud
