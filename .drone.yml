@@ -38,21 +38,126 @@ pipeline:
     commands:
       - docker build -t owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} .
 
-  server:
+  smoketest-prepare-testsuite:
+    image: owncloudci/php
+    pull: true
+    commands:
+      - mkdir -p /drone/owncloud-smoketest
+      - wget -qO- "https://download.owncloud.org/community/owncloud-daily-stable10-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
+      - cat /drone/owncloud-smoketest/version.php
+      - mkdir -p /drone/owncloud-smoketest/vendor-bin/behat
+      - wget https://raw.githubusercontent.com/owncloud/core/stable10/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
+      - cd /drone/owncloud-smoketest/vendor-bin/behat/ && composer install
+
+  smoketest-create-docker-network:
+    image: toolhippie/docker:latest
+    pull: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker network create oc
+
+  smoketest-redis:
     image: toolhippie/docker:latest
     pull: true
     detach: true
     environment:
       - DOCKER_HOST=tcp://docker:2375
     commands:
-      - docker run -p 8000:8080 owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+      - docker run --network=oc --name redis --network-alias redis library/redis:4
 
-  test:
+  smoketest-database:
+    image: toolhippie/docker:latest
+    pull: true
+    detach: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+      - MYSQL_ROOT_PASSWORD=owncloud
+      - MYSQL_USER=owncloud
+      - MYSQL_PASSWORD=owncloud
+      - MYSQL_DATABASE=owncloud
+    commands:
+      - |
+        docker run --network=oc --name db --network-alias db \
+        -e MYSQL_ROOT_PASSWORD \
+        -e MYSQL_USER \
+        -e MYSQL_PASSWORD \
+        -e MYSQL_DATABASE \
+        library/mysql:5.7
+
+  smoketest-mailhog:
+    image: toolhippie/docker:latest
+    pull: true
+    detach: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker run -p 1025:1025 -p 8025:8025 --network=oc --network-alias email --name email mailhog/mailhog:latest
+
+  smoketest-server:
+    image: toolhippie/docker:latest
+    pull: true
+    detach: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+      - DEBUG=true
+      - OWNCLOUD_REDIS_HOST=redis
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=owncloud
+      - OWNCLOUD_DB_PASSWORD=owncloud
+      - OWNCLOUD_DB_HOST=db
+      - OWNCLOUD_APPS_INSTALL=https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz
+      - OWNCLOUD_APPS_ENABLE=testing
+    commands:
+      - |
+        docker run \
+        --network=oc \
+        --name owncloud \
+        -e DEBUG \
+        -p 8000:8080 \
+        -e OWNCLOUD_APPS_INSTALL \
+        -e OWNCLOUD_APPS_ENABLE \
+        -e OWNCLOUD_REDIS_HOST \
+        -e OWNCLOUD_DB_TYPE \
+        -e OWNCLOUD_DB_NAME \
+        -e OWNCLOUD_DB_USERNAME \
+        -e OWNCLOUD_DB_PASSWORD \
+        -e OWNCLOUD_DB_HOST \
+        --network=oc \
+        owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
+
+  wait-for-owncloud:
     image: owncloud/ubuntu:latest
     pull: true
     commands:
       - wait-for-it -t 600 docker:8000
-      - curl -sSf http://docker:8000/status.php
+
+  run-api-smoke-test:
+    image: owncloudci/php
+    pull: true
+    environment:
+      - TEST_SERVER_URL=http://docker:8000
+      - SKELETON_DIR=/mnt/data/apps/testing/data/apiSkeleton
+    commands:
+      - cd /drone/owncloud-smoketest/tests/acceptance
+      - bash run.sh --remote --tags "@smokeTest&&~@skip" --type api
+
+  run-ui-smoke-test:
+    image: owncloudci/php
+    pull: true
+    environment:
+      - BROWSER=chrome
+      - SELENIUM_HOST=selenium
+      - SELENIUM_PORT=4444
+      - PLATFORM=Linux
+      - MAILHOG_HOST=email
+      - LOCAL_MAILHOG_HOST=docker
+      - TEST_SERVER_URL=http://docker:8000
+      - SKELETON_DIR=/mnt/data/apps/testing/data/webUISkeleton
+    commands:
+      - cd /drone/owncloud-smoketest/tests/acceptance
+      - bash run.sh --remote --tags "@smokeTest&&~@skip" --type webUI
 
   prepublish:
     image: toolhippie/docker:latest
@@ -136,3 +241,8 @@ pipeline:
 services:
   docker:
     image: docker:18.04-dind
+    pull: true
+
+  selenium:
+    image: selenium/standalone-chrome-debug:latest
+    pull: true
