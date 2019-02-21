@@ -15,14 +15,15 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/owncloud-10.0.10.tar.bz2
-    sha256: a2efe484678c1659b9640ea247746a2174d77870d29c7d60abd565c20eb5aa84
+    source: https://download.owncloud.org/community/owncloud-10.1.0.tar.bz2
+    sha256: e45db1e3f7d7649a61ad16b2391e3a582f49012300540847e8fc656789e123ff
 
   ldap:
     image: plugins/download:1
     pull: true
-    source: https://github.com/owncloud/user_ldap/releases/download/v0.11.0/user_ldap.tar.gz
-    sha256: f89b4ea5b519f30b2ceefca2cca82af5f961dc04c29dea2a7c477b1d11f1c303
+    source: https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0
+    sha256: f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3
+    destination: user_ldap.tar.gz
 
   wait:
     image: owncloud/ubuntu:latest
@@ -199,12 +200,12 @@ pipeline:
       - docker push owncloud/server:latest
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest-$(date '+%Y%m%d')
       - docker push owncloud/server:latest-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0.10
-      - docker push owncloud/server:10.0.10
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0.10-$(date '+%Y%m%d')
-      - docker push owncloud/server:10.0.10-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.0
-      - docker push owncloud/server:10.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1.0
+      - docker push owncloud/server:10.1.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1.0-$(date '+%Y%m%d')
+      - docker push owncloud/server:10.1.0-$(date '+%Y%m%d')
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1
+      - docker push owncloud/server:10.1
     when:
       event: [ push ]
 
