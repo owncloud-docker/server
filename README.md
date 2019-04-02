@@ -144,7 +144,7 @@ You can run `occ` commands inside the ownCloud docker image, without caring for 
 occ user:report
 ```
 
-You can also run commands via `docker exec`, or `docker-compse exec`:
+You can also run commands via `docker exec`, or `docker-compose exec`:
 
 ```
 docker exec -ti example_owncloud_1 occ user:report
