@@ -38,6 +38,9 @@ services:
       retries: 5
     volumes:
       - files:/mnt/data
+    networks:
+      - front
+      - back
 
   db:
     image: webhippie/mariadb:latest
@@ -57,6 +60,8 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - backup:/var/lib/backup
+    networks:
+      - back
 
   redis:
     image: webhippie/redis:latest
@@ -70,3 +75,22 @@ services:
       retries: 5
     volumes:
       - redis:/var/lib/redis
+    networks:
+      - back
+
+networks:
+    front:
+      driver: bridge
+# Note: below is optional, if you have an existing ingress bridge
+#      config:
+#        external:
+#            name: ingress
+    back:
+      driver: bridge
+      ipam:
+        driver: default
+# Note: below is optional, if you'd like the back bridge to use fewer IP addresses
+#        config:
+#        - subnet: 172.16.128.0/24
+#          gateway: 172.16.128.1
+      internal: true
