@@ -15,8 +15,8 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/owncloud-10.1.1.tar.bz2
-    sha256: c65e253fa3ea6a0bd2d3a164a7408c268d4efa0d7687c06c2bba241fc618d6dd
+    source: https://download.owncloud.org/community/owncloud-10.2.0.tar.bz2
+    sha256: 9511d58278797d9c9380062a3f62f257124871d194de8949df94bb191681a6d3
 
   ldap:
     image: plugins/download:1
@@ -200,12 +200,12 @@ pipeline:
       - docker push owncloud/server:latest
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest-$(date '+%Y%m%d')
       - docker push owncloud/server:latest-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1.1
-      - docker push owncloud/server:10.1.1
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1.1-$(date '+%Y%m%d')
-      - docker push owncloud/server:10.1.1-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.1
-      - docker push owncloud/server:10.1
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.0
+      - docker push owncloud/server:10.2.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.0-$(date '+%Y%m%d')
+      - docker push owncloud/server:10.2.0-$(date '+%Y%m%d')
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2
+      - docker push owncloud/server:10.2
     when:
       event: [ push ]
 
