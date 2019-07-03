@@ -44,10 +44,10 @@ pipeline:
     pull: true
     commands:
       - mkdir -p /drone/owncloud-smoketest
-      - wget -qO- "https://download.owncloud.org/community/owncloud-daily-stable10-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
+      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.2.1-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
       - cat /drone/owncloud-smoketest/version.php
       - mkdir -p /drone/owncloud-smoketest/vendor-bin/behat
-      - wget https://raw.githubusercontent.com/owncloud/core/stable10/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
+      - wget https://raw.githubusercontent.com/owncloud/core/release-10.2.1/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
       - cd /drone/owncloud-smoketest/vendor-bin/behat/ && composer install
 
   smoketest-create-docker-network:
