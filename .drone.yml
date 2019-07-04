@@ -15,8 +15,8 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/owncloud-10.2.0.tar.bz2
-    sha256: 9511d58278797d9c9380062a3f62f257124871d194de8949df94bb191681a6d3
+    source: https://download.owncloud.org/community/owncloud-10.2.1.tar.bz2
+    sha256: cc3929d1b0269122bbbf7a4e90f1d264e28e6d4352478e85ea51f8586bafc277
 
   ldap:
     image: plugins/download:1
@@ -44,10 +44,10 @@ pipeline:
     pull: true
     commands:
       - mkdir -p /drone/owncloud-smoketest
-      - wget -qO- "https://download.owncloud.org/community/owncloud-daily-stable10-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
+      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.2.1-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
       - cat /drone/owncloud-smoketest/version.php
       - mkdir -p /drone/owncloud-smoketest/vendor-bin/behat
-      - wget https://raw.githubusercontent.com/owncloud/core/stable10/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
+      - wget https://raw.githubusercontent.com/owncloud/core/release-10.2.1/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
       - cd /drone/owncloud-smoketest/vendor-bin/behat/ && composer install
 
   smoketest-create-docker-network:
@@ -200,10 +200,10 @@ pipeline:
       - docker push owncloud/server:latest
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest-$(date '+%Y%m%d')
       - docker push owncloud/server:latest-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.0
-      - docker push owncloud/server:10.2.0
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.0-$(date '+%Y%m%d')
-      - docker push owncloud/server:10.2.0-$(date '+%Y%m%d')
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.1
+      - docker push owncloud/server:10.2.1
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.1-$(date '+%Y%m%d')
+      - docker push owncloud/server:10.2.1-$(date '+%Y%m%d')
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2
       - docker push owncloud/server:10.2
     when:
@@ -245,5 +245,5 @@ services:
     pull: true
 
   selenium:
-    image: selenium/standalone-chrome-debug:latest
+    image: selenium/standalone-chrome-debug:3.141.59-oxygen
     pull: true
