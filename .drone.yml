@@ -15,7 +15,7 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/testing/owncloud-10.2.0RC2.tar.bz2
+    source: https://download.owncloud.org/community/testing/owncloud-10.2.1RC3.tar.bz2
     sha256: c58b073fa0e0f3089c01ba9fc3be409d5413a152a3c019f8236f1a17c796a0bd
 
   ldap:
@@ -196,8 +196,8 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.0-rc2
-      - docker push owncloud/server:10.2.0-rc2
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.1-rc3
+      - docker push owncloud/server:10.2.1-rc3
     when:
       event: [ push ]
 

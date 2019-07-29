@@ -6,6 +6,8 @@
   * Link to docuemntation for installation
 * Removed
   * Drop docker and docker-compose examples
+* Changed
+  * Update to 10.2.1-rc3
 
 ## 2018-10-09
 
