@@ -196,7 +196,7 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-alpha
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-alpha1
       - docker push owncloud/server:10.3.0-alpha1
     when:
       event: [ push ]
