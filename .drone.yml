@@ -197,7 +197,7 @@ pipeline:
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-alpha
-      - docker push owncloud/server:10.3.0-alpha
+      - docker push owncloud/server:10.3.0-alpha1
     when:
       event: [ push ]
 
@@ -237,5 +237,5 @@ services:
     pull: true
 
   selenium:
-    image: selenium/standalone-chrome-debug:latest
+    image: selenium/standalone-chrome-debug:3.141.59-oxygen
     pull: true
