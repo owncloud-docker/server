@@ -78,12 +78,12 @@ pipeline:
       - MYSQL_PASSWORD=owncloud
       - MYSQL_DATABASE=owncloud
     commands:
-      - |
-        docker run --network=oc --name db --network-alias db \
-        -e MYSQL_ROOT_PASSWORD \
-        -e MYSQL_USER \
-        -e MYSQL_PASSWORD \
-        -e MYSQL_DATABASE \
+      - >
+        docker run --network=oc --name db --network-alias db
+        -e MYSQL_ROOT_PASSWORD
+        -e MYSQL_USER
+        -e MYSQL_PASSWORD
+        -e MYSQL_DATABASE
         library/mysql:5.7
 
   smoketest-mailhog:
@@ -111,21 +111,21 @@ pipeline:
       - OWNCLOUD_APPS_INSTALL=https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz
       - OWNCLOUD_APPS_ENABLE=testing
     commands:
-      - |
-        docker run \
-        --network=oc \
-        --name owncloud \
-        -e DEBUG \
-        -p 8000:8080 \
-        -e OWNCLOUD_APPS_INSTALL \
-        -e OWNCLOUD_APPS_ENABLE \
-        -e OWNCLOUD_REDIS_HOST \
-        -e OWNCLOUD_DB_TYPE \
-        -e OWNCLOUD_DB_NAME \
-        -e OWNCLOUD_DB_USERNAME \
-        -e OWNCLOUD_DB_PASSWORD \
-        -e OWNCLOUD_DB_HOST \
-        --network=oc \
+      - >
+        docker run
+        --network=oc
+        --name owncloud
+        -e DEBUG
+        -p 8000:8080
+        -e OWNCLOUD_APPS_INSTALL
+        -e OWNCLOUD_APPS_ENABLE
+        -e OWNCLOUD_REDIS_HOST
+        -e OWNCLOUD_DB_TYPE
+        -e OWNCLOUD_DB_NAME
+        -e OWNCLOUD_DB_USERNAME
+        -e OWNCLOUD_DB_PASSWORD
+        -e OWNCLOUD_DB_HOST
+        --network=oc
         owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}
 
   wait-for-owncloud:
