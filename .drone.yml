@@ -15,8 +15,8 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/testing/owncloud-10.3.0alpha2.tar.bz2
-    sha256: 4611086b5652e2f0245f3ca0a2f7c907fec4ef4c4c0fdacfd30b04e3b916ea95
+    source: https://download.owncloud.org/community/testing/owncloud-10.3.0RC1.tar.bz2
+    sha256: 3a142cb718ba4410115ec2a4d76a97c7fc920a223984e9e784b80571fb85d2a5
 
   ldap:
     image: plugins/download:1
@@ -44,7 +44,7 @@ pipeline:
     pull: true
     commands:
       - mkdir -p /drone/owncloud-smoketest
-      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.3.0alpha2-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
+      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.3.0RC1-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
       - cat /drone/owncloud-smoketest/version.php
       - mkdir -p /drone/owncloud-smoketest/vendor-bin/behat
       - wget https://raw.githubusercontent.com/owncloud/core/stable10/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
@@ -196,8 +196,8 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-alpha2
-      - docker push owncloud/server:10.3.0-alpha2
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-rc1
+      - docker push owncloud/server:10.3.0-rc1
     when:
       event: [ push ]
 
