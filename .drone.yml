@@ -15,8 +15,8 @@ pipeline:
     image: plugins/download:1
     pull: true
     secrets: [ download_username, download_password ]
-    source: https://download.owncloud.org/community/owncloud-10.2.1.tar.bz2
-    sha256: cc3929d1b0269122bbbf7a4e90f1d264e28e6d4352478e85ea51f8586bafc277
+    source: https://download.owncloud.org/community/owncloud-10.3.0.tar.bz2
+    sha256: 3fc96799af93e10f1228970371668c83d8c07a3fdca67369105e56420ff36e64
 
   ldap:
     image: plugins/download:1
@@ -44,10 +44,10 @@ pipeline:
     pull: true
     commands:
       - mkdir -p /drone/owncloud-smoketest
-      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.2.1-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
+      - wget -qO- "https://download.owncloud.org/community/testing/owncloud-10.3.0-qa.tar.bz2" | tar -xj -C /drone/owncloud-smoketest --strip 1
       - cat /drone/owncloud-smoketest/version.php
       - mkdir -p /drone/owncloud-smoketest/vendor-bin/behat
-      - wget https://raw.githubusercontent.com/owncloud/core/release-10.2.1/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
+      - wget https://raw.githubusercontent.com/owncloud/core/v10.3.0/vendor-bin/behat/composer.json -O /drone/owncloud-smoketest/vendor-bin/behat/composer.json
       - cd /drone/owncloud-smoketest/vendor-bin/behat/ && composer install
 
   smoketest-create-docker-network:
@@ -78,7 +78,7 @@ pipeline:
       - MYSQL_PASSWORD=owncloud
       - MYSQL_DATABASE=owncloud
     commands:
-      - |
+      - >
         docker run --network=oc --name db --network-alias db \
         -e MYSQL_ROOT_PASSWORD \
         -e MYSQL_USER \
@@ -111,7 +111,7 @@ pipeline:
       - OWNCLOUD_APPS_INSTALL=https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz
       - OWNCLOUD_APPS_ENABLE=testing
     commands:
-      - |
+      - >
         docker run \
         --network=oc \
         --name owncloud \
@@ -200,12 +200,12 @@ pipeline:
       - docker push owncloud/server:latest
       - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:latest-$(date '+%Y%m%d')
       - docker push owncloud/server:latest-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.1
-      - docker push owncloud/server:10.2.1
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2.1-$(date '+%Y%m%d')
-      - docker push owncloud/server:10.2.1-$(date '+%Y%m%d')
-      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.2
-      - docker push owncloud/server:10.2
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0
+      - docker push owncloud/server:10.3.0
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3.0-$(date '+%Y%m%d')
+      - docker push owncloud/server:10.3.0-$(date '+%Y%m%d')
+      - docker tag owncloud/server:${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER} owncloud/server:10.3
+      - docker push owncloud/server:10.3
     when:
       event: [ push ]
 
@@ -214,8 +214,8 @@ pipeline:
     pull: true
     secrets: [ docker_username, docker_password ]
     commands:
-      - |
-        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+      - >
+        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' https://hub.docker.com/v2/users/login/ | jq -r .token) \
         curl -sSf -o /dev/null -H "Authorization: JWT $TOKEN" -H "Content-Type: application/json" -X DELETE https://hub.docker.com/v2/repositories/owncloud/server/tags/${DRONE_COMMIT_SHA}-${DRONE_BUILD_NUMBER}/
     when:
       event: [ push, pull_request ]
