@@ -155,9 +155,6 @@ def docker(config):
       'os': 'linux',
       'arch': config['platform'],
     },
-    'clone': {
-      'disable': True,
-    },
     'steps': publish(config),
     'depends_on': [],
     'trigger': {
