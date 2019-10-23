@@ -155,7 +155,7 @@ def docker(config):
       'os': 'linux',
       'arch': config['platform'],
     },
-    'steps': publish(config),
+    'steps': tarball(config) + ldap(config) + publish(config),
     'depends_on': [],
     'trigger': {
       'ref': [
@@ -737,6 +737,7 @@ def publish(config):
       'dockerfile': '%s/Dockerfile.%s' % (config['version']['base'], config['arch']),
       'repo': 'owncloud/server',
       'context': config['version']['base'],
+      'cache_from': 'registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
       'pull_image': False,
     },
     'when': {
