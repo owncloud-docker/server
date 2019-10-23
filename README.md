@@ -7,21 +7,20 @@ This is the official ownCloud image for the community edition, it is built from 
 
 For a guide how to get started with this Docker image please take a look at our [official documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
 
-
 ## Versions
 
-To get an overview about the available versions please take a look at the [GitHub branches](https://github.com/owncloud-docker/server/branches/all) or our [Docker Hub tags](https://hub.docker.com/r/owncloud/server/tags/), these lists are always up to date. Please note that release candidates or alpha/beta versions are only temporary available, they will be removed after the final release of a version.
-
+* `latest` available as `owncloud/server:latest`
+* `10.3.0` available as `owncloud/server:10.3.0`, `owncloud/server:10.3`,  `owncloud/server:10`
+* `10.2.1` available as `owncloud/server:10.2.1`, `owncloud/server:10.2`
+* `10.2.0` available as `owncloud/server:10.2.0`
 
 ## Volumes
 
 * /mnt/data
 
-
 ## Ports
 
 * 8080
-
 
 ## Available environment variables
 
@@ -35,27 +34,22 @@ To get an overview about the available versions please take a look at the [GitHu
 * [owncloud/php](https://github.com/owncloud-docker/php#available-environment-variables)
 * [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#available-environment-variables)
 
-
 ## Issues, Feedback and Ideas
 
 Open an [Issue](https://github.com/owncloud-docker/server/issues)
 
-
 ## Contributing
 
 Fork -> Patch -> Push -> Pull Request
-
 
 ## Authors
 
 * [Thomas Boerger](https://github.com/tboerger)
 * [Felix Boehm](https://github.com/felixboehm)
 
-
 ## License
 
 MIT
-
 
 ## Copyright
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2019-10-16
+
+* Changed
+  * Switch to single branch development
+  * Use drone starlark instead of yaml
+  * Prepare multi architecture support
+
 ## 2019-07-29
 
 * Added
