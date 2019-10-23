@@ -147,6 +147,26 @@ def docker(config):
     },
   }]
 
+  push = [{
+    'kind': 'pipeline',
+    'type': 'docker',
+    'name': 'publish-%s-%s' % (config['arch'], config['version']['value']),
+    'platform': {
+      'os': 'linux',
+      'arch': config['platform'],
+    },
+    'clone': {
+      'disable': True,
+    },
+    'steps': publish(config),
+    'depends_on': [],
+    'trigger': {
+      'ref': [
+        'refs/heads/master',
+      ],
+    },
+  }]
+
   test = []
 
   if config['arch'] == 'amd64':
@@ -319,13 +339,19 @@ def docker(config):
     })
 
   for t in test:
+    for p in push:
+      p['depends_on'].append(t['name'])
+
     for p in pre:
       t['depends_on'].append(p['name'])
 
     for p in post:
       p['depends_on'].append(t['name'])
 
-  return pre + test + post
+      for x in push:
+        p['depends_on'].append(x['name'])
+
+  return pre + test + push + post
 
 def manifest(config):
   return {
