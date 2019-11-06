@@ -12,6 +12,17 @@ def main(ctx):
       'tags': [],
     },
     {
+      'value': '10.3.1-rc1',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.1RC1-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-10.3.1RC1.tar.bz2',
+      'tarball_sha': 'cba3098e4e275af44176522be9d6137c929cec02bb0ba62d92c8547634d93b6c',
+      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
+      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
+      'php': '7.3',
+      'base': 'v19.10',
+      'tags': [],
+    },
+    {
       'value': '10.3.0',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.0-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/owncloud-10.3.0.tar.bz2',
@@ -19,7 +30,7 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
       'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
       'php': '7.3',
-      'base': 'v18.04',
+      'base': 'v19.10',
       'tags': ['10.3', '10'],
     },
     {
@@ -32,17 +43,6 @@ def main(ctx):
       'php': '7.0',
       'base': 'v18.04',
       'tags': ['10.2'],
-    },
-    {
-      'value': '10.2.0',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.2.0-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-10.2.0.tar.bz2',
-      'tarball_sha': '9511d58278797d9c9380062a3f62f257124871d194de8949df94bb191681a6d3',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
-      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
-      'php': '7.0',
-      'base': 'v18.04',
-      'tags': [],
     },
   ]
 
