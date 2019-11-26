@@ -12,6 +12,17 @@ def main(ctx):
       'tags': [],
     },
     {
+      'value': '10.3.2-rc1',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.2RC1-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-10.3.2RC1.tar.bz2',
+      'tarball_sha': 'bd55d5ab04b8d2c6f0186ee26bfad554e0c0aec450a03c64f8b00211d66bc364',
+      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
+      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
+      'php': '7.3',
+      'base': 'v19.10',
+      'tags': [],
+    },
+    {
       'value': '10.3.1',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.1-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/owncloud-10.3.1.tar.bz2',
