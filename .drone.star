@@ -2,33 +2,22 @@ def main(ctx):
   versions = [
     {
       'value': 'latest',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.1-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-10.3.1.tar.bz2',
-      'tarball_sha': '649b0bf34b21c7f1c3b3f19677df654dc6d20086bae910dc6c0e28be99bc8530',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
-      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.2-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-10.3.2.tar.bz2',
+      'tarball_sha': '0af4429bd477b4d9f829c9a69b47bb855d22c4a36de7d3e402f3852c33223c33',
+      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.14.0',
+      'ldap_sha': 'f6bc61e2820b464cf7ad08061607f45ede892f0257d7c5ac1aa5a969caa58769',
       'php': '7.3',
       'base': 'v19.10',
       'tags': [],
     },
     {
-      'value': '10.3.2-rc1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.2RC1-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-10.3.2RC1.tar.bz2',
-      'tarball_sha': 'bd55d5ab04b8d2c6f0186ee26bfad554e0c0aec450a03c64f8b00211d66bc364',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
-      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
-      'php': '7.3',
-      'base': 'v19.10',
-      'tags': [],
-    },
-    {
-      'value': '10.3.1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.1-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-10.3.1.tar.bz2',
-      'tarball_sha': '649b0bf34b21c7f1c3b3f19677df654dc6d20086bae910dc6c0e28be99bc8530',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.13.0',
-      'ldap_sha': 'f35042d11df9c26d22af44dba600efa3b7d134bf93294923ebd8c5fd506a65b3',
+      'value': '10.3.2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.2-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-10.3.2.tar.bz2',
+      'tarball_sha': '0af4429bd477b4d9f829c9a69b47bb855d22c4a36de7d3e402f3852c33223c33',
+      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.14.0',
+      'ldap_sha': 'f6bc61e2820b464cf7ad08061607f45ede892f0257d7c5ac1aa5a969caa58769',
       'php': '7.3',
       'base': 'v19.10',
       'tags': ['10.3', '10'],
@@ -675,7 +664,7 @@ def api(config):
     'pull': 'always',
     'commands': [
       'mkdir -p vendor-bin/behat',
-      'wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/master/vendor-bin/behat/composer.json',
+      'wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/%s/vendor-bin/behat/composer.json' % versionize(config['version']['value']),
       'cd vendor-bin/behat/ && composer install',
     ],
   },
@@ -730,7 +719,7 @@ def ui(config):
     'pull': 'always',
     'commands': [
       'mkdir -p vendor-bin/behat',
-      'wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/master/vendor-bin/behat/composer.json',
+      'wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/%s/vendor-bin/behat/composer.json' % versionize(config['version']['value']),
       'cd vendor-bin/behat/ && composer install',
     ],
   },
@@ -807,3 +796,9 @@ def cleanup(config):
       'reg rm --username $DOCKER_USER --password $DOCKER_PASSWORD registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
     ],
   }]
+
+def versionize(version):
+    if version == 'latest':
+        return 'master'
+    else:
+        return 'v%s' % (version.replace("rc", "RC").replace("-", ""))
