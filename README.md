@@ -10,7 +10,8 @@ For a guide how to get started with this Docker image please take a look at our 
 ## Versions
 
 * `latest` available as `owncloud/server:latest`
-* `10.3.0` available as `owncloud/server:10.3.0`, `owncloud/server:10.3`,  `owncloud/server:10`
+* `10.4.0` available as `owncloud/server:10.4.0`, `owncloud/server:10.4`,  `owncloud/server:10`
+* `10.3.2` available as `owncloud/server:10.3.2`, `owncloud/server:10.3`,
 * `10.2.1` available as `owncloud/server:10.2.1`, `owncloud/server:10.2`
 * `10.2.0` available as `owncloud/server:10.2.0`
 
@@ -54,5 +55,6 @@ MIT
 ## Copyright
 
 ```
+Copyright (c) 2020 ownCloud GmbH
 Copyright (c) 2018 Thomas Boerger <tboerger@owncloud.com>
 ```
