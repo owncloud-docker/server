@@ -14,10 +14,10 @@ def main(ctx):
     },
 
     {
-      'value': '10.4.0-rc3',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.4.0RC3-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-10.4.0RC3.tar.bz2',
-      'tarball_sha': '4dbff6d09aec22d6d3a13f86c86c6b79a17ffd32a7140e94bd06b1f8ed43206b',
+      'value': '10.4.0',
+      'qa': 'https://download.owncloud.org/community/owncloud-10.4.0-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-10.4.0.tar.bz2',
+      'tarball_sha': 'ec6ac9a507f4196453da4526f44cc079b96f7e7863bafe4eb6ba373962907bb6',
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.0',
       'ldap_sha': '742703c66a8a112636c30aa500d7b4fdff670bac179fe3ae658a2b4016e5847f',
       'php': '7.3',
