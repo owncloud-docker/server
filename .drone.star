@@ -23,7 +23,6 @@ def main(ctx):
       'base': 'v19.10',
       'tags': [],
     },
-
     {
       'value': '10.4.0',
       'qa': 'https://download.owncloud.org/community/owncloud-10.4.0-qa.tar.bz2',
@@ -35,19 +34,6 @@ def main(ctx):
       'behat_version': 'behat-10.4.0',
       'base': 'v19.10',
       'tags': ['10.4', '10'],
-    },
-
-    {
-      'value': '10.3.2',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-10.3.2-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-10.3.2.tar.bz2',
-      'tarball_sha': '0af4429bd477b4d9f829c9a69b47bb855d22c4a36de7d3e402f3852c33223c33',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.14.0',
-      'ldap_sha': 'f6bc61e2820b464cf7ad08061607f45ede892f0257d7c5ac1aa5a969caa58769',
-      'php': '7.3',
-      'behat_version': 'release-10.3.3',
-      'base': 'v19.10',
-      'tags': ['10.3'],
     },
   ]
 
@@ -815,7 +801,6 @@ def cleanup(config):
 
 def versionize(version):
   if 'behat_version' in version:
-    raw_version = version['behat_version']
+    return version['behat_version']
   else:
-    raw_version = 'v%s' % (version['value'].replace("rc", "RC").replace("-", ""))
-  return raw_version
+    return 'v%s' % (version['value'].replace("rc", "RC").replace("-", ""))
