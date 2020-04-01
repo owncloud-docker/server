@@ -8,7 +8,7 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.0',
       'ldap_sha': '742703c66a8a112636c30aa500d7b4fdff670bac179fe3ae658a2b4016e5847f',
       'php': '7.3',
-      'behat_version': '10.4.0',
+      'behat_version': 'behat-10.4.0',
       'base': 'v19.10',
       'tags': [],
     },
@@ -21,6 +21,7 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.0',
       'ldap_sha': '742703c66a8a112636c30aa500d7b4fdff670bac179fe3ae658a2b4016e5847f',
       'php': '7.3',
+      'behat_version': 'behat-10.4.0',
       'base': 'v19.10',
       'tags': ['10.4', '10'],
     },
@@ -33,6 +34,7 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.14.0',
       'ldap_sha': 'f6bc61e2820b464cf7ad08061607f45ede892f0257d7c5ac1aa5a969caa58769',
       'php': '7.3',
+      'behat_version': 'release-10.3.3',
       'base': 'v19.10',
       'tags': ['10.3'],
     },
@@ -804,5 +806,5 @@ def versionize(version):
   if 'behat_version' in version:
     raw_version = version['behat_version']
   else:
-    raw_version = version['value']
-  return 'v%s' % (raw_version.replace("rc", "RC").replace("-", ""))
+    raw_version = 'v%s' % (version['value'].replace("rc", "RC").replace("-", ""))
+  return raw_version
