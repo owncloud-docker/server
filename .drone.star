@@ -11,6 +11,7 @@ def main(ctx):
       'base': 'v19.10',
       'tags': [],
     },
+<<<<<<< HEAD
     {
       'value': 'latest',
       'qa': 'https://download.owncloud.org/community/owncloud-10.4.0-qa.tar.bz2',
@@ -35,6 +36,8 @@ def main(ctx):
       'base': 'v19.10',
       'tags': ['10.4', '10'],
     },
+=======
+>>>>>>> Remove all old targets
   ]
 
   arches = [
