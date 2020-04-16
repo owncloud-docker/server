@@ -21,7 +21,7 @@ def main(ctx):
       'php': '7.3',
       'behat_version': 'behat-10.4.0',
       'base': 'v19.10',
-      'tags': [],
+      'tags': ['10.4', '10'],
     },
     {
       'value': '10.4.0',
@@ -31,7 +31,6 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.0',
       'ldap_sha': '742703c66a8a112636c30aa500d7b4fdff670bac179fe3ae658a2b4016e5847f',
       'php': '7.3',
-      'behat_version': 'behat-10.4.0',
       'base': 'v19.10',
       'tags': ['10.4', '10'],
     },
