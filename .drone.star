@@ -19,7 +19,7 @@ def main(ctx):
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.1',
       'ldap_sha': '1e34bb56850ac93c8625809247a6d7b23113eda53c456c7560dda1f58f42ab93',
       'php': '7.3',
-      'behat_version': 'behat-10.4.0',
+      'behat_version': 'v10.4.1',
       'base': 'v19.10',
       'tags': ['10.4', '10'],
     },
