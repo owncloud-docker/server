@@ -1,0 +1,26 @@
+FROM owncloud/base:20.04-arm64v8
+
+LABEL maintainer="ownCloud DevOps <devops@owncloud.com>" \
+  org.label-schema.name="ownCloud Server" \
+  org.label-schema.vendor="ownCloud GmbH" \
+  org.label-schema.schema-version="1.0"
+
+VOLUME ["/mnt/data"]
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/bin/entrypoint"]
+CMD ["/usr/bin/owncloud", "server"]
+
+RUN apt-get update -y && \
+  apt-get upgrade -y && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+ADD owncloud.tar.bz2 /var/www/
+ADD user_ldap.tar.gz /var/www/owncloud/apps/
+
+COPY ./overlay /
+WORKDIR /var/www/owncloud
+
+RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \
+  chmod g+w /var/www/owncloud
