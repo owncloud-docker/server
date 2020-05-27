@@ -15,8 +15,3 @@ manifests:
       architecture: arm64
       variant: v8
       os: linux
-  - image: owncloud/server:{{ if ne .Env.MANIFEST_VERSION "latest" }}{{ .Env.MANIFEST_VERSION }}-arm32v7{{ else }}arm32v7{{ end }}
-    platform:
-      architecture: arm
-      variant: v7
-      os: linux
