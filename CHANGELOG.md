@@ -1,5 +1,10 @@
 # Changelog
 
+## 2020-05-25
+
+* Added
+  * Add ubuntu-20.04 for owncloud-complete-10.5.0beta1
+
 ## 2019-10-16
 
 * Changed
