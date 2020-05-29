@@ -590,7 +590,7 @@ def trivy(config):
       'image': 'plugins/download',
       'pull': 'always',
       'settings': {
-        'source': 'https://download.owncloud.com/internal/trivy.db',
+        'source': 'https://download1.owncloud.com/internal/trivy.db',
         'destination': 'trivy/db/trivy.db',
         'username': {
           'from_secret': 'download_username',
