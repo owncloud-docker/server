@@ -3,8 +3,8 @@ def main(ctx):
 
     {
       'value': '10.5.0beta1',
-      'qa': 'https://download.owncloud.org/community/owncloud-complete-20200525-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200525.tar.bz2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200525-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20200525.tar.bz2',
       'tarball_sha': 'f188ce66c2d275b90c432c8838bca2a4f475c3a635bdfa14cac6629aa77f378c',
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.1',
       'ldap_sha': '1e34bb56850ac93c8625809247a6d7b23113eda53c456c7560dda1f58f42ab93',
@@ -62,7 +62,7 @@ def main(ctx):
     m = manifest(config)
     inner = []
 
-    if version == 'latest' or version == '20.04':
+    if version['base'] == 'v20.04':
       # skip arm32v7-20.04 while https://bugs.launchpad.net/ubuntu/+source/glibc/+bug/1867675
       myarches = [ 'amd64', 'arm64v8' ]
     else:
