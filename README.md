@@ -9,7 +9,7 @@ For a guide how to get started with this Docker image please take a look at our 
 
 ## Versions
 
-* publised at https://hub.docker.com/r/owncloud/server/tags
+* published at https://hub.docker.com/r/owncloud/server/tags
 * `latest` available as `owncloud/server:latest`, 10.4.0
 * `10.5.0` available as `owncloud/server:10.5.0`, `owncloud/server:10.5`
 * `10.4.0` available as `owncloud/server:10.4.0`, `owncloud/server:10.4`,  `owncloud/server:10`
