@@ -2,7 +2,7 @@ def main(ctx):
   versions = [
 
     {
-      'value': '10.5.0beta2',
+      'value': '10.5.0-beta2',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200602-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20200602.tar.bz2',
       'tarball_sha': 'ef15413cbc65681b87521625029d35d193c439fab93095fced385cc99923968b',
