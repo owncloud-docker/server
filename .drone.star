@@ -2,10 +2,10 @@ def main(ctx):
   versions = [
 
     {
-      'value': '10.5.0beta1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200525-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20200525.tar.bz2',
-      'tarball_sha': 'f188ce66c2d275b90c432c8838bca2a4f475c3a635bdfa14cac6629aa77f378c',
+      'value': '10.5.0beta2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200602-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20200602.tar.bz2',
+      'tarball_sha': 'ef15413cbc65681b87521625029d35d193c439fab93095fced385cc99923968b',
       'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.1',
       'ldap_sha': '1e34bb56850ac93c8625809247a6d7b23113eda53c456c7560dda1f58f42ab93',
       'php': '7.4',
