@@ -11,8 +11,9 @@ EXPOSE 8080
 ENTRYPOINT ["/usr/bin/entrypoint"]
 CMD ["/usr/bin/owncloud", "server"]
 
+# cleanup, even if an obs repo fails to respond.
 RUN apt-get update -y && \
-  apt-get upgrade -y && \
+  apt-get upgrade -y || true && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
