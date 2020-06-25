@@ -301,41 +301,47 @@ def docker(config):
         },
       })
   else:
-    test.append({
-      'kind': 'pipeline',
-      'type': 'docker',
-      'name': 'test-%s-%s' % (config['arch'], config['version']['value']),
-      'platform': {
-        'os': 'linux',
-        'arch': config['platform'],
-      },
-      'clone': {
-        'disable': True,
-      },
-      'steps': wait(config) + tests(config),
-      'services': [
-        {
-          'name': 'server',
-          'image': 'registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
-          'pull': 'always',
-          'environment': {
-            'DEBUG': 'true',
-            'OWNCLOUD_APPS_INSTALL': 'https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz',
-            'OWNCLOUD_APPS_ENABLE': 'testing',
-          },
+    if config['arch'] == 'arm32v7' and config['version']['value'] in ('latest', '10.4.1'):
+      # test-arm32v7-10.4.1: Error: No such image: docker.io/owncloud/ubuntu:latest
+      # test-arm32v7-latest: Error: No such image: docker.io/owncloud/ubuntu:latest
+      # An ubuntu:20.04 image does not exist for arm32. latest should remain at 18.04
+      pass
+    else:
+      test.append({
+        'kind': 'pipeline',
+        'type': 'docker',
+        'name': 'test-%s-%s' % (config['arch'], config['version']['value']),
+        'platform': {
+          'os': 'linux',
+          'arch': config['platform'],
         },
-      ],
-      'image_pull_secrets': [
-        'registries',
-      ],
-      'depends_on': [],
-      'trigger': {
-        'ref': [
-          'refs/heads/master',
-          'refs/pull/**',
+        'clone': {
+          'disable': True,
+        },
+        'steps': wait(config) + tests(config),
+        'services': [
+          {
+            'name': 'server',
+            'image': 'registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
+            'pull': 'always',
+            'environment': {
+              'DEBUG': 'true',
+              'OWNCLOUD_APPS_INSTALL': 'https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz',
+              'OWNCLOUD_APPS_ENABLE': 'testing',
+            },
+          },
         ],
-      },
-    })
+        'image_pull_secrets': [
+          'registries',
+        ],
+        'depends_on': [],
+        'trigger': {
+          'ref': [
+            'refs/heads/master',
+            'refs/pull/**',
+          ],
+        },
+      })
 
   for t in test:
     for p in push:
