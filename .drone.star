@@ -754,6 +754,7 @@ def ui(config):
       'LOCAL_MAILHOG_HOST': 'email',
     },
     'commands': [
+      'php occ config:system:set --type boolean --value false grace_period.demo_key.show_popup',
       'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type webUI --part %d %d' % (config['step'], config['split']),
     ],
   }]
