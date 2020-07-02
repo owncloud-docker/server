@@ -11,8 +11,7 @@ EXPOSE 8080
 ENTRYPOINT ["/usr/bin/entrypoint"]
 CMD ["/usr/bin/owncloud", "server"]
 
-# allow-insecure, as we have registered a sernet repo in the php base image with an expired key
-RUN apt-get --allow-insecure-repositories update -y && \
+RUN apt-get update -y && \
   apt-get upgrade -y && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
