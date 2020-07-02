@@ -755,6 +755,8 @@ def ui(config):
     },
     'commands': [
       'curl -k -s -u admin:admin http://server:8080/ocs/v2.php/apps/testing/api/v1/occ -d "command=config:system:set --type boolean --value false grace_period.demo_key.show_popup"',
+      'curl -k -s -u admin:admin http://server:8080/ocs/v2.php/apps/testing/api/v1/occ -d "command=app:disable ownbrander"',
+      'curl -k -s -u admin:admin http://server:8080/ocs/v2.php/apps/testing/api/v1/occ -d "command=app:list"',
       'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type webUI --part %d %d' % (config['step'], config['split']),
     ],
   }]
