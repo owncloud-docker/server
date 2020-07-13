@@ -638,7 +638,7 @@ def wait(config):
     'image': 'owncloud/ubuntu:latest',
     'pull': 'always',
     'commands': [
-      'wait-for-it -t 600 server:8080',
+      'wait-for-it -t 1200 server:8080',
     ],
   }]
 
