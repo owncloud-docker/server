@@ -15,7 +15,7 @@
 ## 2019-07-29
 
 * Added
-  * Link to docuemntation for installation
+  * Link to documentation for installation
 * Removed
   * Drop docker and docker-compose examples
 
