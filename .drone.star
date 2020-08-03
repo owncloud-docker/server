@@ -2,10 +2,10 @@ def main(ctx):
   versions = [
 
     {
-      'value': '10.5.0-rc7',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200728-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20200728.tar.bz2',
-      'tarball_sha': 'f98b1292bcc6e742ba42370705c1d3713e9611f46d89d97f54bd072472b4f243',
+      'value': '10.5.0',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200731-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200731.tar.bz2',
+      'tarball_sha': '5746b28af749860fb59cfe7234b0949193e0d1ea10345610bdd57074597dffdb',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
@@ -27,15 +27,14 @@ def main(ctx):
 
     {
       'value': 'latest',
-      'qa': 'https://download.owncloud.org/community/owncloud-10.4.1-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-10.4.1.tar.bz2',
-      'tarball_sha': '63f32048225c6bc4534c6757e8beee65fc845a35126899e85d787a3ba4073d48',
-      'ldap': 'https://marketplace.owncloud.com/api/v1/apps/user_ldap/0.15.1',
-      'ldap_sha': '1e34bb56850ac93c8625809247a6d7b23113eda53c456c7560dda1f58f42ab93',
-      'php': '7.3',
-      'behat_version': 'v10.4.1',
-      'base': 'v19.10',
-      'tags': ['10.4', '10'],
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200731-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200731.tar.bz2',
+      'tarball_sha': '5746b28af749860fb59cfe7234b0949193e0d1ea10345610bdd57074597dffdb',
+      'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
+      'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
+      'php': '7.4',
+      'base': 'v20.04',
+      'tags': ['10.5', '10'],
     },
   ]
 
