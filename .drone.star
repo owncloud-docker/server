@@ -33,6 +33,7 @@ def main(ctx):
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
+      'behat_version': 'v10.5.0', # branch or tag in owncloud/core to check out vendor-bin/behat/composer.json
       'base': 'v20.04',
       'tags': [],
     },
