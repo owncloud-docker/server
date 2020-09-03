@@ -371,7 +371,7 @@ def manifest(config):
     'steps': [
       {
         'name': 'generate',
-        'image': 'owncloud/ubuntu:latest',
+        'image': 'owncloud/ubuntu:19.04',
         'pull': 'always',
         'environment': {
           'MANIFEST_VERSION': config['version']['value'],
@@ -587,6 +587,7 @@ def sleep(config):
     ],
   }]
 
+# container vulnerability scanning, see: https://github.com/aquasecurity/trivy
 def trivy(config):
   if config['arch'] != 'amd64':
     return []
@@ -619,7 +620,7 @@ def trivy(config):
 def wait(config):
   return [{
     'name': 'wait',
-    'image': 'owncloud/ubuntu:latest',
+    'image': 'owncloud/ubuntu:19.04',
     'pull': 'always',
     'commands': [
       'wait-for-it -t 600 server:8080',
@@ -745,7 +746,7 @@ def ui(config):
 def tests(config):
   return [{
     'name': 'test',
-    'image': 'owncloud/ubuntu:latest',
+    'image': 'owncloud/ubuntu:19.04',
     'pull': 'always',
     'commands': [
       'curl -sSf http://server:8080/status.php',
