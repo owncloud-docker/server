@@ -627,6 +627,7 @@ def trivy(config):
         'TRIVY_CACHE_DIR': '/drone/src/trivy'
       },
       'commands': [
+        'tar -xf trivy.tar.gz',
         'trivy registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
       ],
     },
