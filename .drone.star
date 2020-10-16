@@ -2,6 +2,18 @@ def main(ctx):
   versions = [
 
     {
+      'value': '10.6.0-beta1',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016.tar.bz2',
+      'tarball_sha': '8e59f1132fe72bbd6850ef195a089c981fa873b64eb5f0d7376916a54d2d4324',
+      'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
+      'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
+      'php': '7.4',
+      'base': 'v20.04',
+      'tags': [],
+    },
+
+    {
       'value': '10.5.0',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200731-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200731.tar.bz2',
@@ -201,6 +213,11 @@ def docker(config):
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
+            'commands': [
+               'sed -i -e "s@isIntegrityCheckDisabled = .*;@isIntegrityCheckDisabled = true; /* NOT FOR PRODUCTION - CI ONLY */@" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
+               'grep "CI ONLY" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
+               '/usr/bin/owncloud server',
+            ],
           },
           {
             'name': 'mysql',
@@ -262,6 +279,11 @@ def docker(config):
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
+            'commands': [
+               'sed -i -e "s@isIntegrityCheckDisabled = .*;@isIntegrityCheckDisabled = true; /* NOT FOR PRODUCTION - CI ONLY */@" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
+               'grep "CI ONLY" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
+               '/usr/bin/owncloud server',
+            ],
           },
           {
             'name': 'mysql',
@@ -645,7 +667,7 @@ def wait(config):
 
 def api(config):
   return [{
-    'name': 'tarball',
+    'name': 'api-tarball',
     'image': 'plugins/download',
     'pull': 'always',
     'settings': {
@@ -700,7 +722,7 @@ def api(config):
 
 def ui(config):
   return [{
-    'name': 'tarball',
+    'name': 'ui-tarball',
     'image': 'plugins/download',
     'pull': 'always',
     'settings': {
