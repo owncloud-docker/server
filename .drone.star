@@ -5,7 +5,7 @@ def main(ctx):
       'value': '10.6.0-beta1',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016.tar.bz2',
-      'tarball_sha': 'a2df6040dc7693c9013d1848bf65e5047d35c380d1a9efdd15757a8726f02e42',
+      'tarball_sha': '8e59f1132fe72bbd6850ef195a089c981fa873b64eb5f0d7376916a54d2d4324',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
