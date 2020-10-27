@@ -273,6 +273,10 @@ def docker(config):
               'OWNCLOUD_DB_USERNAME': 'owncloud',
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
+              # $config['integrity.excluded.files'] = explode(',', getenv('OWNCLOUD_INTEGRITY_EXCLUDED_FILES'));
+              'OWNCLOUD_INTEGRITY_EXCLUDED_FILES': 'something',
+              # $config['integrity.check.disabled'] = getenv('OWNCLOUD_INTEGRITY_CHECK_DISBLED') == 'true';
+              'OWNCLOUD_INTEGRITY_CHECK_DISABLED': 'true',
             },
           },
           {
