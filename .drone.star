@@ -274,6 +274,9 @@ def docker(config):
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
+            'commands': [
+               'occ config:system:set "integrity.check.disabled" --value true --type bool',
+            ],
           },
           {
             'name': 'mysql',
