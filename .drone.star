@@ -661,7 +661,7 @@ def wait(config):
 
 def api(config):
   return [{
-    'name': 'tarball',
+    'name': 'api-tarball',
     'image': 'plugins/download',
     'pull': 'always',
     'settings': {
@@ -716,7 +716,7 @@ def api(config):
 
 def ui(config):
   return [{
-    'name': 'tarball',
+    'name': 'ui-tarball',
     'image': 'plugins/download',
     'pull': 'always',
     'settings': {
