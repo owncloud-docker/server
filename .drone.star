@@ -275,8 +275,8 @@ def docker(config):
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
             'commands': [
-               'echo "\$CONFIG = array(\'integrity.check.disabled\' => true);"',
-               'echo "\$CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+               'server',
+               'occ config:system:set "integrity.check.disabled" --value true --type bool',
             ],
           },
           {
