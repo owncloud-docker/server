@@ -3,9 +3,9 @@ def main(ctx):
 
     {
       'value': '10.6.0-beta1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016.tar.bz2',
-      'tarball_sha': '8e59f1132fe72bbd6850ef195a089c981fa873b64eb5f0d7376916a54d2d4324',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201026-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201026.tar.bz2',
+      'tarball_sha': '7a430ae8670fb34281239b7c94b734a7b71702633fb7672da279f24578863976',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
@@ -601,6 +601,7 @@ def sleep(config):
       },
     },
     'commands': [
+      'env',
       'retry -- reg digest --username $DOCKER_USER --password $DOCKER_PASSWORD registry.drone.owncloud.com/owncloud/server:%s' % config['internal'],
     ],
   }]
