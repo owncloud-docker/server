@@ -3,7 +3,7 @@ def main(ctx):
 
     {
       'value': '10.6.0-beta1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016-qa.tar.bz2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201026-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016.tar.bz2',
       'tarball_sha': '8e59f1132fe72bbd6850ef195a089c981fa873b64eb5f0d7376916a54d2d4324',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
@@ -275,7 +275,8 @@ def docker(config):
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
             'commands': [
-               'echo "\\$CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+               # FIXME: Unfortunately, this config.php snippet does not get picked up.
+               'echo "\$CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
                '/usr/bin/owncloud server',
             ],
           },
