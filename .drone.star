@@ -3,7 +3,7 @@ def main(ctx):
 
     {
       'value': '10.6.0-beta1',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201026-qa.tar.bz2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201016.tar.bz2',
       'tarball_sha': '8e59f1132fe72bbd6850ef195a089c981fa873b64eb5f0d7376916a54d2d4324',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
@@ -213,6 +213,11 @@ def docker(config):
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
+            'commands': [
+               # A simple backslash dollar just explodes inside drone.owncloud.com, we workaround with a more horrible syntax.
+               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);"',
+               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+            ],
           },
           {
             'name': 'mysql',
@@ -275,11 +280,9 @@ def docker(config):
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
             'commands': [
-               # FIXME: Unfortunately, this config.php snippet does not get picked up.
-               # FIXME:  backslash dollar just explodes inside drone.owncloud.com, use a more horrible syntax.
+               # A simple backslash dollar just explodes inside drone.owncloud.com, we workaround with a more horrible syntax.
                'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);"',
                'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
-               '/usr/bin/owncloud server',
             ],
           },
           {
