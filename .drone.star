@@ -276,7 +276,9 @@ def docker(config):
             },
             'commands': [
                # FIXME: Unfortunately, this config.php snippet does not get picked up.
-               'echo "\$CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+               # FIXME:  backslash dollar just explodes inside drone.owncloud.com, use a more horrible syntax.
+               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);"',
+               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
                '/usr/bin/owncloud server',
             ],
           },
