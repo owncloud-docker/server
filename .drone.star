@@ -215,8 +215,11 @@ def docker(config):
             },
             'commands': [
                # A simple backslash dollar just explodes inside drone.owncloud.com, we workaround with a more horrible syntax.
-               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);"',
                'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+               'cat /var/www/owncloud/config/integrity-check-disabled.config.php',
+               'cp /var/www/owncloud/config/integrity-check-disabled.config.php /mnt/data/config/ || true',
+               'du -a /mnt/data/ /var/www/owncloud/',
+               '/usr/bin/owncloud server',
             ],
           },
           {
@@ -281,8 +284,11 @@ def docker(config):
             },
             'commands': [
                # A simple backslash dollar just explodes inside drone.owncloud.com, we workaround with a more horrible syntax.
-               'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);"',
                'echo \'$\'"CONFIG = array(\'integrity.check.disabled\' => true);" > /var/www/owncloud/config/integrity-check-disabled.config.php',
+               'cat /var/www/owncloud/config/integrity-check-disabled.config.php',
+               'cp /var/www/owncloud/config/integrity-check-disabled.config.php /mnt/data/config/ || true',
+               'du -a /mnt/data/ /var/www/owncloud/',
+               '/usr/bin/owncloud server',
             ],
           },
           {
