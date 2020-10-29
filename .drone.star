@@ -213,11 +213,6 @@ def docker(config):
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
             },
-            'commands': [
-               'sed -i -e "s@isIntegrityCheckDisabled = .*;@isIntegrityCheckDisabled = true; /* NOT FOR PRODUCTION - CI ONLY */@" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
-               'grep "CI ONLY" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
-               '/usr/bin/owncloud server',
-            ],
           },
           {
             'name': 'mysql',
@@ -272,18 +267,14 @@ def docker(config):
               'DEBUG': 'true',
               'OWNCLOUD_APPS_INSTALL': 'https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz',
               'OWNCLOUD_APPS_ENABLE': 'testing',
+              'OWNCLOUD_INTEGRITY_CHECK_DISABLED': 'true',
               'OWNCLOUD_REDIS_HOST': 'redis',
               'OWNCLOUD_DB_TYPE': 'mysql',
               'OWNCLOUD_DB_HOST': 'mysql',
               'OWNCLOUD_DB_USERNAME': 'owncloud',
               'OWNCLOUD_DB_PASSWORD': 'owncloud',
               'OWNCLOUD_DB_NAME': 'owncloud',
-            },
-            'commands': [
-               'sed -i -e "s@isIntegrityCheckDisabled = .*;@isIntegrityCheckDisabled = true; /* NOT FOR PRODUCTION - CI ONLY */@" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
-               'grep "CI ONLY" /var/www/owncloud/lib/private/IntegrityCheck/Checker.php',
-               '/usr/bin/owncloud server',
-            ],
+            }
           },
           {
             'name': 'mysql',
