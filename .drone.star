@@ -2,15 +2,15 @@ def main(ctx):
   versions = [
 
     {
-      'value': '10.6.0-rc3',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201214-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/testing/owncloud-complete-20201214.tar.bz2',
-      'tarball_sha': '25a3371a556002a785eff4cf8683a4f82720dcb541d849dea8bd0a11bc1f80a3',
+      'value': '10.6.0',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201216-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20201216.tar.bz2',
+      'tarball_sha': '3853bb528c1d4d274837faced9b3e27d343e9eadbb5cf692e5eeacb91083e529',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
       'base': 'v20.04',
-      'tags': [],
+      'tags': ['10.6', '10'],
     },
 
     {
@@ -22,18 +22,18 @@ def main(ctx):
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
       'base': 'v20.04',
-      'tags': ['10.5', '10'],
+      'tags': ['10.5'],
     },
 
     {
       'value': 'latest',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200731-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200731.tar.bz2',
-      'tarball_sha': '5746b28af749860fb59cfe7234b0949193e0d1ea10345610bdd57074597dffdb',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201216-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20201216.tar.bz2',
+      'tarball_sha': '3853bb528c1d4d274837faced9b3e27d343e9eadbb5cf692e5eeacb91083e529',
       'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
-      'behat_version': 'v10.5.0', # branch or tag in owncloud/core to check out vendor-bin/behat/composer.json
+      'behat_version': 'v10.6.0', # branch or tag in owncloud/core to check out vendor-bin/behat/composer.json
       'base': 'v20.04',
       'tags': [],
     },
