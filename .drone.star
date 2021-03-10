@@ -2,6 +2,18 @@ def main(ctx):
   versions = [
 
     {
+      'value': '10.7.0beta2',
+      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20210310-qa.tar.bz2',
+      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20210310.tar.bz2',
+      'tarball_sha': '7491a4ed9c0110170c91c32e512f8dfb8edb3533bd9ab262e0b60257c3e65e49',
+      'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
+      'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
+      'php': '7.4',
+      'base': 'v20.04',
+      'tags': [],
+    },
+
+    {
       'value': '10.6.0',
       'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201216-qa.tar.bz2',
       'tarball': 'https://download.owncloud.org/community/owncloud-complete-20201216.tar.bz2',
@@ -11,18 +23,6 @@ def main(ctx):
       'php': '7.4',
       'base': 'v20.04',
       'tags': ['10.6', '10'],
-    },
-
-    {
-      'value': '10.5.0',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20200731-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20200731.tar.bz2',
-      'tarball_sha': '5746b28af749860fb59cfe7234b0949193e0d1ea10345610bdd57074597dffdb',
-      'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
-      'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
-      'php': '7.4',
-      'base': 'v20.04',
-      'tags': ['10.5'],
     },
 
     {
