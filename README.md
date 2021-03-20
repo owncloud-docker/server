@@ -1,6 +1,6 @@
 # ownCloud: Server
 
-[![Build Status](https://cloud.drone.io/api/badges/owncloud-docker/server/status.svg)](https://cloud.drone.io/owncloud-docker/server)
+[![Build Status](https://cloud.drone.io/api/badges/owncloud-docker/server/status.svg)](https://drone.owncloud.com/owncloud-docker/server/)
 [![](https://images.microbadger.com/badges/image/owncloud/server.svg)](https://microbadger.com/images/owncloud/server "Get your own image badge on microbadger.com")
 
 This is the official ownCloud image for the community edition, it is built from our [base container](https://registry.hub.docker.com/u/owncloud/base/). This ownCloud image is designed to work with a data volume in the host filesystem and with separate MariaDB and Redis containers.
