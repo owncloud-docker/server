@@ -22,7 +22,7 @@ def main(ctx):
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
       'base': 'v20.04',
-      'tags': ['10.6', '10'],
+      'tags': ['10.6'],
     },
 
     {
