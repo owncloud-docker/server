@@ -11,7 +11,7 @@ This is the official ownCloud server image. This Docker image is designed to wor
 ## Quick reference
 
 - **Where to file issues:**\
-  [owncloud-docker/server](https://github.com/owncloud-docker/server/issues)
+  [owncloud/core](https://github.com/owncloud/core/issues)
 
 - **Supported architectures:**\
   `amd64`, `arm32v7`, `arm64v8`
