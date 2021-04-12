@@ -89,7 +89,7 @@ def main(ctx):
     stages.extend(inner)
 
   after = downstream(config) + [
-    microbadger(config),
+    documentation(config),
     rocketchat(config),
   ]
 
@@ -433,28 +433,40 @@ def downstream(config):
     },
   }]
 
-def microbadger(config):
+def documentation(config):
   return {
     'kind': 'pipeline',
     'type': 'docker',
-    'name': 'microbadger',
+    'name': 'documentation',
     'platform': {
       'os': 'linux',
       'arch': 'amd64',
     },
-    'clone': {
-      'disable': True,
-    },
     'steps': [
       {
-        'name': 'notify',
-        'image': 'plugins/webhook',
-        'pull': 'always',
-        'failure': 'ignore',
-        'settings': {
-          'urls': {
-            'from_secret': 'microbadger_url',
+        'name': 'link-check',
+        'image': 'ghcr.io/tcort/markdown-link-check:stable',
+        'commands': [
+          '/src/markdown-link-check README.md',
+        ],
+      },
+      {
+        'name': 'publish',
+        'image': 'chko/docker-pushrm:1',
+        'environment': {
+          'DOCKER_PASS': {
+            'from_secret': 'public_password',
           },
+          'DOCKER_USER': {
+            'from_secret': 'public_username',
+          },
+          'PUSHRM_FILE': 'README.md',
+          'PUSHRM_TARGET': 'owncloud/${DRONE_REPO_NAME}',
+        },
+        'when': {
+          'ref': [
+            'refs/heads/master',
+          ],
         },
       },
     ],
@@ -463,6 +475,7 @@ def microbadger(config):
       'ref': [
         'refs/heads/master',
         'refs/tags/**',
+        'refs/pull/**',
       ],
     },
   }
