@@ -8,15 +8,11 @@
 
 Official [ownCloud](https://owncloud.com) Docker image. It's designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
 
-## What is ownCloud
+## About ownCloud
 
-ownCloud is a self-hosted file sync and share server. It provides access to your data through a web interface, sync clients or WebDAV while providing a platform to view, sync and share across devices easily—all under your control. ownCloud’s open architecture is extensible via a simple but powerful API for applications and plugins and it works with any storage.
+ownCloud is an open-source file sync, share and content collaboration software that lets teams work on data easily from anywhere, on any device.. It provides access to your data through a web interface, sync clients or WebDAV while providing a platform to view, sync and share across devices easily—all under your control. ownCloud’s open architecture is extensible via a simple but powerful API for applications and plugins and it works with any storage.
 
 ![Secure content collaboration and filesharing with ownCloud](https://github.com/owncloud-docker/server/blob/master/images/Home-UI.png)
-
-You can deploy ownCloud in your own data center on-premises, at a trusted service provider or choose ownCloud.online, our Software-as-a-Service collaboration platform hosted in Germany.
-
-Be confident your data storage and maintenance complies with regulation. Increase security through measures like multi-factor authentication, encryption and file lifecycle management.
 
 ## Quick reference
 
