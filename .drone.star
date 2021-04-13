@@ -49,9 +49,8 @@ def main(ctx):
     'version': None,
     'arch': None,
     'split': 5,
-    'downstream': [
-
-    ],
+    'downstream': [],
+    'description': 'ownCloud - Secure Collaboration Platform',
   }
 
   stages = []
@@ -79,7 +78,7 @@ def main(ctx):
       if config['arch'] == 'arm32v7':
         config['platform'] = 'arm'
 
-      config['internal'] = '%s-%s' % (ctx.build.commit, config['tag'])
+      config['internal'] = '%s-%s-%s' % (ctx.build.commit, '${DRONE_BUILD_NUMBER}', config['tag'])
 
       for d in docker(config):
         m['depends_on'].append(d['name'])
@@ -462,6 +461,7 @@ def documentation(config):
           },
           'PUSHRM_FILE': 'README.md',
           'PUSHRM_TARGET': 'owncloud/${DRONE_REPO_NAME}',
+          'PUSHRM_SHORT': config['description'],
         },
         'when': {
           'ref': [
