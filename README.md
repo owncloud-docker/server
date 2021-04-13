@@ -6,7 +6,7 @@
 [![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/owncloud-docker/server)
 [![License: MIT](https://img.shields.io/github/license/owncloud-docker/server)](https://github.com/owncloud-docker/server/blob/master/LICENSE)
 
-This is the official ownCloud server image. This Docker image is designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
+This is the official [ownCloud](https://owncloud.com) server image. This Docker image is designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
 
 ## Quick reference
 

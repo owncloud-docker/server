@@ -1,9 +1,13 @@
 FROM owncloud/base:20.04-arm64v8
 
-LABEL maintainer="ownCloud DevOps <devops@owncloud.com>" \
-  org.label-schema.name="ownCloud Server" \
-  org.label-schema.vendor="ownCloud GmbH" \
-  org.label-schema.schema-version="1.0"
+LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
+  org.opencontainers.image.authors="ownCloud DevOps <devops@owncloud.com>" \
+  org.opencontainers.image.vendor="ownCloud GmbH" \
+  org.opencontainers.image.title="ownCloud Server" \
+  org.opencontainers.image.description="ownCloud - Secure Collaboration Platform" \
+  org.opencontainers.image.url="https://hub.docker.com/r/owncloud/server" \
+  org.opencontainers.image.source="https://github.com/owncloud-docker/server" \
+  org.opencontainers.image.documentation="https://github.com/owncloud-docker/server"
 
 VOLUME ["/mnt/data"]
 EXPOSE 8080
