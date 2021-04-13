@@ -31,7 +31,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 - [`latest`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:latest`
 - [`10.7.0`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:10.7.0`, `owncloud/server:10.7`, `owncloud/server:10`
-- [`10.6.0`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:10.6.0`, `owncloud/server:10.6`, `owncloud/server:10`
+- [`10.6.0`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:10.6.0`, `owncloud/server:10.6`
 
 ## Default volumes
 
