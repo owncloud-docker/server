@@ -1,48 +1,49 @@
 # ownCloud: Server
 
-[![Build Status](https://drone.owncloud.com/api/badges/owncloud-docker/server/status.svg)](https://drone.owncloud.com/owncloud-docker/server/)
-[![](https://images.microbadger.com/badges/image/owncloud/server.svg)](https://microbadger.com/images/owncloud/server "Get your own image badge on microbadger.com")
+[![Build Status](https://img.shields.io/drone/build/owncloud-docker/server?logo=drone&server=https%3A%2F%2Fdrone.owncloud.com)](https://drone.owncloud.com/owncloud-docker/server)
+[![Docker Hub](https://img.shields.io/docker/v/owncloud/server?logo=docker&label=dockerhub&sort=semver&logoColor=white)](https://hub.docker.com/r/owncloud/server)
+[![GitHub contributors](https://img.shields.io/github/contributors/owncloud-docker/server)](https://github.com/owncloud-docker/server/graphs/contributors)
+[![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/owncloud-docker/server)
+[![License: MIT](https://img.shields.io/github/license/owncloud-docker/server)](https://github.com/owncloud-docker/server/blob/master/LICENSE)
 
-This is the official ownCloud image for the community edition, it is built from our [base container](https://registry.hub.docker.com/u/owncloud/base/). This ownCloud image is designed to work with a data volume in the host filesystem and with separate MariaDB and Redis containers.
+This is the official [ownCloud](https://owncloud.com) server image. This Docker image is designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
 
-For a guide how to get started with this Docker image please take a look at our [official documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
+## Quick reference
 
-## Versions
+- **Where to file issues:**\
+  [owncloud/core](https://github.com/owncloud/core/issues)
 
-- published at https://hub.docker.com/r/owncloud/server/tags
-- `latest` available as `owncloud/server:latest`, 10.5.0
-- `10.5.0` available as `owncloud/server:10.5.0`, `owncloud/server:10.5`, `owncloud/server:10`
-- `10.4.1` available as `owncloud/server:10.4.1`, `owncloud/server:10.4`
-- `10.4.0` available as `owncloud/server:10.4.0`
-- `10.3.2` available as `owncloud/server:10.3.2`, `owncloud/server:10.3`
-- `10.2.1` available as `owncloud/server:10.2.1`, `owncloud/server:10.2`
-- `10.2.0` available as `owncloud/server:10.2.0`
+- **Supported architectures:**\
+  `amd64`, `arm32v7`, `arm64v8`
 
-## Volumes
+- **Inherited environments:**\
+  [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#environment-variables),
+  [owncloud/php](https://github.com/owncloud-docker/php#environment-variables),
+  [owncloud/base](https://github.com/owncloud-docker/base#environment-variables)
 
-- /mnt/data
+## Docker Tags and respective Dockerfile links
 
-## Ports
+- [`latest`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:latest`
+- [`10.7.0`](https://github.com/owncloud-docker/server/blob/master/v20.04/Dockerfile.amd64) available as `owncloud/server:10.7.0`, `owncloud/server:10.7`, `owncloud/server:10`
+
+## Default volumes
+
+- `/mnt/data`
+
+## Exposed ports
 
 - 8080
 
-## Available environment variables
+## Environment variables
 
 None
 
-## Inherited environment variables
-
-- [owncloud/base](https://github.com/owncloud-docker/base#available-environment-variables)
-- [owncloud/php](https://github.com/owncloud-docker/php#available-environment-variables)
-- [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#available-environment-variables)
-
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/owncloud-docker/server/blob/master/LICENSE) file for details.
 
 ## Copyright
 
-```
-Copyright (c) 2020 ownCloud GmbH
+```Text
 Copyright (c) 2021 ownCloud GmbH
 ```
