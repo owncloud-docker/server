@@ -15,11 +15,6 @@ EXPOSE 8080
 ENTRYPOINT ["/usr/bin/entrypoint"]
 CMD ["/usr/bin/owncloud", "server"]
 
-RUN apt-get update -y && \
-  apt-get upgrade -y && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
 ADD owncloud.tar.bz2 /var/www/
 ADD user_ldap.tar.gz /var/www/owncloud/apps/
 
