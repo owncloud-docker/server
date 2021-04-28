@@ -44,6 +44,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
 ## Environment variables
 
 None
+Inherited variables from: https://github.com/owncloud-docker/base/#environment-variables
 
 ## License
 
