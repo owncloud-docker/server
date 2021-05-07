@@ -613,7 +613,8 @@ def trivy(config):
         'TRIVY_EXIT_CODE': '1',
         'TRIVY_SKIP_UPDATE': True,
         'TRIVY_SEVERITY': 'HIGH,CRITICAL',
-        'TRIVY_CACHE_DIR': '/drone/src/trivy'
+        'TRIVY_CACHE_DIR': '/drone/src/trivy',
+        'TRIVY_IGNOREFILE': '/drone/src/.trivyignore'
       },
       'commands': [
         'tar -xf trivy.tar.gz',
