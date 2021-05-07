@@ -10,7 +10,7 @@ def main(ctx):
       'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
       'php': '7.4',
       'base': 'v20.04',
-      'tags': ['10.7', '10'],
+      'tags': ['10.7', '10', 'latest'],
     },
 
     {
@@ -24,19 +24,7 @@ def main(ctx):
       'base': 'v20.04',
       'tags': ['10.6'],
     },
-
-    {
-      'value': 'latest',
-      'qa': 'https://download.owncloud.org/community/testing/owncloud-complete-20201216-qa.tar.bz2',
-      'tarball': 'https://download.owncloud.org/community/owncloud-complete-20201216.tar.bz2',
-      'tarball_sha': '3853bb528c1d4d274837faced9b3e27d343e9eadbb5cf692e5eeacb91083e529',
-      'ldap': 'https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz',
-      'ldap_sha': '2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87',
-      'php': '7.4',
-      'behat_version': 'v10.6.0', # branch or tag in owncloud/core to check out vendor-bin/behat/composer.json
-      'base': 'v20.04',
-      'tags': [],
-    },
+  
   ]
 
   arches = [
