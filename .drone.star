@@ -33,7 +33,7 @@ def main(ctx):
     config = {
         "version": None,
         "arch": None,
-        "splitAPI": 8,
+        "splitAPI": 10,
         "splitUI": 5,
         "description": "ownCloud - Secure Collaboration Platform",
         "repo": ctx.repo.name,
