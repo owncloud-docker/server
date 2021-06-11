@@ -33,7 +33,8 @@ def main(ctx):
     config = {
         "version": None,
         "arch": None,
-        "split": 5,
+        "splitAPI": 10,
+        "splitUI": 5,
         "description": "ownCloud - Secure Collaboration Platform",
         "repo": ctx.repo.name,
     }
@@ -148,7 +149,7 @@ def docker(config):
     test = []
 
     if config["arch"] == "amd64":
-        for step in list(range(1, config["split"] + 1)):
+        for step in list(range(1, config["splitAPI"] + 1)):
             config["step"] = step
 
             test.append({
@@ -209,7 +210,7 @@ def docker(config):
                 },
             })
 
-        for step in list(range(1, config["split"] + 1)):
+        for step in list(range(1, config["splitUI"] + 1)):
             config["step"] = step
 
             test.append({
@@ -644,7 +645,7 @@ def api(config):
                 "SKELETON_DIR": "/mnt/data/apps/testing/data/apiSkeleton",
             },
             "commands": [
-                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type api --part %d %d' % (config["step"], config["split"]),
+                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type api --part %d %d' % (config["step"], config["splitAPI"]),
             ],
         },
     ]
@@ -707,7 +708,7 @@ def ui(config):
                 "LOCAL_MAILHOG_HOST": "email",
             },
             "commands": [
-                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type webUI --part %d %d' % (config["step"], config["split"]),
+                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type webUI --part %d %d' % (config["step"], config["splitUI"]),
             ],
         },
     ]
