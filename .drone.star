@@ -210,6 +210,40 @@ def docker(config):
                 },
             })
 
+        test.append({
+            "kind": "pipeline",
+            "type": "docker",
+            "name": "api-test",
+            "platform": {
+                "os": "linux",
+                "arch": config["platform"],
+            },
+            "clone": {
+                "disable": True,
+            },
+            "steps": [
+                {
+                    "name": "fail-step",
+                    "image": "owncloudci/php:%s" % config["version"]["php"],
+                    "pull": "always",
+                    "failure": "fast",
+                    "commands": [
+                        "cat /foo",
+                    ],
+                },
+            ],
+            "image_pull_secrets": [
+                "registries",
+            ],
+            "depends_on": [],
+            "trigger": {
+                "ref": [
+                    "refs/heads/master",
+                    "refs/pull/**",
+                ],
+            },
+        })
+
         for step in list(range(1, config["splitUI"] + 1)):
             config["step"] = step
 
