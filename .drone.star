@@ -213,7 +213,7 @@ def docker(config):
         test.append({
             "kind": "pipeline",
             "type": "docker",
-            "name": "api-test",
+            "name": "api-test-custom",
             "platform": {
                 "os": "linux",
                 "arch": config["platform"],
@@ -223,7 +223,7 @@ def docker(config):
             },
             "steps": [
                 {
-                    "name": "fail-step",
+                    "name": "fail-step-custom",
                     "image": "owncloudci/php:%s" % config["version"]["php"],
                     "pull": "always",
                     "failure": "fast",
