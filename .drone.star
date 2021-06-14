@@ -152,7 +152,7 @@ def docker(config):
         for step in list(range(1, config["splitAPI"] + 1)):
             config["step"] = step
 
-            if step == 1:
+            if step == 4:
                 test.append({
                     "kind": "pipeline",
                     "type": "docker",
