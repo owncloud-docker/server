@@ -521,7 +521,7 @@ def prepublish(config):
 def sleep(config):
     return [{
         "name": "sleep",
-        "image": "toolhippie/reg:latest",
+        "image": "owncloudci/alpine:latest",
         "pull": "always",
         "environment": {
             "DOCKER_USER": {
@@ -752,7 +752,7 @@ def publish(config):
 def cleanup(config):
     return [{
         "name": "cleanup",
-        "image": "toolhippie/reg:latest",
+        "image": "owncloudci/alpine:latest",
         "pull": "always",
         "failure": "ignore",
         "environment": {
