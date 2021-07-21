@@ -1,15 +1,15 @@
 def main(ctx):
     versions = [
         {
-            "value": "10.8.0-rc1",
-            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210715-qa.tar.bz2",
-            "tarball": "https://download.owncloud.org/community/testing/owncloud-complete-20210715.tar.bz2",
-            "tarball_sha": "e4a9b17cb19bcc37a31ac3e5143d61e8875c24c3df5149972026d5a148566f42",
-            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.4-rc3/user_ldap-0.15.4-rc3.tar.gz",
-            "ldap_sha": "929ef300d800ed41369863740e8d30da0ec160ebcaf34b247536fca97108db5a",
+            "value": "10.8.0",
+            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210720-qa.tar.bz2",
+            "tarball": "https://download.owncloud.org/community/owncloud-complete-20210720.tar.bz2",
+            "tarball_sha": "d9a5a61b3ac4e6e34302b4d98c9aabc63009662cd5142d990fda87d890209aa6",
+            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.4/user_ldap-0.15.4.tar.gz",
+            "ldap_sha": "8246d1fb3fc9e6586a8a5951ba0adb103b1cc1eb96efdba9791a1d9fead6cace",
             "php": "7.4",
             "base": "v20.04",
-            "tags": [],
+            "tags": ["10.8", "10", "latest"],
         },
         {
             "value": "10.7.0",
@@ -20,18 +20,7 @@ def main(ctx):
             "ldap_sha": "2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.7", "10", "latest"],
-        },
-        {
-            "value": "10.6.0",
-            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20201216-qa.tar.bz2",
-            "tarball": "https://download.owncloud.org/community/owncloud-complete-20201216.tar.bz2",
-            "tarball_sha": "3853bb528c1d4d274837faced9b3e27d343e9eadbb5cf692e5eeacb91083e529",
-            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz",
-            "ldap_sha": "2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.6"],
+            "tags": ["10.7"],
         },
     ]
 
