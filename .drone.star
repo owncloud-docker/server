@@ -2,11 +2,11 @@ def main(ctx):
     versions = [
         {
             "value": "10.8.0",
-            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210720-qa.tar.bz2",
-            "tarball": "https://download.owncloud.org/community/owncloud-complete-20210720.tar.bz2",
-            "tarball_sha": "d9a5a61b3ac4e6e34302b4d98c9aabc63009662cd5142d990fda87d890209aa6",
+            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210721-qa.tar.bz2",
+            "tarball": "https://download.owncloud.org/community/owncloud-complete-20210721.tar.bz2",
+            "tarball_sha": "c98afec32d2047be12a7a2724ef27a61ef42dc7175fcf8368813ff39d22d55d8",
             "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.4/user_ldap-0.15.4.tar.gz",
-            "ldap_sha": "8246d1fb3fc9e6586a8a5951ba0adb103b1cc1eb96efdba9791a1d9fead6cace",
+            "ldap_sha": "84412529b941723ef9523fe3c6d7c43cf2e44ab2522a9a9933966228f96122de",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.8", "10", "latest"],
