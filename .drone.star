@@ -1,7 +1,7 @@
 def main(ctx):
     versions = [
         {
-	    "value": "10.8.0",
+            "value": "10.8.0",
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210720-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/stable/owncloud-complete-20210720.tar.bz2",
             "tarball_sha": "d9a5a61b3ac4e6e34302b4d98c9aabc63009662cd5142d990fda87d890209aa6",
