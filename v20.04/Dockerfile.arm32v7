@@ -16,7 +16,6 @@ ENTRYPOINT ["/usr/bin/entrypoint"]
 CMD ["/usr/bin/owncloud", "server"]
 
 ADD owncloud.tar.bz2 /var/www/
-ADD user_ldap.tar.gz /var/www/owncloud/apps/
 
 COPY ./overlay /
 WORKDIR /var/www/owncloud
