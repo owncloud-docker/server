@@ -11,7 +11,7 @@ def main(ctx):
             "base": "v20.04",
             "tags": [],
         },
-	{
+        {
             "value": "10.8.0",
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210721-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/owncloud-complete-20210721.tar.bz2",
