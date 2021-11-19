@@ -5,8 +5,6 @@ def main(ctx):
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20211118-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/testing/owncloud-complete-20211118.tar.bz2",
             "tarball_sha": "4b7ab788358d1dbc96db44a6c232236e495ca5590701e6056c5ef2fac9e89a49",
-            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.4/user_ldap-0.15.4.tar.gz",
-            "ldap_sha": "84412529b941723ef9523fe3c6d7c43cf2e44ab2522a9a9933966228f96122de",
             "php": "7.4",
             "base": "v20.04",
             "tags": [],
@@ -16,8 +14,6 @@ def main(ctx):
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210721-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/owncloud-complete-20210721.tar.bz2",
             "tarball_sha": "c98afec32d2047be12a7a2724ef27a61ef42dc7175fcf8368813ff39d22d55d8",
-            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.4/user_ldap-0.15.4.tar.gz",
-            "ldap_sha": "84412529b941723ef9523fe3c6d7c43cf2e44ab2522a9a9933966228f96122de",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.8", "10", "latest"],
@@ -27,8 +23,6 @@ def main(ctx):
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210326-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/owncloud-complete-20210326.tar.bz2",
             "tarball_sha": "a5506e1fc7abd7634dc3daaf005a4ccd0151a63c9f23aa979efebefaeb40e79c",
-            "ldap": "https://github.com/owncloud/user_ldap/releases/download/v0.15.2/user_ldap-0.15.2.tar.gz",
-            "ldap_sha": "2c4cdd4f08c7b9541761afddf9ac33210619fc21c62463b0834dc651e12ecf87",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.7"],
@@ -105,7 +99,7 @@ def docker(config):
             "os": "linux",
             "arch": config["platform"],
         },
-        "steps": tarball(config) + ldap(config) + prepublish(config) + sleep(config) + trivy(config),
+        "steps": tarball(config) + prepublish(config) + sleep(config) + trivy(config),
         "depends_on": [],
         "trigger": {
             "ref": [
@@ -148,7 +142,7 @@ def docker(config):
             "os": "linux",
             "arch": config["platform"],
         },
-        "steps": tarball(config) + ldap(config) + publish(config),
+        "steps": tarball(config) + publish(config),
         "depends_on": [],
         "trigger": {
             "ref": [
@@ -493,18 +487,6 @@ def tarball(config):
             "source": config["version"]["tarball"],
             "sha256": config["version"]["tarball_sha"],
             "destination": "%s/owncloud.tar.bz2" % config["version"]["base"],
-        },
-    }]
-
-def ldap(config):
-    return [{
-        "name": "ldap",
-        "image": "plugins/download",
-        "pull": "always",
-        "settings": {
-            "source": config["version"]["ldap"],
-            "sha256": config["version"]["ldap_sha"],
-            "destination": "%s/user_ldap.tar.gz" % config["version"]["base"],
         },
     }]
 
