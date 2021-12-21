@@ -52,5 +52,5 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## Copyright
 
 ```Text
-Copyright (c) 2021 ownCloud GmbH
+Copyright (c) 2022 ownCloud GmbH
 ```
