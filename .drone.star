@@ -16,7 +16,7 @@ def main(ctx):
             "tarball_sha": "c98afec32d2047be12a7a2724ef27a61ef42dc7175fcf8368813ff39d22d55d8",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.8", "10"],
+            "tags": ["10.8"],
         },
     ]
 
