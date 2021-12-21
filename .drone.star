@@ -18,15 +18,6 @@ def main(ctx):
             "base": "v20.04",
             "tags": ["10.8", "10"],
         },
-        {
-            "value": "10.7.0",
-            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210326-qa.tar.bz2",
-            "tarball": "https://download.owncloud.org/community/owncloud-complete-20210326.tar.bz2",
-            "tarball_sha": "a5506e1fc7abd7634dc3daaf005a4ccd0151a63c9f23aa979efebefaeb40e79c",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.7"],
-        },
     ]
 
     arches = [
