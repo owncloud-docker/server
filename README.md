@@ -26,6 +26,9 @@ ownCloud is an open-source file sync, share and content collaboration software t
   [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#environment-variables),
   [owncloud/php](https://github.com/owncloud-docker/php#environment-variables),
   [owncloud/base](https://github.com/owncloud-docker/base#environment-variables)
+  
+- **Or Run without installation:**\
+  [![TeamCode try-it-now](https://static01.teamcode.com/badge/teamcode-badge-run-in-cloud-en.svg)](https://www.teamcode.com/tin/clone?applicationId=275687444676419584)
 
 ## Docker Tags and respective Dockerfile links
 
