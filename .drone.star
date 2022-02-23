@@ -540,12 +540,8 @@ def trivy(config):
             "image": "plugins/download",
             "pull": "always",
             "settings": {
-                "source": "https://download.owncloud.com/internal/trivy.tar.gz",
-                "username": {
-                    "from_secret": "download_username",
-                },
-                "password": {
-                    "from_secret": "download_password",
+                "source": {
+                    "from_secret": "trivy_db_download_url",
                 },
             },
         },
