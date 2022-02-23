@@ -540,7 +540,9 @@ def trivy(config):
             "image": "plugins/download",
             "pull": "always",
             "settings": {
-                "source": "https://minio.owncloud.com/packages/trivy/trivy.tar.gz",
+                "source": {
+                    "from_secret": "trivy_db_download_url",
+                },
             },
         },
         {
