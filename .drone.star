@@ -1,6 +1,6 @@
 def main(ctx):
     versions = [
-	{
+        {
             "value": "10.10.0-rc1",
             "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220504-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20220504.tar.bz2",
@@ -8,7 +8,7 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": [],
-	},
+        },
         {
             "value": "10.9.1",
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20220112-qa.tar.bz2",
