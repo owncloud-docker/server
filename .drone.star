@@ -19,6 +19,15 @@ def main(ctx):
             "tags": ["10.9", "10", "latest"],
         },
         {
+            "value": "10.9.0",
+            "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20211220-qa.tar.bz2",
+            "tarball": "https://download.owncloud.org/community/owncloud-complete-20211220.tar.bz2",
+            "tarball_sha": "33f0f779f42bd6fcbe3ca117d65a1504a85615e1aa682fa1ebdd51f196867e82",
+            "php": "7.4",
+            "base": "v20.04",
+            "tags": [],
+        },
+        {
             "value": "10.8.0",
             "qa": "https://download.owncloud.org/community/testing/owncloud-complete-20210721-qa.tar.bz2",
             "tarball": "https://download.owncloud.org/community/owncloud-complete-20210721.tar.bz2",
