@@ -643,7 +643,7 @@ def api(config):
                 "SKELETON_DIR": "/mnt/data/apps/testing/data/apiSkeleton",
             },
             "commands": [
-                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type api --part %d %d' % (config["step"], config["splitAPI"]),
+                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting&&~@files_external-app-required" --type api --part %d %d' % (config["step"], config["splitAPI"]),
             ],
         },
     ]
