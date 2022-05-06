@@ -8,6 +8,7 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": [],
+            "extraTestFilterTags": "~@files_external-app-required",
         },
         {
             "value": "10.9.1",
@@ -643,7 +644,7 @@ def api(config):
                 "SKELETON_DIR": "/mnt/data/apps/testing/data/apiSkeleton",
             },
             "commands": [
-                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type api --part %d %d' % (config["step"], config["splitAPI"]),
+                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting%s" --type api --part %d %d' % (extraTestFilterTags(config), config["step"], config["splitAPI"]),
             ],
         },
     ]
@@ -706,7 +707,7 @@ def ui(config):
                 "LOCAL_MAILHOG_HOST": "email",
             },
             "commands": [
-                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting" --type webUI --part %d %d' % (config["step"], config["splitUI"]),
+                'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting%s" --type webUI --part %d %d' % (extraTestFilterTags(config), config["step"], config["splitUI"]),
             ],
         },
     ]
@@ -809,3 +810,15 @@ def versionize(version):
         return version["behat_version"]
     else:
         return "v%s" % (version["value"].replace("rc", "RC").replace("-", ""))
+
+def extraTestFilterTags(config):
+    if "version" not in config:
+        return ""
+
+    if "extraTestFilterTags" not in config["version"]:
+        return ""
+
+    if (config["version"]["extraTestFilterTags"] == ""):
+        return ""
+    else:
+        return "&&%s" % config["version"]["extraTestFilterTags"]
