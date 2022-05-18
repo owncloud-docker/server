@@ -3,7 +3,7 @@ def main(ctx):
         {
             "value": "10.10.0",
             "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220518-qa.tar.bz2",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20220518.tar.bz2",
+            "tarball": "https://download.owncloud.com/server/owncloud-complete-20220518.tar.bz2",
             "tarball_sha": "a6c811cfe87908e18178d69ef128993a721b0a78de6a5f8943e970bb5d201f39",
             "php": "7.4",
             "base": "v20.04",
