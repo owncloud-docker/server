@@ -8,7 +8,6 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.10", "10", "latest"],
-            "extraTestFilterTags": "~@files_external-app-required",
         },
         {
             "value": "10.9.1",
