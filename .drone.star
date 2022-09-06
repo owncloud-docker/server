@@ -8,7 +8,7 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.11.0-rc.1"],
-            "behat_version", "v10.11.0-rc.1",
+            "behat_version": "v10.11.0-rc.1",
         },
         {
             "value": "10.10.0",
