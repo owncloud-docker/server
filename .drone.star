@@ -8,7 +8,6 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.11.0-rc.1"],
-            "behat_version": "v10.11.0-rc.1",
         },
         {
             "value": "10.10.0",
@@ -21,7 +20,7 @@ def main(ctx):
         },
         {
             "value": "10.9.1",
-            "qa": "https://attic.owncloud.com/server/testing/owncloud-complete-20220112-qa.tar.bz2",
+            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220112-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220112.tar.bz2",
             "tarball_sha": "3ab3478aee75d6aa6c47db2bc8749a108917df633f2cfab7e8ff67973c2f6147",
             "php": "7.4",
@@ -800,7 +799,7 @@ def versionize(version):
     if "behat_version" in version:
         return version["behat_version"]
     else:
-        return "v%s" % (version["value"].replace("rc", "RC").replace("-", ""))
+        return "v%s" % (version["value"])
 
 def extraTestFilterTags(config):
     if "version" not in config:
