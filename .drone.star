@@ -46,12 +46,17 @@ def main(ctx):
 
     stages = []
     shell = []
+    shell_bases = []
 
     for version in versions:
         config["version"] = version
 
         m = manifest(config)
-        shell.extend(shellcheck(config))
+
+        if config["version"]["base"] not in shell_bases:
+            shell_bases.append(config["version"]["base"])
+            shell.extend(shellcheck(config))
+
         inner = []
 
         for arch in arches:
