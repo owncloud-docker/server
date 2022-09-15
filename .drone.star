@@ -101,7 +101,7 @@ def docker(config):
             "os": "linux",
             "arch": config["platform"],
         },
-        "steps": tarball(config) + prepublish(config) + sleep(config) + trivy(config),
+        "steps": download(config) + prepublish(config) + sleep(config) + trivy(config),
         "depends_on": [],
         "trigger": {
             "ref": [
@@ -144,7 +144,7 @@ def docker(config):
             "os": "linux",
             "arch": config["platform"],
         },
-        "steps": tarball(config) + publish(config),
+        "steps": download(config) + publish(config),
         "depends_on": [],
         "trigger": {
             "ref": [
