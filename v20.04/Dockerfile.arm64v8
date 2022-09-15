@@ -17,7 +17,7 @@ CMD ["/usr/bin/owncloud", "server"]
 
 ADD owncloud.tar.bz2 /var/www/
 
-COPY ./overlay /
+ADD overlay /
 WORKDIR /var/www/owncloud
 
 RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \

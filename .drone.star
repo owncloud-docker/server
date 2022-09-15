@@ -45,11 +45,13 @@ def main(ctx):
     }
 
     stages = []
+    shell = []
 
     for version in versions:
         config["version"] = version
 
         m = manifest(config)
+        shell.extend(shellcheck(config))
         inner = []
 
         for arch in arches:
@@ -72,7 +74,7 @@ def main(ctx):
             config["internal"] = "%s-%s-%s" % (ctx.build.commit, "${DRONE_BUILD_NUMBER}", config["tag"])
 
             for d in docker(config):
-                d["depends_on"].append(checkStarlark()["name"])
+                d["depends_on"].append(lint()["name"])
                 m["depends_on"].append(d["name"])
                 inner.append(d)
 
@@ -88,7 +90,7 @@ def main(ctx):
         for a in after:
             a["depends_on"].append(s["name"])
 
-    return [checkStarlark()] + stages + after
+    return [lint(shell)] + stages + after
 
 def docker(config):
     pre = [{
@@ -363,7 +365,6 @@ def manifest(config):
             {
                 "name": "manifest",
                 "image": "plugins/manifest",
-                "pull": "always",
                 "settings": {
                     "username": {
                         "from_secret": "public_username",
@@ -449,7 +450,6 @@ def rocketchat(config):
             {
                 "name": "notify",
                 "image": "plugins/slack",
-                "pull": "always",
                 "failure": "ignore",
                 "settings": {
                     "webhook": {
@@ -472,11 +472,10 @@ def rocketchat(config):
         },
     }
 
-def tarball(config):
+def download(config):
     return [{
-        "name": "tarball",
+        "name": "download",
         "image": "plugins/download",
-        "pull": "always",
         "settings": {
             "username": {
                 "from_secret": "download_username",
@@ -494,7 +493,6 @@ def prepublish(config):
     return [{
         "name": "prepublish",
         "image": "plugins/docker",
-        "pull": "always",
         "settings": {
             "username": {
                 "from_secret": "internal_username",
@@ -515,7 +513,6 @@ def sleep(config):
     return [{
         "name": "sleep",
         "image": "owncloudci/alpine:latest",
-        "pull": "always",
         "environment": {
             "DOCKER_USER": {
                 "from_secret": "internal_username",
@@ -538,7 +535,6 @@ def trivy(config):
         {
             "name": "database",
             "image": "plugins/download",
-            "pull": "always",
             "settings": {
                 "source": {
                     "from_secret": "trivy_db_download_url",
@@ -563,7 +559,6 @@ def trivy(config):
                 "TRIVY_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
                 "TRIVY_CACHE_DIR": "/drone/src/trivy",
-                "TRIVY_IGNOREFILE": "/drone/src/.trivyignore",
             },
             "commands": [
                 "tar -xf trivy.tar.gz",
@@ -706,7 +701,6 @@ def tests(config):
     return [{
         "name": "test",
         "image": "owncloud/ubuntu:20.04",
-        "pull": "always",
         "commands": [
             "curl -sSf http://server:8080/status.php",
         ],
@@ -716,7 +710,6 @@ def publish(config):
     return [{
         "name": "publish",
         "image": "plugins/docker",
-        "pull": "always",
         "settings": {
             "username": {
                 "from_secret": "public_username",
@@ -742,7 +735,6 @@ def cleanup(config):
     return [{
         "name": "cleanup",
         "image": "owncloudci/alpine:latest",
-        "pull": "always",
         "failure": "ignore",
         "environment": {
             "DOCKER_USER": {
@@ -757,24 +749,22 @@ def cleanup(config):
         ],
     }]
 
-def checkStarlark():
-    return {
+def lint(shell):
+    lint = {
         "kind": "pipeline",
         "type": "docker",
-        "name": "check-starlark",
+        "name": "lint",
         "steps": [
             {
-                "name": "format-check-starlark",
+                "name": "starlark-format",
                 "image": "owncloudci/bazel-buildifier",
-                "pull": "always",
                 "commands": [
                     "buildifier --mode=check .drone.star",
                 ],
             },
             {
-                "name": "show-diff",
+                "name": "starlark-diff",
                 "image": "owncloudci/bazel-buildifier",
-                "pull": "always",
                 "commands": [
                     "buildifier --mode=fix .drone.star",
                     "git diff",
@@ -794,6 +784,21 @@ def checkStarlark():
             ],
         },
     }
+
+    lint["steps"].extend(shell)
+
+    return lint
+
+def shellcheck(config):
+    return [
+        {
+            "name": "shellcheck-%s" % (config["path"]),
+            "image": "koalaman/shellcheck-alpine:stable",
+            "commands": [
+                "grep -ErlI '^#!(.*/|.*env +)(sh|bash|ksh)' %s/overlay/ | xargs -r shellcheck" % (config["path"]),
+            ],
+        },
+    ]
 
 def versionize(version):
     if "behat_version" in version:
