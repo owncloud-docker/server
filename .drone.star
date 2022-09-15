@@ -792,10 +792,10 @@ def lint(shell):
 def shellcheck(config):
     return [
         {
-            "name": "shellcheck-%s" % (config["path"]),
+            "name": "shellcheck-%s" % (config["version"]["base"]),
             "image": "koalaman/shellcheck-alpine:stable",
             "commands": [
-                "grep -ErlI '^#!(.*/|.*env +)(sh|bash|ksh)' %s/overlay/ | xargs -r shellcheck" % (config["path"]),
+                "grep -ErlI '^#!(.*/|.*env +)(sh|bash|ksh)' %s/overlay/ | xargs -r shellcheck" % (config["version"]["base"]),
             ],
         },
     ]
