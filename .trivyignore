@@ -1,1 +1,8 @@
 # placeholder
+# guzzlehttp/guzzle
+# These CVE's are related to oC 10.10 core. As long as we build this version,
+# we need to ignore it in trivy.
+CVE-2022-29248
+CVE-2022-31042
+CVE-2022-31043
+CVE-2022-31091
