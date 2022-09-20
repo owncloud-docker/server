@@ -7,7 +7,7 @@ def main(ctx):
             "tarball_sha": "8cbd911da3a77d9af3e746080bb8e4e74f4bb4c34147231c01cc0c7b8f72417f",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.11.0", "10.11", "10", "latest"],
+            "tags": ["10.11", "10", "latest"],
         },
         {
             "value": "10.10.0",
@@ -16,7 +16,7 @@ def main(ctx):
             "tarball_sha": "a6c811cfe87908e18178d69ef128993a721b0a78de6a5f8943e970bb5d201f39",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.10", "10", "latest"],
+            "tags": ["10.10"],
         },
     ]
 
