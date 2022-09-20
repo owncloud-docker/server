@@ -1,13 +1,13 @@
 def main(ctx):
     versions = [
         {
-            "value": "10.11.0-rc.2",
-            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220914-qa.tar.bz2",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20220914.tar.bz2",
-            "tarball_sha": "b04e61b7dac381fbfa29bc11b82c09deecf8d8ddfb57faeb2036c4a24e26c3da",
+            "value": "10.11.0",
+            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220919-qa.tar.bz2",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220919.tar.bz2",
+            "tarball_sha": "8cbd911da3a77d9af3e746080bb8e4e74f4bb4c34147231c01cc0c7b8f72417f",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.11.0-rc.2"],
+            "tags": ["10.11.0", "10.11", "10", "latest"],
         },
         {
             "value": "10.10.0",
@@ -17,15 +17,6 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.10", "10", "latest"],
-        },
-        {
-            "value": "10.9.1",
-            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220112-qa.tar.bz2",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220112.tar.bz2",
-            "tarball_sha": "3ab3478aee75d6aa6c47db2bc8749a108917df633f2cfab7e8ff67973c2f6147",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.9"],
         },
     ]
 
