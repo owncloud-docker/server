@@ -14,6 +14,8 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 ![Secure content collaboration and filesharing with ownCloud](https://raw.githubusercontent.com/owncloud-docker/server/master/images/Home-UI.png)
 
+> **IMPORTANT:** We had to change the behavior of the ownCloud setting for trusted domains. Instead of automatic detection, it is now required to set all trusted domains with the environment variable "OWNCLOUD_TRUSTED_DOMAINS".
+
 ## Quick reference
 
 - **Where to file issues:**\
