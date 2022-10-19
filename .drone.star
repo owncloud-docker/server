@@ -532,7 +532,14 @@ def trivy(config):
 
     return [
         {
-            "name": "database",
+            "name": "trivy-presets",
+            "image": "owncloudci/alpine",
+            "commands": [
+                'retry -t 3 -s 5 -- "curl -sSfL https://github.com/owncloud-docker/trivy-presets/archive/refs/heads/main.tar.gz | tar xz --strip-components=2 trivy-presets-main/base/"',
+            ],
+        },
+        {
+            "name": "trivy-db",
             "image": "plugins/download",
             "settings": {
                 "source": {
@@ -541,7 +548,7 @@ def trivy(config):
             },
         },
         {
-            "name": "trivy",
+            "name": "trivy-scan",
             "image": "aquasec/trivy",
             "environment": {
                 "TRIVY_AUTH_URL": "https://registry.drone.owncloud.com",
@@ -555,12 +562,13 @@ def trivy(config):
                 "TRIVY_IGNORE_UNFIXED": True,
                 "TRIVY_TIMEOUT": "5m",
                 "TRIVY_EXIT_CODE": "1",
-                "TRIVY_SKIP_UPDATE": True,
+                "TRIVY_DB_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
                 "TRIVY_CACHE_DIR": "/drone/src/trivy",
             },
             "commands": [
                 "tar -xf trivy.tar.gz",
+                "trivy -v",
                 "trivy image registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
             ],
         },
