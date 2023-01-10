@@ -22,7 +22,6 @@ def main(ctx):
 
     arches = [
         "amd64",
-        "arm32v7",
         "arm64v8",
     ]
 
