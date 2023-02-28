@@ -61,6 +61,14 @@ def main(ctx):
         for arch in arches:
             config["arch"] = arch
 
+            # Legacy switch: since 10.12.0 we use inbucket.
+            if config["version"]["value"] in ("10.11.0", "10.10.0"):
+                config["email_image"] = "mailhog/mailhog:latest"
+                config["email_port"] = "8025"
+            else:
+                config["email_image"] = "inbucket/inbucket:latest"
+                config["email_port"] = "9000"
+
             if config["version"]["value"] == "latest":
                 config["tag"] = arch
             else:
@@ -274,7 +282,7 @@ def docker(config):
                     },
                     {
                         "name": "email",
-                        "image": "inbucket/inbucket:latest",
+                        "image": config("email_image"),
                         "pull": "always",
                     },
                     {
@@ -599,7 +607,7 @@ def wait_email(config):
         "image": "owncloud/ubuntu:20.04",
         "pull": "always",
         "commands": [
-            "wait-for-it -t 600 email:9000",
+            "wait-for-it -t 600 email:" + config("email_port"),
         ],
     }]
 
@@ -714,6 +722,8 @@ def ui(config):
                 "SELENIUM_HOST": "selenium",
                 "SELENIUM_PORT": "4444",
                 "PLATFORM": "Linux",
+                "MAILHOG_HOST": "email",	# legacy for 10.10.0 and 10.11.0
+                "LOCAL_MAILHOG_HOST": "email",	# legacy for 10.10.0 and 10.11.0
                 "EMAIL_HOST": "email",
                 "LOCAL_EMAIL_HOST": "email",
             },
