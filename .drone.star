@@ -282,7 +282,7 @@ def docker(config):
                     },
                     {
                         "name": "email",
-                        "image": config("email_image"),
+                        "image": config["email_image"],
                         "pull": "always",
                     },
                     {
@@ -607,7 +607,7 @@ def wait_email(config):
         "image": "owncloud/ubuntu:20.04",
         "pull": "always",
         "commands": [
-            "wait-for-it -t 600 email:" + config("email_port"),
+            "wait-for-it -t 600 email:" + config["email_port"],
         ],
     }]
 
