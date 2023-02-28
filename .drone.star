@@ -4,7 +4,7 @@ def main(ctx):
             "value": "10.12.0-rc2",
             "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20230228-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20230228.tar.bz2",
-            "tarball_sha": "86a9895f22be820eef7c7434cadea1b7476c8e5416fec902526d9a626a0c85c4",
+            "tarball_sha": "7bb27d5b4fea3eea1fce6fef254c6ee4679c612cdb5423b76bfb7f27ae8c12b2",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.12.0-rc2"],
