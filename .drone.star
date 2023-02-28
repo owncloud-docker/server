@@ -236,7 +236,7 @@ def docker(config):
                 "clone": {
                     "disable": True,
                 },
-                "steps": wait(config) + ui(config),
+                "steps": wait(config) + wait_email(config) + ui(config),
                 "services": [
                     {
                         "name": "server",
@@ -593,6 +593,16 @@ def wait(config):
         ],
     }]
 
+def wait_email(config):
+    return [{
+        "name": "wait-email",
+        "image": "owncloud/ubuntu:20.04",
+        "pull": "always",
+        "commands": [
+            "wait-for-it -t 600 email:9000",
+        ],
+    }]
+
 def api(config):
     return [
         {
@@ -704,8 +714,8 @@ def ui(config):
                 "SELENIUM_HOST": "selenium",
                 "SELENIUM_PORT": "4444",
                 "PLATFORM": "Linux",
-                "MAILHOG_HOST": "email",
-                "LOCAL_MAILHOG_HOST": "email",
+                "EMAIL_HOST": "email",
+                "LOCAL_EMAIL_HOST": "email",
             },
             "commands": [
                 'bash tests/acceptance/run.sh --remote --tags "@smokeTest&&~@skip&&~@skipOnDockerContainerTesting%s" --type webUI --part %d %d' % (extraTestFilterTags(config), config["step"], config["splitUI"]),
