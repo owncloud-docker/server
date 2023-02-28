@@ -704,8 +704,8 @@ def ui(config):
                 "SELENIUM_HOST": "selenium",
                 "SELENIUM_PORT": "4444",
                 "PLATFORM": "Linux",
-                "MAILHOG_HOST": "email",	# legacy for 10.10.0 and 10.11.0
-                "LOCAL_MAILHOG_HOST": "email",	# legacy for 10.10.0 and 10.11.0
+                "MAILHOG_HOST": "email",  # legacy for 10.10.0 and 10.11.0
+                "LOCAL_MAILHOG_HOST": "email",  # legacy for 10.10.0 and 10.11.0
                 "EMAIL_HOST": "email",
                 "LOCAL_EMAIL_HOST": "email",
             },
