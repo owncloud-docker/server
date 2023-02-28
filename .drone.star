@@ -475,12 +475,6 @@ def download(config):
         "name": "download",
         "image": "plugins/download",
         "settings": {
-            "username": {
-                "from_secret": "download_username",
-            },
-            "password": {
-                "from_secret": "download_password",
-            },
             "source": config["version"]["tarball"],
             "sha256": config["version"]["tarball_sha"],
             "destination": "%s/owncloud.tar.bz2" % config["version"]["base"],
@@ -591,12 +585,6 @@ def api(config):
             "image": "plugins/download",
             "pull": "always",
             "settings": {
-                "username": {
-                    "from_secret": "download_username",
-                },
-                "password": {
-                    "from_secret": "download_password",
-                },
                 "source": config["version"]["qa"],
                 "destination": "owncloud-qa.tar.bz2",
             },
@@ -648,12 +636,6 @@ def ui(config):
             "image": "plugins/download",
             "pull": "always",
             "settings": {
-                "username": {
-                    "from_secret": "download_username",
-                },
-                "password": {
-                    "from_secret": "download_password",
-                },
                 "source": config["version"]["qa"],
                 "destination": "owncloud-qa.tar.bz2",
             },
