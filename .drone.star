@@ -7,7 +7,7 @@ def main(ctx):
             "tarball_sha": "86a9895f22be820eef7c7434cadea1b7476c8e5416fec902526d9a626a0c85c4",
             "php": "7.4",
             "base": "v20.04",
-            "tags": [],
+            "tags": ["10.12.0-rc2"],
         },
         {
             "value": "10.11.0",
