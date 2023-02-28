@@ -274,7 +274,7 @@ def docker(config):
                     },
                     {
                         "name": "email",
-                        "image": "mailhog/mailhog:latest",
+                        "image": "inbucket/inbucket:latest",
                         "pull": "always",
                     },
                     {
