@@ -2,7 +2,6 @@ def main(ctx):
     versions = [
         {
             "value": "10.12.0-rc2",
-            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20230228-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20230228.tar.bz2",
             "tarball_sha": "7bb27d5b4fea3eea1fce6fef254c6ee4679c612cdb5423b76bfb7f27ae8c12b2",
             "php": "7.4",
@@ -11,7 +10,6 @@ def main(ctx):
         },
         {
             "value": "10.11.0",
-            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220919-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220919.tar.bz2",
             "tarball_sha": "8cbd911da3a77d9af3e746080bb8e4e74f4bb4c34147231c01cc0c7b8f72417f",
             "php": "7.4",
@@ -20,7 +18,6 @@ def main(ctx):
         },
         {
             "value": "10.10.0",
-            "qa": "https://download.owncloud.com/server/testing/owncloud-complete-20220518-qa.tar.bz2",
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220518.tar.bz2",
             "tarball_sha": "a6c811cfe87908e18178d69ef128993a721b0a78de6a5f8943e970bb5d201f39",
             "php": "7.4",
@@ -56,18 +53,13 @@ def main(ctx):
             shell_bases.append(config["version"]["base"])
             shell.extend(shellcheck(config))
 
+        config["version"]["qa"] = config["version"].get("qa", "https://download.owncloud.com/server/daily/owncloud-daily-master-qa.tar.bz2")
+        config["version"]["behat"] = config["version"].get("behat", "https://raw.githubusercontent.com/owncloud/core/master/vendor-bin/behat/composer.json")
+
         inner = []
 
         for arch in arches:
             config["arch"] = arch
-
-            # Legacy switch: since 10.12.0 we use inbucket.
-            if config["version"]["value"] in ("10.11.0", "10.10.0"):
-                config["email_image"] = "mailhog/mailhog:latest"
-                config["email_port"] = "8025"
-            else:
-                config["email_image"] = "inbucket/inbucket:latest"
-                config["email_port"] = "9000"
 
             if config["version"]["value"] == "latest":
                 config["tag"] = arch
@@ -182,12 +174,11 @@ def docker(config):
                 "clone": {
                     "disable": True,
                 },
-                "steps": wait(config) + api(config),
+                "steps": wait_server(config) + api(config),
                 "services": [
                     {
                         "name": "server",
                         "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-                        "pull": "always",
                         "environment": {
                             "DEBUG": "true",
                             "OWNCLOUD_TRUSTED_DOMAINS": "server",
@@ -204,7 +195,6 @@ def docker(config):
                     {
                         "name": "mysql",
                         "image": "library/mysql:5.7",
-                        "pull": "always",
                         "environment": {
                             "MYSQL_ROOT_PASSWORD": "owncloud",
                             "MYSQL_USER": "owncloud",
@@ -215,7 +205,6 @@ def docker(config):
                     {
                         "name": "redis",
                         "image": "library/redis:4.0",
-                        "pull": "always",
                     },
                 ],
                 "image_pull_secrets": [
@@ -244,12 +233,11 @@ def docker(config):
                 "clone": {
                     "disable": True,
                 },
-                "steps": wait(config) + wait_email(config) + ui(config),
+                "steps": wait_server(config) + wait_email(config) + ui(config),
                 "services": [
                     {
                         "name": "server",
                         "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-                        "pull": "always",
                         "environment": {
                             "DEBUG": "true",
                             "OWNCLOUD_TRUSTED_DOMAINS": "server",
@@ -267,7 +255,6 @@ def docker(config):
                     {
                         "name": "mysql",
                         "image": "library/mysql:5.7",
-                        "pull": "always",
                         "environment": {
                             "MYSQL_ROOT_PASSWORD": "owncloud",
                             "MYSQL_USER": "owncloud",
@@ -278,17 +265,14 @@ def docker(config):
                     {
                         "name": "redis",
                         "image": "library/redis:4.0",
-                        "pull": "always",
                     },
                     {
                         "name": "email",
-                        "image": config["email_image"],
-                        "pull": "always",
+                        "image": "inbucket/inbucket",
                     },
                     {
                         "name": "selenium",
                         "image": "selenium/standalone-chrome-debug:3.141.59-oxygen",
-                        "pull": "always",
                     },
                 ],
                 "image_pull_secrets": [
@@ -314,7 +298,7 @@ def docker(config):
             "clone": {
                 "disable": True,
             },
-            "steps": wait(config) + tests(config),
+            "steps": wait_server(config) + tests(config),
             "services": [
                 {
                     "name": "server",
@@ -585,7 +569,7 @@ def trivy(config):
         },
     ]
 
-def wait(config):
+def wait_server(config):
     return [{
         "name": "wait",
         "image": "owncloud/ubuntu:20.04",
@@ -599,9 +583,8 @@ def wait_email(config):
     return [{
         "name": "wait-email",
         "image": "owncloud/ubuntu:20.04",
-        "pull": "always",
         "commands": [
-            "wait-for-it -t 600 email:" + config["email_port"],
+            "wait-for-it -t 600 email:9000",
         ],
     }]
 
@@ -638,7 +621,7 @@ def api(config):
             "pull": "always",
             "commands": [
                 "mkdir -p vendor-bin/behat",
-                "wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/%s/vendor-bin/behat/composer.json" % versionize(config["version"]),
+                "wget -O vendor-bin/behat/composer.json %s" % config["version"]["behat"],
                 "cd vendor-bin/behat/ && composer install",
             ],
         },
@@ -689,7 +672,7 @@ def ui(config):
             "pull": "always",
             "commands": [
                 "mkdir -p vendor-bin/behat",
-                "wget -O vendor-bin/behat/composer.json https://raw.githubusercontent.com/owncloud/core/%s/vendor-bin/behat/composer.json" % versionize(config["version"]),
+                "wget -O vendor-bin/behat/composer.json %s" % config["version"]["behat"],
                 "cd vendor-bin/behat/ && composer install",
             ],
         },
@@ -704,8 +687,6 @@ def ui(config):
                 "SELENIUM_HOST": "selenium",
                 "SELENIUM_PORT": "4444",
                 "PLATFORM": "Linux",
-                "MAILHOG_HOST": "email",  # legacy for 10.10.0 and 10.11.0
-                "LOCAL_MAILHOG_HOST": "email",  # legacy for 10.10.0 and 10.11.0
                 "EMAIL_HOST": "email",
                 "LOCAL_EMAIL_HOST": "email",
             },
@@ -818,12 +799,6 @@ def shellcheck(config):
             ],
         },
     ]
-
-def versionize(version):
-    if "behat_version" in version:
-        return version["behat_version"]
-    else:
-        return "v%s" % (version["value"])
 
 def extraTestFilterTags(config):
     if "version" not in config:
