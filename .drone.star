@@ -571,7 +571,7 @@ def trivy(config):
 
 def wait_server(config):
     return [{
-        "name": "wait",
+        "name": "wait-server",
         "image": "owncloud/ubuntu:20.04",
         "pull": "always",
         "commands": [
