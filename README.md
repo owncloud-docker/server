@@ -22,7 +22,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
   [owncloud/core](https://github.com/owncloud/core/issues)
 
 - **Supported architectures:**\
-  `amd64`, `arm32v7`, `arm64v8`
+  `amd64`, `arm64v8`
 
 - **Inherited environments:**\
   [owncloud/ubuntu](https://github.com/owncloud-docker/ubuntu#environment-variables),
