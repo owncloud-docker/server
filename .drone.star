@@ -8,7 +8,7 @@ def main(ctx):
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.12.1-rc.1"],
-
+        },
         {
             "value": "10.12.0",
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20230313.tar.bz2",
