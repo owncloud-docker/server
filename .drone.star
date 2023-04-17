@@ -1,17 +1,9 @@
 def main(ctx):
     versions = [
         {
-            "value": "10.12.1-rc.3",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20230406.tar.bz2",
-            "tarball_sha": "811aeb234bad127346b1a56d8cd9d3da76a9083fc3be733f0897c96f4ac5d208",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.12.1-rc.3"],
-        },
-        {
-            "value": "10.12.0",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20230313.tar.bz2",
-            "tarball_sha": "174f48076cefd574b35f6e5f088555eabefc46c419d621c5c0215be7621a08b9",
+            "value": "10.12.1",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20230415.tar.bz2",
+            "tarball_sha": "4db0e834b3df661370679759f7556013d18d6e4de30a70ff30d70f89d5f25794",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.12", "10", "latest"],
@@ -394,7 +386,7 @@ def documentation(config):
         "steps": [
             {
                 "name": "link-check",
-                "image": "ghcr.io/tcort/markdown-link-check:stable",
+                "image": "ghcr.io/tcort/markdown-link-check:3.11.0",
                 "commands": [
                     "/src/markdown-link-check README.md",
                 ],
