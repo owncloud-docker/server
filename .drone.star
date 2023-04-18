@@ -261,7 +261,7 @@ def docker(config):
                     },
                     {
                         "name": "selenium",
-                        "image": "docker.io/selenium/standalone-chrome:111.0",
+                        "image": "docker.io/selenium/standalone-chrome-debug:3.141.59-oxygen",
                     },
                 ],
                 "image_pull_secrets": [
