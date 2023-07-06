@@ -196,9 +196,6 @@ def docker(config):
                         "image": "docker.io/redis:6",
                     },
                 ],
-                "image_pull_secrets": [
-                    "registries",
-                ],
                 "depends_on": [],
                 "trigger": {
                     "ref": [
@@ -264,9 +261,6 @@ def docker(config):
                         "image": "docker.io/selenium/standalone-chrome-debug:3.141.59-oxygen",
                     },
                 ],
-                "image_pull_secrets": [
-                    "registries",
-                ],
                 "depends_on": [],
                 "trigger": {
                     "ref": [
@@ -300,9 +294,6 @@ def docker(config):
                         "OWNCLOUD_APPS_ENABLE": "testing",
                     },
                 },
-            ],
-            "image_pull_secrets": [
-                "registries",
             ],
             "depends_on": [],
             "trigger": {
