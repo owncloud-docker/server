@@ -1,4 +1,4 @@
-FROM owncloud/base:20.04-arm64v8@sha256:72b83eecca6883d8e6f3b3346d6f955508fe88ef8b8366049a20899993e901c9
+FROM owncloud/base:20.04-arm64v8@sha256:a7704bf8b1f093e7e0840b6b4400e8a31e502e91181cd022c717426cf0c212da
 
 LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.opencontainers.image.authors="ownCloud DevOps <devops@owncloud.com>" \
