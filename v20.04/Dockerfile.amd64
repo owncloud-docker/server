@@ -9,8 +9,24 @@ LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.opencontainers.image.source="https://github.com/owncloud-docker/server" \
   org.opencontainers.image.documentation="https://github.com/owncloud-docker/server"
 
-ADD owncloud.tar.bz2 /var/www/
+############
+# imagemagick-7 upgrade to add HEIC support to the thumbnailer. HEIC was added in 6.9.11 as seen in
+# ubuntu 22.04, whereas ubuntu 20.04 has 6.9.10
+# See https://doc.owncloud.com/server/next/admin_manual/installation/manual_installation/manual_imagick7.html
+##
+RUN phpdismod imagick
+RUN apt remove -y imagemagick-6-common php-imagick
+WORKDIR /tmp
+RUN wget https://dist.1-2.dev/imei.sh
+# expect 10 min build time now ...
+RUN bash ./imei.sh --config-dir "/etc"
+RUN apt install -y php-dev
+RUN pecl channel-update pecl.php.net
+RUN echo | pecl install imagick
+RUN phpenmod imagick
+############
 
+ADD owncloud.tar.bz2 /var/www/
 ADD overlay /
 WORKDIR /var/www/owncloud
 
