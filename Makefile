@@ -1,7 +1,7 @@
 # local build without drone.
 #
 # TODO: review, if this gets close to what drone does.
-# NOTE: Many more lables are produced from inside the Dockerfile
+# NOTE: Many more labels are produced from inside the Dockerfile
 
 
 VALUE    := $(shell grep '"value":'   .drone.star  | head -1 | cut -d'"' -f 4)
