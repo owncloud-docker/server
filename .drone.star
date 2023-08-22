@@ -1,12 +1,12 @@
 def main(ctx):
     versions = [
         {
-            "value": "10.13.0-rc.2",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20230821.tar.bz2",
-            "tarball_sha": "50264abb62fa3a7014ad58c221714dd1496abd003d2b1ce994978edbfe48bc96",
+            "value": "10.13.0",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20230822.tar.bz2",
+            "tarball_sha": "a3da3332236f5c292d7cc05a98dce395534bac33202a0060eb53dfcce3b8aff7",
             "php": "7.4",
             "base": "v20.04",
-            "tags": [],
+            "tags": ["10.13", "10", "latest"],
         },
         {
             "value": "10.12.2",
@@ -14,15 +14,7 @@ def main(ctx):
             "tarball_sha": "3775bbaae65eb80013d0558126df927f0e6c5d58eb0968b88222bcd2a5de8de8",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.12", "10", "latest"],
-        },
-        {
-            "value": "10.11.0",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20220919.tar.bz2",
-            "tarball_sha": "8cbd911da3a77d9af3e746080bb8e4e74f4bb4c34147231c01cc0c7b8f72417f",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.11"],
+            "tags": ["10.12"],
         },
     ]
 
