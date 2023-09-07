@@ -15,7 +15,9 @@ ADD overlay /
 WORKDIR /var/www/owncloud
 
 RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \
-  chmod g+w /var/www/owncloud /var/www/owncloud/.htaccess
+  chmod g+w /var/www/owncloud /var/www/owncloud/.htaccess && \
+  find /var/www/owncloud -iname tests -type d && \
+  find /var/www/owncloud -iname tests -type d -prune -exec rm -rf "{}" \;
 
 VOLUME ["/mnt/data"]
 EXPOSE 8080
