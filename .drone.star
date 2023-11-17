@@ -1,6 +1,14 @@
 def main(ctx):
     versions = [
         {
+            "value": "10.13.3-rc.2",
+            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20231117.tar.bz2",
+            "tarball_sha": "1cf9ad99ba9b2a73f5d5e12abbbd76e1f0b3538745a4e875dd9a34efdcf0d32e",
+            "php": "7.4",
+            "base": "v20.04",
+            "tags": [],
+        },
+        {
             "value": "10.13.2",
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20231009.tar.bz2",
             "tarball_sha": "0eee3bf9dacd86ef6b5efba4d71d99188e98d3ff83a49078e87d4ea4e3937cec",
