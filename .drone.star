@@ -637,21 +637,8 @@ def lint(shell):
                 "name": "starlark-format",
                 "image": "docker.io/owncloudci/bazel-buildifier",
                 "commands": [
-                    "buildifier --mode=check .drone.star",
+                    "buildifier -d -diff_command='diff -u' .drone.star",
                 ],
-            },
-            {
-                "name": "starlark-diff",
-                "image": "docker.io/owncloudci/bazel-buildifier",
-                "commands": [
-                    "buildifier --mode=fix .drone.star",
-                    "git diff",
-                ],
-                "when": {
-                    "status": [
-                        "failure",
-                    ],
-                },
             },
         ],
         "depends_on": [],
