@@ -52,7 +52,7 @@ def main(ctx):
 
         config["internal"] = "%s-%s-%s" % (ctx.build.commit, "${DRONE_BUILD_NUMBER}", config["version"]["value"])
         config["version"]["tags"] = version.get("tags", [])
-        config["version"]["tags"].append(version["value"])
+        config["version"]["tags"].append(config["version"]["value"])
 
         for d in docker(config):
             d["depends_on"].append(lint(shell)["name"])
