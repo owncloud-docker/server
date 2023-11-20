@@ -26,14 +26,8 @@ def main(ctx):
         },
     ]
 
-    arches = [
-        "amd64",
-        "arm64v8",
-    ]
-
     config = {
         "version": None,
-        "arch": None,
         "splitAPI": 10,
         "splitUI": 5,
         "description": "ownCloud - Secure Collaboration Platform",
@@ -47,8 +41,6 @@ def main(ctx):
     for version in versions:
         config["version"] = version
 
-        m = manifest(config)
-
         if config["version"]["base"] not in shell_bases:
             shell_bases.append(config["version"]["base"])
             shell.extend(shellcheck(config))
@@ -58,28 +50,14 @@ def main(ctx):
 
         inner = []
 
-        for arch in arches:
-            config["arch"] = arch
+        config["internal"] = "%s-%s-%s" % (ctx.build.commit, "${DRONE_BUILD_NUMBER}", config["version"]["value"])
+        config["version"]["tags"] = version.get("tags", [])
+        config["version"]["tags"].append(version["value"])
 
-            if config["version"]["value"] == "latest":
-                config["tag"] = arch
-            else:
-                config["tag"] = "%s-%s" % (config["version"]["value"], arch)
+        for d in docker(config):
+            d["depends_on"].append(lint(shell)["name"])
+            inner.append(d)
 
-            if config["arch"] == "amd64":
-                config["platform"] = "amd64"
-
-            if config["arch"] == "arm64v8":
-                config["platform"] = "arm64"
-
-            config["internal"] = "%s-%s-%s" % (ctx.build.commit, "${DRONE_BUILD_NUMBER}", config["tag"])
-
-            for d in docker(config):
-                d["depends_on"].append(lint(shell)["name"])
-                m["depends_on"].append(d["name"])
-                inner.append(d)
-
-        inner.append(m)
         stages.extend(inner)
 
     after = [
@@ -97,10 +75,10 @@ def docker(config):
     pre = [{
         "kind": "pipeline",
         "type": "docker",
-        "name": "prepublish-%s-%s" % (config["arch"], config["version"]["value"]),
+        "name": "prepublish-%s" % (config["version"]["value"]),
         "platform": {
             "os": "linux",
-            "arch": config["platform"],
+            "arch": "amd64",
         },
         "steps": download(config) + prepublish(config) + sleep(config) + trivy(config),
         "depends_on": [],
@@ -115,10 +93,10 @@ def docker(config):
     post = [{
         "kind": "pipeline",
         "type": "docker",
-        "name": "cleanup-%s-%s" % (config["arch"], config["version"]["value"]),
+        "name": "cleanup-%s" % (config["version"]["value"]),
         "platform": {
             "os": "linux",
-            "arch": config["platform"],
+            "arch": "amd64",
         },
         "clone": {
             "disable": True,
@@ -140,10 +118,10 @@ def docker(config):
     push = [{
         "kind": "pipeline",
         "type": "docker",
-        "name": "publish-%s-%s" % (config["arch"], config["version"]["value"]),
+        "name": "publish-%s" % (config["version"]["value"]),
         "platform": {
             "os": "linux",
-            "arch": config["platform"],
+            "arch": "amd64",
         },
         "steps": download(config) + publish(config),
         "depends_on": [],
@@ -156,150 +134,115 @@ def docker(config):
 
     test = []
 
-    if config["arch"] == "amd64":
-        for step in list(range(1, config["splitAPI"] + 1)):
-            config["step"] = step
+    for step in list(range(1, config["splitAPI"] + 1)):
+        config["step"] = step
 
-            test.append({
-                "kind": "pipeline",
-                "type": "docker",
-                "name": "api%d-%s-%s" % (config["step"], config["arch"], config["version"]["value"]),
-                "platform": {
-                    "os": "linux",
-                    "arch": config["platform"],
-                },
-                "clone": {
-                    "disable": True,
-                },
-                "steps": wait_server(config) + api(config),
-                "services": [
-                    {
-                        "name": "server",
-                        "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-                        "environment": {
-                            "DEBUG": "true",
-                            "OWNCLOUD_TRUSTED_DOMAINS": "server",
-                            "OWNCLOUD_APPS_INSTALL": "https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz",
-                            "OWNCLOUD_APPS_ENABLE": "testing",
-                            "OWNCLOUD_REDIS_HOST": "redis",
-                            "OWNCLOUD_DB_TYPE": "mysql",
-                            "OWNCLOUD_DB_HOST": "mysql",
-                            "OWNCLOUD_DB_USERNAME": "owncloud",
-                            "OWNCLOUD_DB_PASSWORD": "owncloud",
-                            "OWNCLOUD_DB_NAME": "owncloud",
-                        },
-                    },
-                    {
-                        "name": "mysql",
-                        "image": "docker.io/mariadb:10.6",
-                        "environment": {
-                            "MYSQL_ROOT_PASSWORD": "owncloud",
-                            "MYSQL_USER": "owncloud",
-                            "MYSQL_PASSWORD": "owncloud",
-                            "MYSQL_DATABASE": "owncloud",
-                        },
-                    },
-                    {
-                        "name": "redis",
-                        "image": "docker.io/redis:6",
-                    },
-                ],
-                "depends_on": [],
-                "trigger": {
-                    "ref": [
-                        "refs/heads/master",
-                        "refs/pull/**",
-                    ],
-                },
-            })
-
-        for step in list(range(1, config["splitUI"] + 1)):
-            config["step"] = step
-
-            test.append({
-                "kind": "pipeline",
-                "type": "docker",
-                "name": "ui%d-%s-%s" % (config["step"], config["arch"], config["version"]["value"]),
-                "platform": {
-                    "os": "linux",
-                    "arch": config["platform"],
-                },
-                "clone": {
-                    "disable": True,
-                },
-                "steps": wait_server(config) + wait_email(config) + ui(config),
-                "services": [
-                    {
-                        "name": "server",
-                        "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-                        "environment": {
-                            "DEBUG": "true",
-                            "OWNCLOUD_TRUSTED_DOMAINS": "server",
-                            "OWNCLOUD_APPS_INSTALL": "https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz",
-                            "OWNCLOUD_APPS_ENABLE": "testing",
-                            "OWNCLOUD_REDIS_HOST": "redis",
-                            "OWNCLOUD_DB_TYPE": "mysql",
-                            "OWNCLOUD_DB_HOST": "mysql",
-                            "OWNCLOUD_DB_USERNAME": "owncloud",
-                            "OWNCLOUD_DB_PASSWORD": "owncloud",
-                            "OWNCLOUD_DB_NAME": "owncloud",
-                        },
-                    },
-                    {
-                        "name": "mysql",
-                        "image": "docker.io/mariadb:10.6",
-                        "environment": {
-                            "MYSQL_ROOT_PASSWORD": "owncloud",
-                            "MYSQL_USER": "owncloud",
-                            "MYSQL_PASSWORD": "owncloud",
-                            "MYSQL_DATABASE": "owncloud",
-                        },
-                    },
-                    {
-                        "name": "redis",
-                        "image": "docker.io/redis:6",
-                    },
-                    {
-                        "name": "email",
-                        "image": "docker.io/inbucket/inbucket",
-                    },
-                    {
-                        "name": "selenium",
-                        "image": "docker.io/selenium/standalone-chrome-debug:3.141.59-oxygen",
-                    },
-                ],
-                "depends_on": [],
-                "trigger": {
-                    "ref": [
-                        "refs/heads/master",
-                        "refs/pull/**",
-                    ],
-                },
-            })
-    else:
         test.append({
             "kind": "pipeline",
             "type": "docker",
-            "name": "test-%s-%s" % (config["arch"], config["version"]["value"]),
+            "name": "api%d-%s" % (config["step"], config["version"]["value"]),
             "platform": {
                 "os": "linux",
-                "arch": config["platform"],
+                "arch": "amd64",
             },
             "clone": {
                 "disable": True,
             },
-            "steps": wait_server(config) + tests(config),
+            "steps": wait_server(config) + api(config),
             "services": [
                 {
                     "name": "server",
                     "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-                    "pull": "always",
                     "environment": {
                         "DEBUG": "true",
                         "OWNCLOUD_TRUSTED_DOMAINS": "server",
                         "OWNCLOUD_APPS_INSTALL": "https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz",
                         "OWNCLOUD_APPS_ENABLE": "testing",
+                        "OWNCLOUD_REDIS_HOST": "redis",
+                        "OWNCLOUD_DB_TYPE": "mysql",
+                        "OWNCLOUD_DB_HOST": "mysql",
+                        "OWNCLOUD_DB_USERNAME": "owncloud",
+                        "OWNCLOUD_DB_PASSWORD": "owncloud",
+                        "OWNCLOUD_DB_NAME": "owncloud",
                     },
+                },
+                {
+                    "name": "mysql",
+                    "image": "docker.io/mariadb:10.6",
+                    "environment": {
+                        "MYSQL_ROOT_PASSWORD": "owncloud",
+                        "MYSQL_USER": "owncloud",
+                        "MYSQL_PASSWORD": "owncloud",
+                        "MYSQL_DATABASE": "owncloud",
+                    },
+                },
+                {
+                    "name": "redis",
+                    "image": "docker.io/redis:6",
+                },
+            ],
+            "depends_on": [],
+            "trigger": {
+                "ref": [
+                    "refs/heads/master",
+                    "refs/pull/**",
+                ],
+            },
+        })
+
+    for step in list(range(1, config["splitUI"] + 1)):
+        config["step"] = step
+
+        test.append({
+            "kind": "pipeline",
+            "type": "docker",
+            "name": "ui%d-%s" % (config["step"], config["version"]["value"]),
+            "platform": {
+                "os": "linux",
+                "arch": "amd64",
+            },
+            "clone": {
+                "disable": True,
+            },
+            "steps": wait_server(config) + wait_email(config) + ui(config),
+            "services": [
+                {
+                    "name": "server",
+                    "image": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
+                    "environment": {
+                        "DEBUG": "true",
+                        "OWNCLOUD_TRUSTED_DOMAINS": "server",
+                        "OWNCLOUD_APPS_INSTALL": "https://github.com/owncloud/testing/releases/download/latest/testing.tar.gz",
+                        "OWNCLOUD_APPS_ENABLE": "testing",
+                        "OWNCLOUD_REDIS_HOST": "redis",
+                        "OWNCLOUD_DB_TYPE": "mysql",
+                        "OWNCLOUD_DB_HOST": "mysql",
+                        "OWNCLOUD_DB_USERNAME": "owncloud",
+                        "OWNCLOUD_DB_PASSWORD": "owncloud",
+                        "OWNCLOUD_DB_NAME": "owncloud",
+                    },
+                },
+                {
+                    "name": "mysql",
+                    "image": "docker.io/mariadb:10.6",
+                    "environment": {
+                        "MYSQL_ROOT_PASSWORD": "owncloud",
+                        "MYSQL_USER": "owncloud",
+                        "MYSQL_PASSWORD": "owncloud",
+                        "MYSQL_DATABASE": "owncloud",
+                    },
+                },
+                {
+                    "name": "redis",
+                    "image": "docker.io/redis:6",
+                },
+                {
+                    "name": "email",
+                    "image": "docker.io/inbucket/inbucket",
+                },
+                {
+                    "name": "selenium",
+                    "image": "docker.io/selenium/standalone-chrome-debug:3.141.59-oxygen",
                 },
             ],
             "depends_on": [],
@@ -326,52 +269,6 @@ def docker(config):
 
     return pre + test + push + post
 
-def manifest(config):
-    return {
-        "kind": "pipeline",
-        "type": "docker",
-        "name": "manifest-%s" % config["version"]["value"],
-        "platform": {
-            "os": "linux",
-            "arch": "amd64",
-        },
-        "steps": [
-            {
-                "name": "generate",
-                "image": "docker.io/owncloud/ubuntu:20.04",
-                "pull": "always",
-                "environment": {
-                    "MANIFEST_VERSION": config["version"]["value"],
-                    "MANIFEST_TAGS": ",".join(config["version"]["tags"]) if len(config["version"]["tags"]) > 0 else "-",
-                },
-                "commands": [
-                    "gomplate -f %s/manifest.tmpl -o %s/manifest.yml" % (config["version"]["base"], config["version"]["base"]),
-                ],
-            },
-            {
-                "name": "manifest",
-                "image": "docker.io/plugins/manifest",
-                "settings": {
-                    "username": {
-                        "from_secret": "public_username",
-                    },
-                    "password": {
-                        "from_secret": "public_password",
-                    },
-                    "spec": "%s/manifest.yml" % config["version"]["base"],
-                    "ignore_missing": "true",
-                },
-            },
-        ],
-        "depends_on": [],
-        "trigger": {
-            "ref": [
-                "refs/heads/master",
-                "refs/tags/**",
-            ],
-        },
-    }
-
 def documentation(config):
     return {
         "kind": "pipeline",
@@ -384,7 +281,7 @@ def documentation(config):
         "steps": [
             {
                 "name": "link-check",
-                "image": "ghcr.io/tcort/markdown-link-check:3.11.0",
+                "image": "ghcr.io/tcort/markdown-link-check:stable",
                 "commands": [
                     "/src/markdown-link-check README.md",
                 ],
@@ -483,11 +380,13 @@ def prepublish(config):
                 "from_secret": "internal_password",
             },
             "tags": config["internal"],
-            "dockerfile": "%s/Dockerfile.%s" % (config["version"]["base"], config["arch"]),
+            "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
             "repo": "registry.drone.owncloud.com/owncloud/%s" % config["repo"],
             "registry": "registry.drone.owncloud.com",
             "context": config["version"]["base"],
-            "purge": False,
+        },
+        "environment": {
+            "BUILDKIT_NO_CLIENT_TOKEN": True,
         },
     }]
 
@@ -511,9 +410,6 @@ def sleep(config):
 
 # container vulnerability scanning, see: https://github.com/aquasecurity/trivy
 def trivy(config):
-    if config["arch"] != "amd64":
-        return []
-
     return [
         {
             "name": "trivy-presets",
@@ -521,15 +417,6 @@ def trivy(config):
             "commands": [
                 'retry -t 3 -s 5 -- "curl -sSfL https://github.com/owncloud-docker/trivy-presets/archive/refs/heads/main.tar.gz | tar xz --strip-components=2 trivy-presets-main/base/"',
             ],
-        },
-        {
-            "name": "trivy-db",
-            "image": "docker.io/plugins/download",
-            "settings": {
-                "source": {
-                    "from_secret": "trivy_db_download_url",
-                },
-            },
         },
         {
             "name": "trivy-scan",
@@ -546,12 +433,10 @@ def trivy(config):
                 "TRIVY_IGNORE_UNFIXED": True,
                 "TRIVY_TIMEOUT": "5m",
                 "TRIVY_EXIT_CODE": "1",
-                "TRIVY_DB_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
-                "TRIVY_CACHE_DIR": "/drone/src/trivy",
+                "TRIVY_SKIP_FILES": "/usr/local/bin/gomplate",
             },
             "commands": [
-                "tar -xf trivy.tar.gz",
                 "trivy -v",
                 "trivy image registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
             ],
@@ -705,8 +590,12 @@ def publish(config):
             "password": {
                 "from_secret": "public_password",
             },
-            "tags": config["tag"],
-            "dockerfile": "%s/Dockerfile.%s" % (config["version"]["base"], config["arch"]),
+            "platforms": [
+                "linux/amd64",
+                "linux/arm64",
+            ],
+            "tags": config["version"]["tags"],
+            "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
             "repo": "owncloud/%s" % config["repo"],
             "context": config["version"]["base"],
             "cache_from": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
