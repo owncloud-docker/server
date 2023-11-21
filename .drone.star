@@ -175,7 +175,7 @@ def docker(config):
                 },
                 {
                     "name": "mysql",
-                    "image"MARIADB_IMAGE,
+                    "image": MARIADB_IMAGE,
                     "environment": {
                         "MYSQL_ROOT_PASSWORD": "owncloud",
                         "MYSQL_USER": "owncloud",
@@ -185,7 +185,7 @@ def docker(config):
                 },
                 {
                     "name": "redis",
-                    "image"REDIS_IMAGE,
+                    "image": REDIS_IMAGE,
                 },
             ],
             "depends_on": [],
@@ -231,7 +231,7 @@ def docker(config):
                 },
                 {
                     "name": "mysql",
-                    "image"MARIADB_IMAGE,
+                    "image": MARIADB_IMAGE,
                     "environment": {
                         "MYSQL_ROOT_PASSWORD": "owncloud",
                         "MYSQL_USER": "owncloud",
@@ -241,7 +241,7 @@ def docker(config):
                 },
                 {
                     "name": "redis",
-                    "image"REDIS_IMAGE,
+                    "image": REDIS_IMAGE,
                 },
                 {
                     "name": "email",
@@ -249,7 +249,7 @@ def docker(config):
                 },
                 {
                     "name": "selenium",
-                    "image"STANDALONE_CHROME_DEBUG_IMAGE,
+                    "image": STANDALONE_CHROME_DEBUG_IMAGE,
                 },
             ],
             "depends_on": [],
@@ -453,7 +453,7 @@ def trivy(config):
 def wait_server(config):
     return [{
         "name": "wait-server",
-        "image"UBUNTU_IMAGE,
+        "image": UBUNTU_IMAGE,
         "pull": "always",
         "commands": [
             "wait-for-it -t 600 server:8080",
@@ -463,7 +463,7 @@ def wait_server(config):
 def wait_email(config):
     return [{
         "name": "wait-email",
-        "image"UBUNTU_IMAGE,
+        "image": UBUNTU_IMAGE,
         "commands": [
             "wait-for-it -t 600 email:9000",
         ],
@@ -570,7 +570,7 @@ def ui(config):
 def tests(config):
     return [{
         "name": "test",
-        "image"UBUNTU_IMAGE,
+        "image": UBUNTU_IMAGE,
         "commands": [
             "curl -sSf http://server:8080/status.php",
         ],
