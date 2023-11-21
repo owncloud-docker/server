@@ -579,7 +579,7 @@ def tests(config):
 def publish(config):
     return [{
         "name": "publish",
-        "image": "docker.io/plugins/docker",
+        "image": DRONE_DOCKER_BUILDX_IMAGE,
         "settings": {
             "username": {
                 "from_secret": "public_username",
