@@ -36,6 +36,7 @@ def main(ctx):
     stages = []
     shell = []
     shell_bases = []
+    linter = lint(config)
 
     for version in versions:
         config["version"] = version
@@ -54,10 +55,12 @@ def main(ctx):
         config["version"]["tags"].append(config["version"]["value"])
 
         for d in docker(config):
-            d["depends_on"].append(lint(shell)["name"])
+            d["depends_on"].append(linter["name"])
             inner.append(d)
 
         stages.extend(inner)
+
+    linter["steps"].extend(shell)
 
     after = [
         documentation(config),
@@ -68,7 +71,7 @@ def main(ctx):
         for a in after:
             a["depends_on"].append(s["name"])
 
-    return [lint(shell)] + stages + after
+    return [linter] + stages + after
 
 def docker(config):
     pre = [{
@@ -357,55 +360,61 @@ def rocketchat(config):
     }
 
 def download(config):
-    return [{
-        "name": "download",
-        "image": "docker.io/plugins/download",
-        "settings": {
-            "source": config["version"]["tarball"],
-            "sha256": config["version"]["tarball_sha"],
-            "destination": "%s/owncloud.tar.bz2" % config["version"]["base"],
+    return [
+        {
+            "name": "download",
+            "image": "docker.io/plugins/download",
+            "settings": {
+                "source": config["version"]["tarball"],
+                "sha256": config["version"]["tarball_sha"],
+                "destination": "%s/owncloud.tar.bz2" % config["version"]["base"],
+            },
         },
-    }]
+    ]
 
 def prepublish(config):
-    return [{
-        "name": "prepublish",
-        "image": DRONE_DOCKER_BUILDX_IMAGE,
-        "settings": {
-            "username": {
-                "from_secret": "internal_username",
+    return [
+        {
+            "name": "prepublish",
+            "image": DRONE_DOCKER_BUILDX_IMAGE,
+            "settings": {
+                "username": {
+                    "from_secret": "internal_username",
+                },
+                "password": {
+                    "from_secret": "internal_password",
+                },
+                "tags": config["internal"],
+                "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
+                "repo": "registry.drone.owncloud.com/owncloud/%s" % config["repo"],
+                "registry": "registry.drone.owncloud.com",
+                "context": config["version"]["base"],
             },
-            "password": {
-                "from_secret": "internal_password",
+            "environment": {
+                "BUILDKIT_NO_CLIENT_TOKEN": True,
             },
-            "tags": config["internal"],
-            "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
-            "repo": "registry.drone.owncloud.com/owncloud/%s" % config["repo"],
-            "registry": "registry.drone.owncloud.com",
-            "context": config["version"]["base"],
         },
-        "environment": {
-            "BUILDKIT_NO_CLIENT_TOKEN": True,
-        },
-    }]
+    ]
 
 def sleep(config):
-    return [{
-        "name": "sleep",
-        "image": "docker.io/owncloudci/alpine",
-        "environment": {
-            "DOCKER_USER": {
-                "from_secret": "internal_username",
+    return [
+        {
+            "name": "sleep",
+            "image": "docker.io/owncloudci/alpine",
+            "environment": {
+                "DOCKER_USER": {
+                    "from_secret": "internal_username",
+                },
+                "DOCKER_PASSWORD": {
+                    "from_secret": "internal_password",
+                },
             },
-            "DOCKER_PASSWORD": {
-                "from_secret": "internal_password",
-            },
+            "commands": [
+                "regctl registry login registry.drone.owncloud.com --user $DOCKER_USER --pass $DOCKER_PASSWORD",
+                "retry -- 'regctl image digest registry.drone.owncloud.com/owncloud/%s:%s'" % (config["repo"], config["internal"]),
+            ],
         },
-        "commands": [
-            "regctl registry login registry.drone.owncloud.com --user $DOCKER_USER --pass $DOCKER_PASSWORD",
-            "retry -- 'regctl image digest registry.drone.owncloud.com/owncloud/%s:%s'" % (config["repo"], config["internal"]),
-        ],
-    }]
+    ]
 
 # container vulnerability scanning, see: https://github.com/aquasecurity/trivy
 def trivy(config):
@@ -443,22 +452,26 @@ def trivy(config):
     ]
 
 def wait_server(config):
-    return [{
-        "name": "wait-server",
-        "image": UBUNTU_IMAGE,
-        "commands": [
-            "wait-for-it -t 600 server:8080",
-        ],
-    }]
+    return [
+        {
+            "name": "wait-server",
+            "image": UBUNTU_IMAGE,
+            "commands": [
+                "wait-for-it -t 600 server:8080",
+            ],
+        },
+    ]
 
 def wait_email(config):
-    return [{
-        "name": "wait-email",
-        "image": UBUNTU_IMAGE,
-        "commands": [
-            "wait-for-it -t 600 email:9000",
-        ],
-    }]
+    return [
+        {
+            "name": "wait-email",
+            "image": UBUNTU_IMAGE,
+            "commands": [
+                "wait-for-it -t 600 email:9000",
+            ],
+        },
+    ]
 
 def api(config):
     return [
@@ -559,64 +572,70 @@ def ui(config):
     ]
 
 def tests(config):
-    return [{
-        "name": "test",
-        "image": UBUNTU_IMAGE,
-        "commands": [
-            "curl -sSf http://server:8080/status.php",
-        ],
-    }]
+    return [
+        {
+            "name": "test",
+            "image": UBUNTU_IMAGE,
+            "commands": [
+                "curl -sSf http://server:8080/status.php",
+            ],
+        },
+    ]
 
 def publish(config):
-    return [{
-        "name": "publish",
-        "image": DRONE_DOCKER_BUILDX_IMAGE,
-        "settings": {
-            "username": {
-                "from_secret": "public_username",
+    return [
+        {
+            "name": "publish",
+            "image": DRONE_DOCKER_BUILDX_IMAGE,
+            "settings": {
+                "username": {
+                    "from_secret": "public_username",
+                },
+                "password": {
+                    "from_secret": "public_password",
+                },
+                "platforms": [
+                    "linux/amd64",
+                    "linux/arm64",
+                ],
+                "tags": config["version"]["tags"],
+                "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
+                "repo": "owncloud/%s" % config["repo"],
+                "context": config["version"]["base"],
+                "cache_from": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
+                "pull_image": False,
             },
-            "password": {
-                "from_secret": "public_password",
+            "when": {
+                "ref": [
+                    "refs/heads/master",
+                ],
             },
-            "platforms": [
-                "linux/amd64",
-                "linux/arm64",
-            ],
-            "tags": config["version"]["tags"],
-            "dockerfile": "%s/Dockerfile.multiarch" % (config["version"]["base"]),
-            "repo": "owncloud/%s" % config["repo"],
-            "context": config["version"]["base"],
-            "cache_from": "registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-            "pull_image": False,
         },
-        "when": {
-            "ref": [
-                "refs/heads/master",
-            ],
-        },
-    }]
+    ]
 
 def cleanup(config):
-    return [{
-        "name": "cleanup",
-        "image": "docker.io/owncloudci/alpine",
-        "failure": "ignore",
-        "environment": {
-            "DOCKER_USER": {
-                "from_secret": "internal_username",
+    return [
+        {
+            "name": "cleanup",
+            "image": "docker.io/owncloudci/alpine",
+            "failure": "ignore",
+            "environment": {
+                "DOCKER_USER": {
+                    "from_secret": "internal_username",
+                },
+                "DOCKER_PASSWORD": {
+                    "from_secret": "internal_password",
+                },
             },
-            "DOCKER_PASSWORD": {
-                "from_secret": "internal_password",
-            },
+            "commands": [
+                "regctl registry login registry.drone.owncloud.com --user $DOCKER_USER --pass $DOCKER_PASSWORD",
+                "regctl tag rm registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
+            ],
         },
-        "commands": [
-            "regctl registry login registry.drone.owncloud.com --user $DOCKER_USER --pass $DOCKER_PASSWORD",
-            "regctl tag rm registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
-        ],
-    }]
+    ]
 
-def lint(shell):
-    lint = {
+def lint(config):
+    return {
         "kind": "pipeline",
         "type": "docker",
         "name": "lint",
@@ -628,6 +647,10 @@ def lint(shell):
                     "buildifier -d -diff_command='diff -u' .drone.star",
                 ],
             },
+            {
+                "name": "editorconfig-format",
+                "image": "docker.io/mstruebing/editorconfig-checker",
+            },
         ],
         "depends_on": [],
         "trigger": {
@@ -637,10 +660,6 @@ def lint(shell):
             ],
         },
     }
-
-    lint["steps"].extend(shell)
-
-    return lint
 
 def shellcheck(config):
     return [
