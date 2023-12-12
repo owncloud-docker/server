@@ -18,3 +18,7 @@ indent_size = 4
 [*.star]
 indent_style = space
 indent_size = 4
+
+[LICENSE]
+indent_size = unset
+tab_width = unset
