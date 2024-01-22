@@ -1,5 +1,5 @@
 DOCKER_PUSHRM_IMAGE = "docker.io/chko/docker-pushrm:1"
-DRONE_DOCKER_BUILDX_IMAGE = "docker.io/owncloudci/drone-docker-buildx:2"
+DRONE_DOCKER_BUILDX_IMAGE = "docker.io/owncloudci/drone-docker-buildx:3"
 MARIADB_IMAGE = "docker.io/mariadb:10.6"
 REDIS_IMAGE = "docker.io/redis:6"
 UBUNTU_IMAGE = "docker.io/owncloud/ubuntu:20.04"
