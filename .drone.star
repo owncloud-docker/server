@@ -8,12 +8,12 @@ STANDALONE_CHROME_DEBUG_IMAGE = "docker.io/selenium/standalone-chrome-debug:3.14
 def main(ctx):
     versions = [
         {
-            "value": "10.14.0-rc.2",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20240221.tar.bz2",
-            "tarball_sha": "f0a03a18b236262e4ac843394023312e7edac157e9821e60041ce4fb3ecf5800",
+            "value": "10.14.0",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240226.tar.bz2",
+            "tarball_sha": "7b23e7f189f5ceb606fb95e96b5caa202299b3cea90e524fc59bdd3c9c30853c",
             "php": "7.4",
             "base": "v20.04",
-            "tags": [],
+            "tags": ["10.14", "10", "latest"],
         },
         {
             "value": "10.13.4",
@@ -21,15 +21,7 @@ def main(ctx):
             "tarball_sha": "4e39c500cd99e2b2a988d593aa43bf67c29e6704ecbe03fc068872f37018f523",
             "php": "7.4",
             "base": "v20.04",
-            "tags": ["10.13", "10", "latest"],
-        },
-        {
-            "value": "10.12.2",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20230606.tar.bz2",
-            "tarball_sha": "3775bbaae65eb80013d0558126df927f0e6c5d58eb0968b88222bcd2a5de8de8",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.12"],
+            "tags": ["10.13"],
         },
     ]
 
