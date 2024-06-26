@@ -1,7 +1,7 @@
 DOCKER_PUSHRM_IMAGE = "docker.io/chko/docker-pushrm:1"
 DRONE_DOCKER_BUILDX_IMAGE = "docker.io/owncloudci/drone-docker-buildx:4"
 MARIADB_IMAGE = "docker.io/mariadb:10.6"
-REDIS_IMAGE = "docker.io/redis:6"
+REDIS_IMAGE = "docker.io/redis:7"
 UBUNTU_IMAGE = "docker.io/owncloud/ubuntu:20.04"
 STANDALONE_CHROME_DEBUG_IMAGE = "docker.io/selenium/standalone-chrome-debug:3.141.59-oxygen"
 
