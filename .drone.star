@@ -15,22 +15,22 @@ def main(ctx):
             "base": "v20.04",
             "tags": [],
         },
-        {
-            "value": "10.14.0",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240226.tar.bz2",
-            "tarball_sha": "7b23e7f189f5ceb606fb95e96b5caa202299b3cea90e524fc59bdd3c9c30853c",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.14", "10", "latest"],
-        },
-        {
-            "value": "10.13.4",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20231213.tar.bz2",
-            "tarball_sha": "4e39c500cd99e2b2a988d593aa43bf67c29e6704ecbe03fc068872f37018f523",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.13"],
-        },
+        #{
+        #    "value": "10.14.0",
+        #    "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240226.tar.bz2",
+        #    "tarball_sha": "7b23e7f189f5ceb606fb95e96b5caa202299b3cea90e524fc59bdd3c9c30853c",
+        #    "php": "7.4",
+        #    "base": "v20.04",
+        #    "tags": ["10.14", "10", "latest"],
+        #},
+        #{
+        #    "value": "10.13.4",
+        #    "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20231213.tar.bz2",
+        #    "tarball_sha": "4e39c500cd99e2b2a988d593aa43bf67c29e6704ecbe03fc068872f37018f523",
+        #    "php": "7.4",
+        #    "base": "v20.04",
+        #    "tags": ["10.13"],
+        #},
     ]
 
     config = {
