@@ -8,29 +8,29 @@ STANDALONE_CHROME_DEBUG_IMAGE = "docker.io/selenium/standalone-chrome-debug:3.14
 def main(ctx):
     versions = [
         {
-            "value": "10.15.0-rc.1",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20240618.tar.bz2",
-            "tarball_sha": "02de6c30909324085aa079f71b610933a10a556189179b691156be1858062d5c",
+            "value": "10.15.0-rc.4",
+            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20240711.tar.bz2",
+            "tarball_sha": "b5754944bc4cea59f5f857b439b72b162a04807bb42192650bddcc108b70a80a",
             "php": "7.4",
             "base": "v20.04",
             "tags": [],
         },
-        {
-            "value": "10.14.0",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240226.tar.bz2",
-            "tarball_sha": "7b23e7f189f5ceb606fb95e96b5caa202299b3cea90e524fc59bdd3c9c30853c",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.14", "10", "latest"],
-        },
-        {
-            "value": "10.13.4",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20231213.tar.bz2",
-            "tarball_sha": "4e39c500cd99e2b2a988d593aa43bf67c29e6704ecbe03fc068872f37018f523",
-            "php": "7.4",
-            "base": "v20.04",
-            "tags": ["10.13"],
-        },
+        #{
+        #    "value": "10.14.0",
+        #    "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240226.tar.bz2",
+        #    "tarball_sha": "7b23e7f189f5ceb606fb95e96b5caa202299b3cea90e524fc59bdd3c9c30853c",
+        #    "php": "7.4",
+        #    "base": "v20.04",
+        #    "tags": ["10.14", "10", "latest"],
+        #},
+        #{
+        #    "value": "10.13.4",
+        #    "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20231213.tar.bz2",
+        #    "tarball_sha": "4e39c500cd99e2b2a988d593aa43bf67c29e6704ecbe03fc068872f37018f523",
+        #    "php": "7.4",
+        #    "base": "v20.04",
+        #    "tags": ["10.13"],
+        #},
     ]
 
     config = {
