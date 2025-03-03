@@ -428,13 +428,6 @@ def sleep(config):
 def trivy(config):
     return [
         {
-            "name": "trivy-presets",
-            "image": "docker.io/owncloudci/alpine",
-            "commands": [
-                'retry -t 3 -s 5 -- "curl -sSfL https://github.com/owncloud-docker/trivy-presets/archive/refs/heads/main.tar.gz | tar xz --strip-components=2 trivy-presets-main/base/"',
-            ],
-        },
-        {
             "name": "trivy-scan",
             "image": "ghcr.io/aquasecurity/trivy",
             "environment": {
@@ -449,10 +442,14 @@ def trivy(config):
                 "TRIVY_IGNORE_UNFIXED": True,
                 "TRIVY_TIMEOUT": "5m",
                 "TRIVY_EXIT_CODE": "1",
+                "TRIVY_DB_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
-                "TRIVY_SKIP_FILES": "/usr/bin/gomplate",
+                "TRIVY_SKIP_FILES": "/usr/bin/gomplate,/usr/bin/wait-for",
+                "TRIVY_IGNOREFILE": "/drone/src/.trivyignore",
             },
             "commands": [
+                "pwd",
+                "ls -la",
                 "trivy -v",
                 "trivy image registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
             ],
