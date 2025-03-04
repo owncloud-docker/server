@@ -8,9 +8,9 @@ STANDALONE_CHROME_DEBUG_IMAGE = "docker.io/selenium/standalone-chrome-debug:3.14
 def main(ctx):
     versions = [
         {
-            "value": "10.15.0",
-            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20240724.tar.bz2",
-            "tarball_sha": "f7ae9c9c00dee744306e4be058a9de20246730a4210f41e0c86ce9da60562ad5",
+            "value": "10.15.1",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20250303.tar.bz2",
+            "tarball_sha": "19549cb0f8665fd493b785c76272fe627546f230881a0c5e9ceef3651d9312ce",
             "php": "7.4",
             "base": "v20.04",
             "tags": ["10.15", "10", "latest"],
@@ -428,13 +428,6 @@ def sleep(config):
 def trivy(config):
     return [
         {
-            "name": "trivy-presets",
-            "image": "docker.io/owncloudci/alpine",
-            "commands": [
-                'retry -t 3 -s 5 -- "curl -sSfL https://github.com/owncloud-docker/trivy-presets/archive/refs/heads/main.tar.gz | tar xz --strip-components=2 trivy-presets-main/base/"',
-            ],
-        },
-        {
             "name": "trivy-scan",
             "image": "ghcr.io/aquasecurity/trivy",
             "environment": {
@@ -449,10 +442,14 @@ def trivy(config):
                 "TRIVY_IGNORE_UNFIXED": True,
                 "TRIVY_TIMEOUT": "5m",
                 "TRIVY_EXIT_CODE": "1",
+                "TRIVY_DB_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
-                "TRIVY_SKIP_FILES": "/usr/bin/gomplate",
+                "TRIVY_SKIP_FILES": "/usr/bin/gomplate,/usr/bin/wait-for",
+                "TRIVY_IGNOREFILE": "/drone/src/.trivyignore",
             },
             "commands": [
+                "pwd",
+                "ls -la",
                 "trivy -v",
                 "trivy image registry.drone.owncloud.com/owncloud/%s:%s" % (config["repo"], config["internal"]),
             ],
