@@ -1,5 +1,10 @@
 # Changelog
 
+## 2025-04-29
+
+* Changed
+  * Use ubuntu-22.04 with Freexian PHP 7.4 with owncloud-complete-20250311 10.15.2
+
 ## 2020-05-25
 
 * Added

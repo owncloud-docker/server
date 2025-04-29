@@ -12,7 +12,7 @@ def main(ctx):
             "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20250311.tar.bz2",
             "tarball_sha": "bd7cb99f91c11f9166e2bca7c0a1040ea5ae72ffaa3f9f38b5afa83ee7e954e8",
             "php": "7.4",
-            "base": "v20.04",
+            "base": "v22.04",
             "tags": ["10.15", "10", "latest"],
         },
         #{
