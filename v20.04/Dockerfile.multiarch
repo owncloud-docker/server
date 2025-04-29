@@ -1,4 +1,4 @@
-FROM docker.io/owncloud/base:20.04@sha256:0a37898f4df9a6951ccb3ce1d702b5aa188012d4bf00beaa018062cb548fa2d8
+FROM docker.io/owncloud/base:20.04@sha256:d56a8a03a1f99e2a95df726248da42bb41ca9ee3e963cf85a5c943c49877227a
 
 LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.opencontainers.image.authors="ownCloud DevOps <devops@owncloud.com>" \
