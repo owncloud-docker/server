@@ -1,4 +1,2 @@
 # vulnerability is affecting windows only
 CVE-2024-51736
-# gomplate is not vulnerable - https://github.com/hairyhenderson/gomplate/issues/2323
-CVE-2024-45338
