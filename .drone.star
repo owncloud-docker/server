@@ -8,12 +8,12 @@ STANDALONE_CHROME_DEBUG_IMAGE = "docker.io/selenium/standalone-chrome-debug:3.14
 def main(ctx):
     versions = [
         {
-            "value": "10.16.0-rc1",
-            "tarball": "https://download.owncloud.com/server/testing/owncloud-complete-20251008.tar.bz2",
-            "tarball_sha": "c2a1877844a557a79647e20027b55aa024811491f486154007723265448b4917",
+            "value": "10.16.0",
+            "tarball": "https://download.owncloud.com/server/stable/owncloud-complete-20251023.tar.bz2",
+            "tarball_sha": "8d26ad5afd8bb417e36a748afee95d6cf8538b6720e0789e10acfdff333831d6",
             "php": "7.4",
             "base": "v22.04",
-            "tags": [],
+            "tags": ["10.16", "10", "latest"],
         },
         {
             "value": "10.15.3",
@@ -21,7 +21,7 @@ def main(ctx):
             "tarball_sha": "3d699cb7cd3b12020f449302277ae116d7a96db9953486e0fa6e9d9895726646",
             "php": "7.4",
             "base": "v22.04",
-            "tags": ["10.15", "10", "latest"],
+            "tags": ["10.15"],
         },
         #{
         #    "value": "10.14.0",
