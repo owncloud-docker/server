@@ -452,7 +452,7 @@ def trivy(config):
                 "TRIVY_EXIT_CODE": "1",
                 "TRIVY_DB_SKIP_UPDATE": True,
                 "TRIVY_SEVERITY": "HIGH,CRITICAL",
-                "TRIVY_SKIP_FILES": "/usr/bin/gomplate",
+                "TRIVY_SKIP_FILES": "/usr/bin/gomplate,/usr/bin/wait-for",
                 "TRIVY_IGNOREFILE": "/drone/src/.trivyignore",
             },
             "commands": [
