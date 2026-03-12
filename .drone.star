@@ -10,7 +10,7 @@ def main(ctx):
         {
             "value": "11.0.0-prealpha",
             "tarball": "https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2",
-            "tarball_sha": "05d35a2f5ff168e3ce1747c26eaa3fb8c626fbbb7a24a7d1ff19f34415fa67e8",
+            "tarball_sha": "0ac685061010295ea9517686a49210cab0a73a567f4f083f79ca02ea78260603",
             "php": "8.3",
             "base": "v24.04",
             "tags": ["11.0", "11"],
