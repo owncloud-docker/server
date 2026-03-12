@@ -13,7 +13,7 @@ def main(ctx):
             "tarball_sha": "0ac685061010295ea9517686a49210cab0a73a567f4f083f79ca02ea78260603",
             "php": "8.3",
             "base": "v24.04",
-            "tags": ["11.0", "11"],
+            "tags": [],
         },
         {
             "value": "10.16.1",
