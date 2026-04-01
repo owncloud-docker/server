@@ -1,4 +1,6 @@
-FROM docker.io/owncloud/base:22.04@sha256:afe32d25d014b6ca6a9ef338ce8c731dac642ce501123370d5ed002b62b258d7
+FROM owncloud/base:22.04@sha256:350f1f78c1e70495aebccb1298eabea167e813218ce082543171961c7f22c90a
+
+ARG TARBALL_URL
 
 LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.opencontainers.image.authors="ownCloud DevOps <devops@owncloud.com>" \
@@ -9,7 +11,7 @@ LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
   org.opencontainers.image.source="https://github.com/owncloud-docker/server" \
   org.opencontainers.image.documentation="https://github.com/owncloud-docker/server"
 
-ADD owncloud.tar.bz2 /var/www/
+ADD --unpack ${TARBALL_URL} /var/www/
 
 ADD overlay /
 WORKDIR /var/www/owncloud
