@@ -1,0 +1,58 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [master]
+    tags: ["*"]
+  pull_request:
+  schedule:
+    - cron: 0 0 * * 0
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: editorconfig-checker/action-editorconfig-checker@840e866d93b8e032123c23bac69dece044d4d84c
+
+      - run: editorconfig-checker
+
+  build:
+    needs: lint
+    uses: owncloud-docker/ubuntu/.github/workflows/docker-build.yml@master
+    with:
+      docker-repo-name: owncloud/${{ github.event.repository.name }}
+      docker-tag: ${{ matrix.release.version }}
+      docker-context: ${{ matrix.release.base }}
+      docker-file: ${{ matrix.release.base }}/Dockerfile.multiarch
+      docker-hub-username: ${{ vars.DOCKERHUB_USERNAME }}
+      docker-build-args: |
+        TARBALL_URL=${{ matrix.release.tarball }}
+      push: ${{ github.ref == 'refs/heads/master' }}
+    secrets:
+      docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    strategy:
+      matrix:
+        release:
+          - version: 11.0.0-prealpha
+            tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
+            base: v24.04
+          - version: 10.16.1
+            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
+            base: v24.04
+          - version: 10.15.3
+            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
+            base: v22.04
+
+  update-docker-hub-description:
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    uses: owncloud-docker/ubuntu/.github/workflows/docker-hub-desc.yml@master
+    with:
+      docker-repo-name: owncloud/${{ github.event.repository.name }}
+      docker-repo-description: ownCloud - Secure Collaboration Platform
+      docker-hub-username: ${{ vars.DOCKERHUB_USERNAME }}
+    secrets:
+      docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
