@@ -35,7 +35,7 @@ jobs:
             base: v24.04
           - version: 10.16.1
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
-            base: v24.04
+            base: v22.04
           - version: 10.15.3
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
             base: v22.04
