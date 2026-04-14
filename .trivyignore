@@ -8,5 +8,6 @@ CVE-2025-45769
 
 # will be fixed with oc 10.16.2 and 11.0.0
 
-CVE-2026-32935
-GHSA-27qh-8cxx-2cr5
+# CVE-2026-32935
+
+# GHSA-27qh-8cxx-2cr5

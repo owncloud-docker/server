@@ -33,6 +33,9 @@ jobs:
           - version: 11.0.0-prealpha
             tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
             base: v24.04
+          - version: 10.16.2RC1
+            tarball: https://download.owncloud.com/server/testing/owncloud-complete-20260414.tar.bz2
+            base: v22.04
           - version: 10.16.1
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
             base: v22.04
