@@ -10,4 +10,6 @@ CVE-2025-45769
 
 # CVE-2026-32935
 
-# GHSA-27qh-8cxx-2cr5
+# with php7.4 there is no version available which fixes the following
+
+GHSA-27qh-8cxx-2cr5
