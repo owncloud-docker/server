@@ -1,0 +1,5 @@
+# vulnerability is affecting windows only
+CVE-2024-51736
+
+# will be fixed with oc 11.0.0 - TODO: remove once fixed
+CVE-2026-32935

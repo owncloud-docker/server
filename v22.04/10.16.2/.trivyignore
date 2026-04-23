@@ -1,0 +1,5 @@
+# vulnerability is affecting windows only
+CVE-2024-51736
+
+# fix requires ownCloud to update bundled aws-sdk-php (3.337.3 -> 3.371.4) in files_primary_s3
+GHSA-27qh-8cxx-2cr5
