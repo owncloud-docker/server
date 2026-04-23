@@ -25,6 +25,7 @@ jobs:
         TARBALL_URL=${{ matrix.release.tarball }}
       push: ${{ github.ref == 'refs/heads/master' }}
       trivy-ignore-files: ${{ matrix.release.trivy-ignore }}
+      docker-extra-tags: ${{ matrix.release.extra-tags }}
     secrets:
       docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -35,6 +36,10 @@ jobs:
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260422.tar.bz2
             base: v22.04
             trivy-ignore: v22.04/10.16.2/.trivyignore
+            extra-tags: |
+              10.16
+              10
+              latest
           - version: 10.16.1
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
             base: v22.04
@@ -43,6 +48,8 @@ jobs:
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
             base: v22.04
             trivy-ignore: v22.04/10.15.3/.trivyignore
+            extra-tags: |
+              10.15
           - version: 11.0.0-prealpha
             tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
             base: v24.04
