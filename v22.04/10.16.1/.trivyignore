@@ -6,3 +6,6 @@ CVE-2025-45769
 
 # with php7.4 there is no version available which fixes the following
 GHSA-27qh-8cxx-2cr5
+
+# will be fixed with oc 10.16.2 - TODO: remove once 10.16.2 is available for this branch
+CVE-2026-32935
