@@ -1,15 +1,8 @@
 # vulnerability is affecting windows only
-
 CVE-2024-51736
 
 # only RSA keys are affected - we are using HS256 in wopi and files_texteditor
-
 CVE-2025-45769
 
-# will be fixed with oc 10.16.2 and 11.0.0 - TODO: remove once 10.16.2 is out
-
-CVE-2026-32935
-
 # with php7.4 there is no version available which fixes the following
-
 GHSA-27qh-8cxx-2cr5

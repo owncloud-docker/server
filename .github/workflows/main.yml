@@ -24,24 +24,29 @@ jobs:
       docker-build-args: |
         TARBALL_URL=${{ matrix.release.tarball }}
       push: ${{ github.ref == 'refs/heads/master' }}
+      trivy-ignore-files: ${{ matrix.release.trivy-ignore }}
     secrets:
       docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     strategy:
       matrix:
         release:
-          - version: 11.0.0-prealpha
-            tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
-            base: v24.04
-          - version: 10.16.2RC1
-            tarball: https://download.owncloud.com/server/testing/owncloud-complete-20260414.tar.bz2
+          - version: 10.16.2
+            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260422.tar.bz2
             base: v22.04
+            trivy-ignore: v22.04/10.16.2/.trivyignore
           - version: 10.16.1
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
             base: v22.04
+            trivy-ignore: v22.04/10.16.1/.trivyignore
           - version: 10.15.3
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
             base: v22.04
+            trivy-ignore: v22.04/10.15.3/.trivyignore
+          - version: 11.0.0-prealpha
+            tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
+            base: v24.04
+            trivy-ignore: v24.04/11.0.0-prealpha/.trivyignore
 
   update-docker-hub-description:
     needs: build

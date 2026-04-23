@@ -1,0 +1,5 @@
+# vulnerability is affecting windows only
+CVE-2024-51736
+
+# only RSA keys are affected - we are using HS256 in wopi and files_texteditor
+CVE-2025-45769
