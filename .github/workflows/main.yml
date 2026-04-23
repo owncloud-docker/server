@@ -30,7 +30,8 @@ jobs:
       smoke-test-url: "http://localhost:8080/status.php"
       smoke-test-env: |
         OWNCLOUD_DOMAIN=localhost:8080
-        OWNCLOUD_DB_TYPE=sqlite3
+        OWNCLOUD_TRUSTED_DOMAINS=localhost:8080
+        OWNCLOUD_DB_TYPE=sqlite
       smoke-test-version-jq: ${{ matrix.release.smoke-version-jq }}
     secrets:
       docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
