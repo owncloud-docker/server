@@ -1,4 +1,4 @@
-FROM owncloud/base:24.04@sha256:dbef5746e7f34cf216ed76ea24a8e06ea2dd27180e995df34abcbc40cd9d2f92
+FROM owncloud/base:24.04@sha256:56e3197b4cdbbb1aea0e7523833f3c6ea4863cf14a3276ce5dfbdf8bd5859a41
 
 ARG TARBALL_URL
 
