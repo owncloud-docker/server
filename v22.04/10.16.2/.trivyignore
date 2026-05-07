@@ -3,3 +3,6 @@ CVE-2024-51736
 
 # fix requires ownCloud to update bundled aws-sdk-php (3.337.3 -> 3.371.4) in files_primary_s3
 GHSA-27qh-8cxx-2cr5
+
+# will be fixed with oc 10.16.3 or later
+CVE-2026-44167
