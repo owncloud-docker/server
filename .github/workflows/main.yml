@@ -26,6 +26,13 @@ jobs:
       push: ${{ github.ref == 'refs/heads/master' }}
       trivy-ignore-files: ${{ matrix.release.trivy-ignore }}
       docker-extra-tags: ${{ matrix.release.extra-tags }}
+      smoke-test-port: "8080"
+      smoke-test-url: "http://localhost:8080/status.php"
+      smoke-test-env: |
+        OWNCLOUD_DOMAIN=localhost:8080
+        OWNCLOUD_TRUSTED_DOMAINS=localhost:8080
+        OWNCLOUD_DB_TYPE=sqlite
+      smoke-test-version-jq: ${{ matrix.release.smoke-version-jq }}
     secrets:
       docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -40,20 +47,24 @@ jobs:
               10.16
               10
               latest
+            smoke-version-jq: ".versionstring"
           - version: 10.16.1
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
             base: v22.04
             trivy-ignore: v22.04/10.16.1/.trivyignore
+            smoke-version-jq: ".versionstring"
           - version: 10.15.3
             tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
             base: v22.04
             trivy-ignore: v22.04/10.15.3/.trivyignore
             extra-tags: |
               10.15
+            smoke-version-jq: ".versionstring"
           - version: 11.0.0-prealpha
             tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
             base: v24.04
             trivy-ignore: v24.04/11.0.0-prealpha/.trivyignore
+            smoke-version-jq: ""
 
   update-docker-hub-description:
     needs: build
