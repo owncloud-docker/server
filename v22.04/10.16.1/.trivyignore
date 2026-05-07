@@ -6,3 +6,6 @@ GHSA-27qh-8cxx-2cr5
 
 # will be fixed with oc 10.16.2 - TODO: remove once 10.16.2 is available for this branch
 CVE-2026-32935
+
+# will be fixed with oc 10.16.3 or later
+CVE-2026-44167
