@@ -44,9 +44,9 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 ## Running occ commands
 
-The oc11 image supports running any `occ` command with full initialization
-(database, config, etc.) but without starting Apache, by using the `occ`
-subcommand:
+Starting with `11.0.0-prealpha`, the image supports running any `occ` command
+with full initialization (database, config, etc.) but without starting Apache,
+by using the `occ` subcommand in `docker-compose.yml`:
 
 ```yaml
 command: ["/usr/bin/owncloud", "occ", "<occ-command>", "<args...>"]
