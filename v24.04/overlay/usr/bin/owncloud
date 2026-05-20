@@ -58,6 +58,7 @@ occ)
     # shellcheck disable=SC1090,SC2086
     source ${FILE}
   done
+
   shift
   exec occ "$@"
   ;;
