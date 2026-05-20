@@ -42,6 +42,22 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 - 8080
 
+## Running occ commands
+
+The oc11 image supports running any `occ` command with full initialization
+(database, config, etc.) but without starting Apache, by using the `occ`
+subcommand:
+
+```yaml
+command: ["/usr/bin/owncloud", "occ", "<occ-command>", "<args...>"]
+```
+
+Example — start the Windows Network Drive SMB listener:
+
+```yaml
+command: ["/usr/bin/owncloud", "occ", "wnd:listen", "myhost", "myshare", "myuser", "--password-file=/run/secrets/wnd_password"]
+```
+
 ## Environment variables
 
 None
