@@ -39,26 +39,14 @@ jobs:
     strategy:
       matrix:
         release:
-          - version: 10.16.2
-            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260422.tar.bz2
+          - version: 10.16.3
+            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260522.tar.bz2
             base: v22.04
-            trivy-ignore: v22.04/10.16.2/.trivyignore
+            trivy-ignore: v22.04/10.16.3/.trivyignore
             extra-tags: |
               10.16
               10
               latest
-            smoke-version-jq: ".versionstring"
-          - version: 10.16.1
-            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260218.tar.bz2
-            base: v22.04
-            trivy-ignore: v22.04/10.16.1/.trivyignore
-            smoke-version-jq: ".versionstring"
-          - version: 10.15.3
-            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20250703.tar.bz2
-            base: v22.04
-            trivy-ignore: v22.04/10.15.3/.trivyignore
-            extra-tags: |
-              10.15
             smoke-version-jq: ".versionstring"
           - version: 11.0.0-prealpha
             tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
