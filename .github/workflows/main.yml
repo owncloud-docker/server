@@ -49,7 +49,7 @@ jobs:
               latest
             smoke-version-jq: ".versionstring"
           - version: 11.0.0-prealpha
-            tarball: https://download.owncloud.com/server/daily/owncloud-daily-master.tar.bz2
+            tarball: https://download.owncloud.com/server/daily/owncloud-complete-daily-master.tar.bz2
             base: v24.04
             trivy-ignore: v24.04/11.0.0-prealpha/.trivyignore
             smoke-version-jq: ""
