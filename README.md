@@ -29,9 +29,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 ## Docker Tags and respective Dockerfile links
 
-- [`10.16.2`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.16.2`
-- [`10.16.1`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.16.1`
-- [`10.15.3`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.15.3`
+- [`10.16.3`, `10.16`, `10`, `latest`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.16.3`
 - [`11.0.0-prealpha`](https://github.com/owncloud-docker/server/blob/master/v24.04/Dockerfile.multiarch) available as `owncloud/server:11.0.0-prealpha`
 
 ## Default volumes
@@ -60,7 +58,9 @@ command: ["/usr/bin/owncloud", "occ", "wnd:listen", "myhost", "myshare", "myuser
 
 ## Environment variables
 
-None
+This image defines no environment variables of its own. Configuration is done
+through the variables inherited from the base images linked under
+[Inherited environments](#quick-reference) above.
 
 ## License
 
@@ -69,5 +69,5 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## Copyright
 
 ```Text
-Copyright (c) 2022 ownCloud GmbH
+Copyright (c) 2022-2026 ownCloud GmbH
 ```
