@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-12
+
+* Added
+  * OSPO community health files (agents.md, CODE_OF_CONDUCT.md, CONTRIBUTING.md,
+    SECURITY.md, SUPPORT.md) and README community/OSPO sections as part of the
+    Kiteworks OSPO community health rollout v2
+
 ## 2025-04-29
 
 * Changed
