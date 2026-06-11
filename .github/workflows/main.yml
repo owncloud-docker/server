@@ -24,6 +24,7 @@ jobs:
       docker-build-args: |
         TARBALL_URL=${{ matrix.release.tarball }}
       push: ${{ github.ref == 'refs/heads/master' }}
+      build-date-tag: true
       trivy-ignore-files: ${{ matrix.release.trivy-ignore }}
       docker-extra-tags: ${{ matrix.release.extra-tags }}
       smoke-test-port: "8080"
