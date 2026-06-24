@@ -2,8 +2,8 @@
 
 ## Repository Overview
 
-This repository builds the official **ownCloud Server** Docker image
-(`owncloud/server` on Docker Hub). It does not contain the ownCloud Server
+This repository builds the official **ownCloud Classic** Docker image
+(`owncloud/server` on Docker Hub). It does not contain the ownCloud Classic
 source code — it packages a release tarball on top of the
 [`owncloud/base`](https://github.com/owncloud-docker/base) image and adds an
 optional root-filesystem overlay. Images are multi-architecture and built via
