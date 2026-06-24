@@ -7,8 +7,8 @@ Please read the full contributing guidelines at:
 
 ## About this repository
 
-This repository builds the official **ownCloud Server** Docker image. It is not
-the ownCloud Server source code — it packages a release tarball on top of the
+This repository builds the official **ownCloud Classic** Docker image. It is not
+the ownCloud Classic source code — it packages a release tarball on top of the
 [`owncloud/base`](https://github.com/owncloud-docker/base) image. See the
 [README](README.md) for build details, supported tags and usage.
 
