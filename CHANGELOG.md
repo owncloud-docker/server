@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-06-29
+
+* Changed
+  * Replace 11.0.0-prealpha with 11.0.0-rc1 built from the GitHub release tarball
+
 ## 2026-06-12
 
 * Added
