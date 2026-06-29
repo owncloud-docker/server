@@ -31,7 +31,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
 ## Docker Tags and respective Dockerfile links
 
 - [`10.16.3`, `10.16`, `10`, `latest`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.16.3`
-- [`11.0.0-prealpha`](https://github.com/owncloud-docker/server/blob/master/v24.04/Dockerfile.multiarch) available as `owncloud/server:11.0.0-prealpha`
+- [`11.0.0-rc1`](https://github.com/owncloud-docker/server/blob/master/v24.04/Dockerfile.multiarch) available as `owncloud/server:11.0.0-rc1`
 
 ## Default volumes
 
@@ -43,7 +43,7 @@ ownCloud is an open-source file sync, share and content collaboration software t
 
 ## Running occ commands
 
-Starting with `11.0.0-prealpha`, the image supports running any `occ` command
+Starting with `11.0.0-rc1`, the image supports running any `occ` command
 with full initialization (database, config, etc.) but without starting Apache,
 by using the `occ` subcommand in `docker-compose.yml`:
 
