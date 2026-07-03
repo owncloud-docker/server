@@ -28,6 +28,9 @@ ownCloud is an open-source file sync, share and content collaboration software t
   [owncloud/php](https://github.com/owncloud-docker/php#environment-variables),
   [owncloud/base](https://github.com/owncloud-docker/base#environment-variables)
 
+- **Build & maintenance:**\
+  [How these images are built, scanned, updated and published](https://github.com/owncloud-docker/.github/blob/master/docs/IMAGE-LIFECYCLE.md)
+
 ## Docker Tags and respective Dockerfile links
 
 - [`10.16.3`, `10.16`, `10`, `latest`](https://github.com/owncloud-docker/server/blob/master/v22.04/Dockerfile.multiarch) available as `owncloud/server:10.16.3`
