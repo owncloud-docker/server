@@ -49,10 +49,10 @@ jobs:
               10
               latest
             smoke-version-jq: ".versionstring"
-          - version: 11.0.0-rc1
-            tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc1/owncloud-complete-20260629.tar.bz2
+          - version: 11.0.0-rc2
+            tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc2/owncloud-11.0.0-rc2.tar.bz2
             base: v24.04
-            trivy-ignore: v24.04/11.0.0-rc1/.trivyignore
+            trivy-ignore: v24.04/11.0.0-rc2/.trivyignore
             smoke-version-jq: ""
 
   update-docker-hub-description:
