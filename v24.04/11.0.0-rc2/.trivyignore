@@ -1,2 +1,13 @@
 # vulnerability is affecting windows only
 CVE-2024-51736
+
+# client-side JS libs vendored by the bundled "notes" marketplace app; frontend
+# only (not server-side core) and fixable only upstream in owncloud/core
+# angular 1.4.14 - prototype pollution
+CVE-2019-10768
+# prismjs 0.0.1 - ReDoS
+CVE-2021-23341
+CVE-2021-32723
+# underscore 1.7.0 - template code execution / ReDoS
+CVE-2021-23358
+CVE-2026-27601
