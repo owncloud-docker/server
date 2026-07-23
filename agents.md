@@ -20,7 +20,7 @@ GitHub Actions.
   - `v22.04/Dockerfile.multiarch` — image definition (`FROM owncloud/base:22.04`)
   - `v22.04/overlay/` — files copied into the image root (`ADD overlay /`); currently empty
   - `v22.04/<version>/.trivyignore` — accepted-CVE exclusions for the Trivy scan
-- `v24.04/` — Ubuntu 24.04 based image (ownCloud 11.0.0-prealpha)
+- `v24.04/` — Ubuntu 24.04 based image (ownCloud 11.0.0-rc2)
   - `v24.04/Dockerfile.multiarch`, `v24.04/overlay/`, `v24.04/<version>/.trivyignore` — as above
 - `docs/` — design/spec notes
 - `images/` — README screenshots
@@ -39,7 +39,7 @@ There is no local application build (no Node/pnpm/Make toolchain). The image is
 built by `.github/workflows/main.yml`, which calls reusable workflows from
 [`owncloud-docker/ubuntu`](https://github.com/owncloud-docker/ubuntu):
 
-- Matrix builds two releases: `10.16.3` (base `v22.04`) and `11.0.0-prealpha`
+- Matrix builds two releases: `10.16.3` (base `v22.04`) and `11.0.0-rc2`
   (base `v24.04`), each via `<base>/Dockerfile.multiarch`.
 - The ownCloud version is injected with the `TARBALL_URL` build arg — there is no
   version pinned inside the Dockerfile.
