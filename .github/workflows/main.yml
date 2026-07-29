@@ -40,10 +40,10 @@ jobs:
     strategy:
       matrix:
         release:
-          - version: 10.16.3
-            tarball: https://download.owncloud.com/server/stable/owncloud-complete-20260522.tar.bz2
+          - version: 10.16.4
+            tarball: https://github.com/owncloud/core/releases/download/v10.16.4/owncloud-complete-20260729.tar.bz2
             base: v22.04
-            trivy-ignore: v22.04/10.16.3/.trivyignore
+            trivy-ignore: v22.04/10.16.4/.trivyignore
             extra-tags: |
               10.16
               10

@@ -3,6 +3,7 @@
 ## 2026-07-29
 
 * Changed
+  * Update 10.16.3 to 10.16.4 built from the GitHub release tarball
   * Update 11.0.0-rc2 to 11.0.0-rc3 built from the GitHub release tarball
 
 ## 2026-07-23
