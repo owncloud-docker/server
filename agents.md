@@ -39,7 +39,7 @@ There is no local application build (no Node/pnpm/Make toolchain). The image is
 built by `.github/workflows/main.yml`, which calls reusable workflows from
 [`owncloud-docker/ubuntu`](https://github.com/owncloud-docker/ubuntu):
 
-- Matrix builds two releases: `10.16.3` (base `v22.04`) and `11.0.0-rc3`
+- Matrix builds two releases: `10.16.4` (base `v22.04`) and `11.0.0-rc3`
   (base `v24.04`), each via `<base>/Dockerfile.multiarch`.
 - The ownCloud version is injected with the `TARBALL_URL` build arg — there is no
   version pinned inside the Dockerfile.
