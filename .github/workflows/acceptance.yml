@@ -1,0 +1,400 @@
+name: Acceptance tests
+
+# Runs core's Behat acceptance suite against a *published* owncloud/server image.
+#
+# This is a functional test of the shipped artifact, which the build pipeline
+# (docker-build.yml) does not provide - it only proves the image builds, passes
+# Trivy and answers /status.php.
+#
+# The suite talks to the container over HTTP: run.sh --remote proxies every occ
+# call through the testing app's OCS endpoint, so no shell access to the server
+# is needed. This is the same arrangement the retired .drone.star pipeline used.
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: Image under test
+        required: false
+        type: string
+        default: owncloud/server
+      image-tag:
+        description: Tag of the image under test, e.g. 11.0.0-rc3-20260729
+        required: true
+        type: string
+      qa-tarball:
+        description: >
+          URL of the release QA tarball. It carries the acceptance suite *and*
+          the testing app, both version-matched to the image.
+        required: true
+        type: string
+      core-ref:
+        description: core git ref used to fetch the behat composer manifest, e.g. v11.0.0-rc3
+        required: true
+        type: string
+      php-version:
+        description: PHP version used to run behat
+        required: false
+        type: string
+        default: "8.3"
+      test-type:
+        description: api or cli
+        required: false
+        type: string
+        default: api
+      filter-tags:
+        description: Behat tag filter; empty runs every scenario of the type
+        required: false
+        type: string
+        default: "@smokeTest"
+      shards:
+        description: Number of parallel shards to split the suites across
+        required: false
+        type: number
+        default: 10
+      with-federation:
+        description: Start a second server so the federation suites can run
+        required: false
+        type: boolean
+        default: true
+      additional-packages:
+        description: Extra apt packages for the runner - space separated
+        required: false
+        type: string
+        default: ""
+
+  workflow_dispatch:
+    inputs:
+      image:
+        description: Image under test
+        required: false
+        type: string
+        default: owncloud/server
+      image-tag:
+        description: Tag of the image under test, e.g. 11.0.0-rc3-20260729
+        required: true
+        type: string
+      qa-tarball:
+        description: URL of the release QA tarball
+        required: true
+        type: string
+      core-ref:
+        description: core git ref for the behat composer manifest, e.g. v11.0.0-rc3
+        required: true
+        type: string
+      php-version:
+        description: PHP version used to run behat
+        required: false
+        type: string
+        default: "8.3"
+      test-type:
+        description: Which suites to run
+        required: false
+        type: choice
+        options:
+          - api
+          - cli
+        default: api
+      filter-tags:
+        description: Behat tag filter; clear this to run the full set
+        required: false
+        type: string
+        default: "@smokeTest"
+      shards:
+        description: Number of parallel shards
+        required: false
+        type: number
+        default: 10
+      with-federation:
+        description: Start a second server for the federation suites
+        required: false
+        type: boolean
+        default: true
+      additional-packages:
+        description: Extra apt packages for the runner - space separated
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  # Core's own CI installs from core's git tree, where Installer::getShippedApps()
+  # enables every app carrying <default_enable> - 11 apps, notably including
+  # comments, systemtags, files_external and updatenotification - and then enables
+  # federatedfilesharing and testing on top. The Complete bundle in the image
+  # default-enables a different, larger set, so pin the CI-equivalent list
+  # explicitly. Disabling files_external here, for instance, makes apiAuth report
+  # OCS 999 instead of the expected 997 on /apps/files_external/api/v1/mounts -
+  # a failure that looks like a server regression but is a harness error.
+  APPS_ENABLE: comments,dav,federation,federatedfilesharing,files,files_external,files_sharing,files_trashbin,files_versions,provisioning_api,systemtags,testing,updatenotification
+  # Image defaults minus core defaults. run.sh disables firstrunwizard and
+  # notifications itself, but do it up front so both servers start from the
+  # same state regardless of which suites a shard happens to get.
+  APPS_DISABLE: activity,configreport,diagnostics,files_mediaviewer,files_pdfviewer,files_texteditor,firstrunwizard,market,notifications
+
+jobs:
+  # A matrix cannot take a numeric range, so materialise 1..shards as JSON.
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.parts.outputs.parts }}
+    steps:
+      - name: Compute shard list
+        id: parts
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          echo "parts=$(seq -s, 1 "${SHARDS}" | sed 's/^/[/;s/$/]/')" >> "$GITHUB_OUTPUT"
+
+  acceptance:
+    needs: prepare
+    name: ${{ inputs.test-type }}-${{ matrix.part }}
+    runs-on: ubuntu-latest
+    strategy:
+      # One red shard must not hide the state of the others.
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.prepare.outputs.parts) }}
+    steps:
+      - name: Install runner packages
+        env:
+          ADDITIONAL_PACKAGES: ${{ inputs.additional-packages }}
+        run: |
+          sudo apt-get update
+          # run.sh parses the OCS responses of every remote occ call with xmllint.
+          # ADDITIONAL_PACKAGES is a space separated list, so it must word-split.
+          # shellcheck disable=SC2086
+          sudo apt-get install -y libxml2-utils ${ADDITIONAL_PACKAGES}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        with:
+          php-version: ${{ inputs.php-version }}
+          # Extensions required by the behat dependency tree (ldap for the
+          # laminas-ldap based provisioning steps).
+          extensions: ctype, curl, dom, iconv, json, ldap, libxml, mbstring, phar, tokenizer, xmlreader, xmlwriter, zip
+          ini-values: memory_limit=2048M
+        env:
+          fail-fast: true
+
+      - name: Fetch the acceptance suite
+        env:
+          QA_TARBALL: ${{ inputs.qa-tarball }}
+        run: |
+          curl -sSfL -o owncloud-qa.tar.bz2 "${QA_TARBALL}"
+          tar -xjf owncloud-qa.tar.bz2 --strip 1
+          rm -f owncloud-qa.tar.bz2
+          cat version.php
+
+      - name: Install behat
+        env:
+          CORE_REF: ${{ inputs.core-ref }}
+        run: |
+          # The QA tarball ships the suite but not the behat manifest, so take it
+          # from the matching core tag.
+          mkdir -p vendor-bin/behat
+          curl -sSfL -o vendor-bin/behat/composer.json \
+            "https://raw.githubusercontent.com/owncloud/core/${CORE_REF}/vendor-bin/behat/composer.json"
+          composer install --no-interaction --working-dir=vendor-bin/behat
+
+      - name: Stage the testing app
+        run: |
+          # The testing app provides the occ-over-HTTP transport the suite needs,
+          # and it is not enabled in the image by default. Take the copy from the
+          # QA tarball rather than the app's GitHub "latest" release asset: that
+          # asset was last rebuilt in 2022 and is not version-matched to the
+          # image, whereas the tarball ships the same build as the shipped code
+          # (and, unlike the release asset, a signature.json that satisfies the
+          # integrity check).
+          #
+          # Staged outside the workspace and bind-mounted writable: 25-chown.sh
+          # chowns the whole app tree at every start and the entrypoint aborts
+          # with exit 123 if that fails, so a read-only mount kills the server.
+          mkdir -p "${RUNNER_TEMP}/apps"
+          cp -r apps/testing "${RUNNER_TEMP}/apps/testing"
+
+      - name: Start MariaDB and Redis
+        run: |
+          # Host networking throughout: the suite hands federated addresses such
+          # as localhost:8081 to the *server*, so those names must resolve to the
+          # peer from inside the container too. With bridge networking they would
+          # resolve to the container itself.
+          docker run -d --name mariadb --network host \
+            -e MARIADB_ROOT_PASSWORD=owncloud \
+            -e MARIADB_USER=owncloud \
+            -e MARIADB_PASSWORD=owncloud \
+            -e MARIADB_DATABASE=owncloud \
+            mariadb:10.6 --max-allowed-packet=128M --innodb-log-file-size=64M
+
+          # File locking via Redis, as the Drone pipeline did. The DB locking
+          # provider produced spurious HTTP 423 responses in local runs.
+          docker run -d --name redis --network host redis:8
+
+          for _ in $(seq 60); do
+            docker exec mariadb healthcheck.sh --connect --innodb_initialized && break
+            sleep 2
+          done
+          docker exec mariadb mariadb -uroot -powncloud -e \
+            "CREATE DATABASE IF NOT EXISTS owncloud_fed CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+             GRANT ALL PRIVILEGES ON owncloud_fed.* TO 'owncloud'@'%';
+             FLUSH PRIVILEGES;"
+
+      - name: Start the email server
+        run: |
+          docker run -d --name inbucket --network host \
+            -e INBUCKET_SMTP_ADDR=:2500 \
+            -e INBUCKET_WEB_ADDR=:9000 \
+            -e INBUCKET_POP3_ADDR=:1100 \
+            -e INBUCKET_STORAGE_MAILBOXMSGCAP=300 \
+            inbucket/inbucket
+
+      - name: Write the server environment
+        run: |
+          # These settings must arrive as environment variables, not via occ:
+          # 20-config.sh renders them into overwrite.config.php, which
+          # Config::readData() merges *after* config.php and which therefore
+          # overrides anything config:system:set writes.
+          cat > server.env <<EOF
+          OWNCLOUD_TRUSTED_DOMAINS=localhost
+          OWNCLOUD_DB_TYPE=mysql
+          OWNCLOUD_DB_HOST=127.0.0.1
+          OWNCLOUD_DB_USERNAME=owncloud
+          OWNCLOUD_DB_PASSWORD=owncloud
+          OWNCLOUD_ADMIN_USERNAME=admin
+          OWNCLOUD_ADMIN_PASSWORD=admin
+          # OWNCLOUD_REDIS_ENABLED alone sets memcache.locking to Redis. Do not
+          # also set OWNCLOUD_MEMCACHE_LOCKING: the template's redis branch uses
+          # array_merge_recursive, so both together render memcache.locking as a
+          # two-element array instead of a class name.
+          OWNCLOUD_REDIS_ENABLED=true
+          OWNCLOUD_REDIS_HOST=127.0.0.1
+          OWNCLOUD_APPS_ENABLE=${APPS_ENABLE}
+          OWNCLOUD_APPS_DISABLE=${APPS_DISABLE}
+          OWNCLOUD_CSRF_DISABLED=true
+          OWNCLOUD_SHARING_FEDERATION_ALLOW_HTTP_FALLBACK=true
+          OWNCLOUD_INTEGRITY_IGNORE_MISSING_APP_SIGNATURE=testing
+          OWNCLOUD_FILES_EXTERNAL_ALLOW_NEW_LOCAL=true
+          OWNCLOUD_LOG_LEVEL=2
+          OWNCLOUD_MAIL_SMTP_MODE=smtp
+          OWNCLOUD_MAIL_SMTP_HOST=127.0.0.1
+          OWNCLOUD_MAIL_SMTP_PORT=2500
+          OWNCLOUD_MAIL_DOMAIN=foobar.com
+          EOF
+
+          # The default schedule runs occ system:cron every minute, which races
+          # the cliBackground suites. run.sh puts core into webcron mode itself.
+          echo "OWNCLOUD_CROND_ENABLED=false" >> server.env
+
+      - name: Start the server under test
+        env:
+          IMAGE: ${{ inputs.image }}:${{ inputs.image-tag }}
+        run: |
+          docker run -d --name server --network host --env-file server.env \
+            -e APACHE_LISTEN=8080 \
+            -e OWNCLOUD_DOMAIN=localhost:8080 \
+            -e OWNCLOUD_DB_NAME=owncloud \
+            -v "${RUNNER_TEMP}/apps/testing:/var/www/owncloud/apps/testing" \
+            "${IMAGE}"
+
+      - name: Start the federated server
+        if: ${{ inputs.with-federation }}
+        env:
+          IMAGE: ${{ inputs.image }}:${{ inputs.image-tag }}
+        run: |
+          docker run -d --name server-fed --network host --env-file server.env \
+            -e APACHE_LISTEN=8081 \
+            -e OWNCLOUD_DOMAIN=localhost:8081 \
+            -e OWNCLOUD_DB_NAME=owncloud_fed \
+            -v "${RUNNER_TEMP}/apps/testing:/var/www/owncloud/apps/testing" \
+            "${IMAGE}"
+
+      - name: Wait for the servers
+        env:
+          WITH_FEDERATION: ${{ inputs.with-federation }}
+        run: |
+          ports=8080
+          [[ "${WITH_FEDERATION}" == "true" ]] && ports="8080 8081"
+
+          for port in ${ports}; do
+            echo "Waiting for localhost:${port}..."
+            for _ in $(seq 120); do
+              if curl -sSf "http://localhost:${port}/status.php" -o "status-${port}.json"; then
+                break
+              fi
+              sleep 5
+            done
+            # Fail here rather than letting behat fail confusingly further down.
+            cat "status-${port}.json"
+            jq -e '.installed == true and .maintenance == false' "status-${port}.json"
+          done
+
+      - name: Verify the occ transport
+        env:
+          WITH_FEDERATION: ${{ inputs.with-federation }}
+        run: |
+          ports=8080
+          [[ "${WITH_FEDERATION}" == "true" ]] && ports="8080 8081"
+
+          for port in ${ports}; do
+            # Every occ call the suite makes goes through this endpoint. If it
+            # does not answer, nothing downstream works.
+            code=$(curl -sS -u admin:admin -X POST \
+              -d "command=status" \
+              "http://localhost:${port}/ocs/v2.php/apps/testing/api/v1/occ" \
+              | xmllint --xpath "string(ocs/data/code)" -)
+            echo "localhost:${port} occ status exit code: ${code}"
+            [[ "${code}" == "0" ]]
+          done
+
+      - name: Report the enabled apps
+        run: |
+          # The app baseline decides whether the results mean anything, so make
+          # it visible in the log rather than implied by the env file.
+          curl -sS -u admin:admin -X POST -d "command=app:list" \
+            "http://localhost:8080/ocs/v2.php/apps/testing/api/v1/occ" \
+            | xmllint --xpath "string(ocs/data/stdOut)" -
+
+      - name: Run the acceptance tests
+        env:
+          TEST_SERVER_URL: http://localhost:8080
+          TEST_SERVER_FED_URL: ${{ inputs.with-federation && 'http://localhost:8081' || '' }}
+          # Where the system under test reaches inbucket, and where the suite does.
+          EMAIL_HOST: 127.0.0.1
+          LOCAL_EMAIL_HOST: 127.0.0.1
+          SKELETON_DIR: /var/www/owncloud/apps/testing/data/apiSkeleton
+          NORERUN: "true"
+          PLAIN_OUTPUT: "true"
+          TEST_TYPE: ${{ inputs.test-type }}
+          FILTER_TAGS: ${{ inputs.filter-tags }}
+          PART: ${{ matrix.part }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          declare -a tags=()
+          [[ -n "${FILTER_TAGS}" ]] && tags=(--tags "${FILTER_TAGS}")
+
+          bash tests/acceptance/run.sh --remote --type "${TEST_TYPE}" \
+            "${tags[@]}" --part "${PART}" "${SHARDS}"
+
+      - name: Collect server logs
+        if: failure()
+        run: |
+          for name in server server-fed; do
+            docker inspect "${name}" >/dev/null 2>&1 || continue
+            docker logs "${name}" > "docker-${name}.log" 2>&1
+            docker exec "${name}" sh -c 'tail -n 2000 /mnt/data/files/owncloud.log' \
+              > "owncloud-${name}.log" 2>&1 || true
+          done
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: logs-${{ inputs.test-type }}-${{ matrix.part }}
+          path: |
+            docker-*.log
+            owncloud-*.log
+            status-*.json
+          if-no-files-found: ignore
+          retention-days: 7
