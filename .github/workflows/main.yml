@@ -40,6 +40,11 @@ jobs:
     strategy:
       matrix:
         release:
+          # No qa-tarball, so the acceptance job skips this release. v10.16.4
+          # does publish one, and its run.sh takes --remote and --part just like
+          # 11.x, so wiring it up is a small follow-up - but it has not been
+          # tried against this image yet, and 10.x uses config/behat.yml where
+          # 11.x uses behat.php. Verify before adding it.
           - version: 10.16.4
             tarball: https://github.com/owncloud/core/releases/download/v10.16.4/owncloud-complete-20260729.tar.bz2
             base: v22.04
@@ -51,9 +56,52 @@ jobs:
             smoke-version-jq: ".versionstring"
           - version: 11.0.0-rc3
             tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc3/owncloud-complete-20260729.tar.bz2
+            qa-tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc3/owncloud-complete-20260729-qa.tar.bz2
+            core-ref: v11.0.0-rc3
             base: v24.04
             trivy-ignore: v24.04/11.0.0-rc3/.trivyignore
             smoke-version-jq: ""
+
+  # Functional test of the published image.
+  #
+  # TEMPORARY: also runs on pull requests, and runs the *full* suite rather than
+  # @smokeTest, so this PR can produce authoritative 11.0.0-rc3 results before
+  # the trigger policy is settled. While this is in place the PR loop is slow -
+  # 29 shards instead of nothing. Revisit before merge.
+  acceptance:
+    needs: build
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    uses: ./.github/workflows/acceptance.yml
+    with:
+      image: owncloud/${{ github.event.repository.name }}
+      # The build tags with the version and, via build-date-tag, a dated
+      # variant. The plain version tag is the one that always exists.
+      image-tag: ${{ matrix.release.version }}
+      qa-tarball: ${{ matrix.release.qa-tarball }}
+      core-ref: ${{ matrix.release.core-ref }}
+      test-type: ${{ matrix.suites.type }}
+      shards: ${{ matrix.suites.shards }}
+      # Empty overrides the workflow's @smokeTest default and runs everything.
+      # The cli set only carries 3 @smokeTest scenarios out of 386, so a
+      # smoke-filtered cli run would say nothing at all.
+      filter-tags: ""
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Shards split by suite count, distributing whole suites, so keep the
+        # count at or below the number of suites - 61 api and 9 cli in 11.x -
+        # otherwise the surplus shards start a full server stack only to find
+        # they have nothing to run.
+        suites:
+          - type: api
+            shards: 20
+          - type: cli
+            shards: 9
+        release:
+          - version: 11.0.0-rc3
+            qa-tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc3/owncloud-complete-20260729-qa.tar.bz2
+            core-ref: v11.0.0-rc3
 
   update-docker-hub-description:
     needs: build
