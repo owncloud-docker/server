@@ -279,11 +279,17 @@ jobs:
           OWNCLOUD_SHARING_FEDERATION_ALLOW_HTTP_FALLBACK=true
           OWNCLOUD_INTEGRITY_IGNORE_MISSING_APP_SIGNATURE=testing
           OWNCLOUD_FILES_EXTERNAL_ALLOW_NEW_LOCAL=true
-          OWNCLOUD_LOG_LEVEL=2
-          OWNCLOUD_MAIL_SMTP_MODE=smtp
-          OWNCLOUD_MAIL_SMTP_HOST=127.0.0.1
-          OWNCLOUD_MAIL_SMTP_PORT=2500
-          OWNCLOUD_MAIL_DOMAIN=foobar.com
+          # Deliberately no OWNCLOUD_LOG_LEVEL and no OWNCLOUD_MAIL_* here.
+          # run.sh sets mail_domain, mail_from_address, mail_smtpmode,
+          # mail_smtphost and mail_smtpport itself via occ (and defaults
+          # EMAIL_SMTP_PORT to inbucket's 2500), so these were redundant - and
+          # actively harmful: anything in overwrite.config.php wins over
+          # config:system:set, so a scenario that has to *change* one of these
+          # settings cannot. Setting them cost 40 scenarios:
+          #   - 39 in apiWebdavUpload1/2 and cliBackground/backgroundQueue, which
+          #     set the log level to debug and assert it took effect
+          #   - 1 in cliProvisioning/resetUserPassword, which switches smtpmode
+          #     to sendmail to assert the send fails
           EOF
 
           # The default schedule runs occ system:cron every minute, which races
