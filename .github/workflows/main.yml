@@ -62,13 +62,15 @@ jobs:
             trivy-ignore: v24.04/11.0.0-rc3/.trivyignore
             smoke-version-jq: ""
 
-  # Functional test of the published image. Deliberately not run on pull
-  # requests: those are mostly renovate digest bumps and the ~4 min build loop
-  # should stay that fast. Run the full set manually via the acceptance
-  # workflow's dispatch inputs.
+  # Functional test of the published image.
+  #
+  # TEMPORARY: also runs on pull requests, and runs the *full* suite rather than
+  # @smokeTest, so this PR can produce authoritative 11.0.0-rc3 results before
+  # the trigger policy is settled. While this is in place the PR loop is slow -
+  # 29 shards instead of nothing. Revisit before merge.
   acceptance:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
     uses: ./.github/workflows/acceptance.yml
     with:
       image: owncloud/${{ github.event.repository.name }}
@@ -79,18 +81,23 @@ jobs:
       core-ref: ${{ matrix.release.core-ref }}
       test-type: ${{ matrix.suites.type }}
       shards: ${{ matrix.suites.shards }}
+      # Empty overrides the workflow's @smokeTest default and runs everything.
+      # The cli set only carries 3 @smokeTest scenarios out of 386, so a
+      # smoke-filtered cli run would say nothing at all.
+      filter-tags: ""
 
     strategy:
       fail-fast: false
       matrix:
-        # Shards split by suite count, so keep the count at or below the number
-        # of suites - 61 api and 9 cli in 11.x - otherwise the surplus shards
-        # start a full server stack only to find they have nothing to run.
+        # Shards split by suite count, distributing whole suites, so keep the
+        # count at or below the number of suites - 61 api and 9 cli in 11.x -
+        # otherwise the surplus shards start a full server stack only to find
+        # they have nothing to run.
         suites:
           - type: api
-            shards: 10
+            shards: 20
           - type: cli
-            shards: 3
+            shards: 9
         release:
           - version: 11.0.0-rc3
             qa-tarball: https://github.com/owncloud/core/releases/download/v11.0.0-rc3/owncloud-complete-20260729-qa.tar.bz2
