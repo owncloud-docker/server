@@ -236,10 +236,13 @@ jobs:
             docker exec mariadb healthcheck.sh --connect --innodb_initialized && break
             sleep 2
           done
-          docker exec mariadb mariadb -uroot -powncloud -e \
-            "CREATE DATABASE IF NOT EXISTS owncloud_fed CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-             GRANT ALL PRIVILEGES ON owncloud_fed.* TO 'owncloud'@'%';
-             FLUSH PRIVILEGES;"
+          # Statements on stdin rather than repeated -e flags: mariadb
+          # concatenates multiple -e values into a single statement.
+          docker exec -i mariadb mariadb -uroot -powncloud <<'SQL'
+          CREATE DATABASE IF NOT EXISTS owncloud_fed CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+          GRANT ALL PRIVILEGES ON owncloud_fed.* TO 'owncloud'@'%';
+          FLUSH PRIVILEGES;
+          SQL
 
       - name: Start the email server
         run: |
