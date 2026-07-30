@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-30
+
+* Changed
+  * Update 11.0.0-rc3 to 11.0.0 built from the GitHub release tarball
+
 ## 2026-07-29
 
 * Changed
