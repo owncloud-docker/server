@@ -52,7 +52,7 @@ jobs:
           - version: 11.0.0
             tarball: https://github.com/owncloud/core/releases/download/v11.0.0/owncloud-complete-20260730.tar.bz2
             base: v24.04
-            trivy-ignore: v24.04/11.0.0/.trivyignore
+            trivy-ignore: v24.04/11.0.0/.trivyignore.yaml
             smoke-version-jq: ".versionstring"
 
   update-docker-hub-description:

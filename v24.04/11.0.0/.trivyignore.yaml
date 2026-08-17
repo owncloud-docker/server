@@ -1,0 +1,61 @@
+# Accepted vulnerabilities for the 11.0.0 image scan.
+#
+# YAML rather than the plain format because it carries expired_at: an entry with
+# a date stops suppressing once the date passes, so a temporary acceptance turns
+# the scan red again instead of being buried. The plain and YAML formats cannot
+# be mixed in one scan, hence the single file.
+vulnerabilities:
+  - id: CVE-2024-51736
+    statement: Affects Windows only; this image is Linux.
+
+  # No expiry, matching how this was accepted in the plain ignorefile: it stays
+  # until ownCloud updates a bundled dependency, which no date here can predict.
+  - id: CVE-2026-69246
+    statement: >-
+      Fix requires ownCloud to update bundled guzzlehttp/guzzle (7.15.1 ->
+      7.15.2) in files_external_dropbox; core lib already ships the fixed
+      7.15.2.
+
+  # apps/migrate_to_ocis ships a prebuilt upstream rclone binary. Until the
+  # exec-bit fix in this image (and in owncloud/server-release) these findings
+  # were invisible: Trivy's gobinary analyzer only inspects files that have an
+  # exec bit, and the tarball shipped the binary 0644.
+  #
+  # The eight entries below are the go1.26.5 stdlib findings against upstream
+  # rclone v1.75.0, the newest release (2026-07-31). They are fixed in
+  # go 1.25.13 / 1.26.6, which no rclone release has been built with yet, so no
+  # available binary is free of them. All are denial of service / XSS class,
+  # none CRITICAL. Mirrors owncloud/migrate_to_ocis .trivyignore.yaml - drop
+  # both once rclone publishes a release built with go >= 1.26.6.
+  - id: CVE-2026-33818 # encoding/asn1: DoS via excessive recursion in Unmarshal
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-39821 # golang.org/x/net/idna: privilege escalation via Punycode label processing
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-46600 # golang.org/x/net/dns/dnsmessage: DoS via invalid DNS record parsing
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-56853 # net/http: DoS on unencrypted HTTP/2 connections
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-56858 # html/template: XSS via pathological input
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-56859 # encoding/xml: DoS via decoding recursion depth
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-56860 # net/url: DoS from quadratic complexity in path handling
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
+  - id: CVE-2026-56862 # crypto/tls: DoS via indefinite KeyUpdate messages
+    paths: ["var/www/owncloud/apps/migrate_to_ocis/bin/rclone_linux_amd64"]
+    statement: rclone v1.75.0 is built with go1.26.5; fixed in go 1.25.13/1.26.6, no rclone release ships it yet.
+    expired_at: 2026-11-01
