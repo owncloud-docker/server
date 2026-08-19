@@ -6,3 +6,14 @@ GHSA-27qh-8cxx-2cr5
 
 # fixed in oc 10.16.3, but still a false positive in the openidconnect app
 CVE-2026-44167
+
+# fix requires ownCloud to update bundled guzzlehttp/guzzle (-> 7.15.2) in core lib
+# (7.10.0), graphapi (7.4.5), files_external_dropbox (7.8.1) and updater (7.9.2)
+CVE-2026-69246
+
+# not reachable in this image: mtdowling/jmespath.php 2.8.0 in files_primary_s3 is
+# only vulnerable via CompilerRuntime, which Env::createRuntime() selects solely when
+# JP_PHP_COMPILE is set (it is not), and the bundled aws-sdk-php passes only its own
+# literal expressions -- never user input. Fix requires ownCloud to update bundled
+# aws-sdk-php (3.337.3 -> 3.388.9, which carries jmespath.php 2.9.2)
+CVE-2026-54133
