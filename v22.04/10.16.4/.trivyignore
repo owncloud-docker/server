@@ -6,3 +6,7 @@ GHSA-27qh-8cxx-2cr5
 
 # fixed in oc 10.16.3, but still a false positive in the openidconnect app
 CVE-2026-44167
+
+# fix requires ownCloud to update bundled guzzlehttp/guzzle (-> 7.15.2) in core lib
+# (7.10.0), graphapi (7.4.5), files_external_dropbox (7.8.1) and updater (7.9.2)
+CVE-2026-69246
