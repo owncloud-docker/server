@@ -19,6 +19,15 @@ WORKDIR /var/www/owncloud
 RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \
   chmod g+w /var/www/owncloud /var/www/owncloud/.htaccess
 
+# Apps ship binaries in their own bin/ directory (e.g.
+# migrate_to_ocis/bin/rclone_linux_amd64). Tarballs built before
+# owncloud/server-release#52 normalized every file to 0644, so those binaries
+# arrive non-executable: the app cannot run them, and the image scan cannot see
+# them either - Trivy's gobinary analyzer only inspects files that have an exec
+# bit. -mindepth/-maxdepth 3 keeps this to apps/<app>/bin/<file>, leaving
+# vendored scripts alone.
+RUN find /var/www/owncloud/apps -mindepth 3 -maxdepth 3 -type f -path '*/bin/*' -exec chmod 755 {} \;
+
 VOLUME ["/mnt/data"]
 EXPOSE 8080
 
