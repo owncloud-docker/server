@@ -1,10 +1,16 @@
-# vulnerability is affecting windows only
+# vulnerability is affecting windows only: symfony/process v3.4.47 vendored by updater
+# (core lib ships v5.4.51, which is already past the 5.4.46 fix)
 CVE-2024-51736
 
 # fix requires ownCloud to update bundled aws-sdk-php (3.337.3 -> 3.371.4) in files_primary_s3
 GHSA-27qh-8cxx-2cr5
 
-# fixed in oc 10.16.3, but still a false positive in the openidconnect app
+# NOT a false positive: the 3.x branch of this advisory is fixed in phpseclib 3.0.52 and
+# core lib was bumped accordingly, but apps/openidconnect vendors its own copy still at
+# 3.0.50 (pulled in by jumbojett/openid-connect-php v1.0.2, requiring ^3.0.7) and the
+# app's own autoloader resolves that copy. Suppressed because the impact is a DoS via
+# ASN.1 OID amplification, reachable only through IdP-supplied X.509/JWKS material.
+# Fix requires ownCloud to release openidconnect 2.3.4 with phpseclib 3.0.54+ (OC10-149).
 CVE-2026-44167
 
 # fix requires ownCloud to update bundled guzzlehttp/guzzle (-> 7.15.2) in core lib
