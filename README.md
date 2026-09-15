@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/github/license/owncloud-docker/server)](https://github.com/owncloud-docker/server/blob/master/LICENSE)
 [![ownCloud OSPO](https://img.shields.io/badge/OSPO-ownCloud-blue)](https://kiteworks.com/opensource)
 
-Official [ownCloud](https://owncloud.com) Docker image. It's designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/docker/).
+Official [ownCloud](https://owncloud.com) Docker image. It's designed to work with a data volume in the host filesystem and with a standalone MariaDB and Redis container. For a guide how to get started please take a look at our [documentation](https://doc.owncloud.com/server/latest/admin_manual/installation/installing_with_docker.html).
 
 ## About ownCloud
 
@@ -98,8 +98,6 @@ and our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 **Do not open a public GitHub issue for security vulnerabilities.**
 
 Report vulnerabilities at **<https://security.owncloud.com>** — see [SECURITY.md](SECURITY.md).
-
-Bug bounty: [YesWeHack ownCloud Program](https://yeswehack.com/programs/owncloud-bug-bounty-program)
 
 ## About the ownCloud OSPO
 
