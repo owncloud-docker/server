@@ -24,10 +24,9 @@ GitHub Actions.
   - `v24.04/Dockerfile.multiarch`, `v24.04/overlay/`, `v24.04/<version>/.trivyignore` — as above
 - `docs/` — design/spec notes
 - `images/` — README screenshots
-- `.github/workflows/main.yml` — **active** CI (build, smoke test, scan, publish)
+- `.github/workflows/main.yml` — CI (build, smoke test, scan, publish)
 - `.github/workflows/lint-pr-title.yml` — Conventional-Commit PR-title enforcement
 - `.github/dependabot.yml` — weekly GitHub Actions dependency updates
-- `.drone.star` — **legacy** Drone CI config (inactive; superseded by GitHub Actions)
 - `.renovaterc.json` — Renovate preset for Docker digest updates
 - `.editorconfig` — formatting rules (2-space indent, LF, trailing newline)
 - `CHANGELOG.md` — flat, date-based changelog at repo root
@@ -93,7 +92,7 @@ The image exposes port `8080`, declares volume `/mnt/data`, and inherits its
 - The two `v*/` directories are near-identical; changes usually apply to both.
 - The `overlay/` directories are the image root filesystem — add files there to
   ship them in the image; the entrypoint and `occ` subcommand live in the base image.
-- The active build system is GitHub Actions (`main.yml`); ignore `.drone.star`.
+- The build system is GitHub Actions (`main.yml`).
 - The README is published verbatim as the Docker Hub image description — keep it
   accurate and self-contained.
 - License is **MIT** (permissive, already compatible with Apache-2.0); no
