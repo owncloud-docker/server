@@ -2,8 +2,11 @@
 
 ## 2026-09-25
 
+* Added
+  * Publish the floating `11.0` and `11` tags for the 11.x image
 * Changed
   * Update 10.16.4 to 10.16.5 built from the GitHub release tarball
+  * Update 11.0.0 to 11.0.1 built from the GitHub release tarball
 
 ## 2026-07-30
 

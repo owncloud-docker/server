@@ -1,3 +1,0 @@
-# fix requires ownCloud to update bundled guzzlehttp/guzzle (7.15.1 -> 7.15.2) in
-# files_external_dropbox; core lib already ships the fixed 7.15.2
-CVE-2026-69246
