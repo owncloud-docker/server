@@ -1,0 +1,18 @@
+# vulnerability is affecting windows only: symfony/process v3.4.47 vendored by updater
+# v1.1.2 (core lib ships v5.4.51, which is already past the 5.4.46 fix). v1.1.2 is the
+# newest updater release, so there is nothing to bump to.
+CVE-2024-51736
+
+# no fix exists for this line: aws-sdk-php 3.337.3 vendored by files_primary_s3 v1.6.4.
+# The finding is confined to CloudFront URL/cookie signing, which the app never uses --
+# it drives the S3 client. Every aws-sdk-php from 3.338.0 onward requires php >= 8.1,
+# including the first patched 3.371.4, while 10.16 is a php 7.4 line.
+GHSA-27qh-8cxx-2cr5
+
+# fix requires ownCloud to update bundled guzzlehttp/guzzle (-> 7.15.2) in graphapi
+# v0.3.1 (7.4.5), files_external_dropbox v2.0.2 (7.8.1) and updater v1.1.2 (7.9.2).
+# Core lib is no longer affected: 10.16.5 ships 7.15.5 (owncloud/core#41784). The two
+# apps do have fixed releases -- dropbox v2.1.2 and graphapi v0.3.2 -- but both are
+# signed in the G2 envelope, which 10.16's integrity check rejects outright, so the
+# bundle holds the older pins.
+CVE-2026-69246

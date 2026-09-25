@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-25
+
+* Changed
+  * Update 10.16.4 to 10.16.5 built from the GitHub release tarball
+
 ## 2026-07-30
 
 * Changed
