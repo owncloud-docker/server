@@ -1,0 +1,21 @@
+# already fixed in the vendored copy: pdfjs-dist 2.10.0 reported from
+# apps/files_pdfviewer/js/vendor/pdfjs/package.json (files_pdfviewer v1.1.2). The
+# /FontMatrix fix was backported into build/pdf.js and build/pdf.worker.js in
+# owncloud/files_pdfviewer#351 (v1.1.1) and is guarded there by a regression test
+# against a PoC PDF. The vendored package.json deliberately keeps reporting the
+# upstream version so scanners can inventory the library, which is why the row
+# appears at all -- v1.1.1 shipped no package.json and so was never scanned.
+# Drops out when the vendored copy is regenerated from pdf.js >= 4.2.67
+# (owncloud/files_pdfviewer#363).
+CVE-2024-4367
+
+# no fix released yet: google.golang.org/grpc v1.84.0-dev, reported from
+# apps/migrate_to_ocis/bin/rclone_linux_amd64 (migrate_to_ocis v3.0.2, which
+# bundles upstream rclone v1.75.1). The fixed v1.85.0-dev is on rclone master but
+# in no rclone release, so there is nothing for the app to rebundle. Not
+# reachable: the panic is in the xDS routing interceptor, installed only by
+# servers built with xds.NewGRPCServer(), and needs an inbound RPC carrying
+# neither :authority nor Host -- the app shells out to `rclone sync` and
+# `rclone obscure` and never serves gRPC. Drops out when rclone ships a release
+# with the fixed grpc (owncloud/migrate_to_ocis#74).
+CVE-2026-84445
