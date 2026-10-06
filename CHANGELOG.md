@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-06
+
+* Changed
+  * Update 10.16.5 to 10.16.6 built from the GitHub release tarball
+
 ## 2026-09-25
 
 * Added

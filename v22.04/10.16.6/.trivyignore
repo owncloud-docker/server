@@ -3,7 +3,7 @@
 # newest updater release, so there is nothing to bump to.
 CVE-2024-51736
 
-# no fix exists for this line: aws-sdk-php 3.337.3 vendored by files_primary_s3 v1.6.4.
+# no fix exists for this line: aws-sdk-php 3.337.3 vendored by files_primary_s3 v1.6.5.
 # The finding is confined to CloudFront URL/cookie signing, which the app never uses --
 # it drives the S3 client. Every aws-sdk-php from 3.338.0 onward requires php >= 8.1,
 # including the first patched 3.371.4, while 10.16 is a php 7.4 line.
