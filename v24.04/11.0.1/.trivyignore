@@ -9,13 +9,29 @@
 # (owncloud/files_pdfviewer#363).
 CVE-2024-4367
 
-# no fix released yet: google.golang.org/grpc v1.84.0-dev, reported from
+# not fixed in this bundle: google.golang.org/grpc v1.84.0-dev, reported from
 # apps/migrate_to_ocis/bin/rclone_linux_amd64 (migrate_to_ocis v3.0.2, which
-# bundles upstream rclone v1.75.1). The fixed v1.85.0-dev is on rclone master but
-# in no rclone release, so there is nothing for the app to rebundle. Not
+# bundles upstream rclone v1.75.1). rclone v1.75.2 carries the fixed v1.85.0-dev,
+# but no released migrate_to_ocis bundles it yet. Not
 # reachable: the panic is in the xDS routing interceptor, installed only by
 # servers built with xds.NewGRPCServer(), and needs an inbound RPC carrying
 # neither :authority nor Host -- the app shells out to `rclone sync` and
-# `rclone obscure` and never serves gRPC. Drops out when rclone ships a release
-# with the fixed grpc (owncloud/migrate_to_ocis#74).
+# `rclone obscure` and never serves gRPC. Drops out when the bundle ships a
+# migrate_to_ocis with rclone >= v1.75.2 (owncloud/migrate_to_ocis#74).
 CVE-2026-84445
+
+# not fixed in this bundle: Go standard library go1.26.8 and golang.org/x/net
+# v0.57.0, reported from the same apps/migrate_to_ocis/bin/rclone_linux_amd64
+# (rclone v1.75.1). rclone v1.75.2 is built with the fixed go1.26.9 and x/net
+# v0.60.0, but no released migrate_to_ocis bundles it yet.
+# CVE-2026-78667 (Range header parsing in FileServer/ServeContent/ServeFile) and
+# CVE-2026-97031 (ECH extension handling in a crypto/tls server) are server-side
+# only and not reachable: the app runs rclone purely as a client.
+# CVE-2026-78669 (HTTP/2 SETTINGS flood) does affect clients, but only a
+# malicious HTTP/2 peer can trigger it, here the oCIS instance an admin
+# configured as the migration target, and it costs CPU in a short-lived
+# `rclone sync` process without exposing data. Drops out with the
+# same migrate_to_ocis bump as CVE-2026-84445 above.
+CVE-2026-78667
+CVE-2026-78669
+CVE-2026-97031
