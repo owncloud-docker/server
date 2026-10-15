@@ -28,12 +28,14 @@ CVE-2026-84445
 # CVE-2026-97031 (ECH extension handling in a crypto/tls server) are server-side
 # only and not reachable: the app runs rclone purely as a client.
 # CVE-2026-78669 (HTTP/2 SETTINGS flood) does affect clients. It needs a
-# malicious HTTP/2 peer: the oCIS instance an admin configured as the migration
-# target or, when the migration runs with -k (--no-check-certificate), anyone
-# on the network path to it. The impact is CPU load on the app server for as
-# long as `rclone sync` runs, which for a large migration can be hours. No data
-# is exposed. Do not carry these into the next 11.0.x file under the same
-# condition as CVE-2026-84445 above.
+# malicious HTTP/2 peer: the oCIS target or the ownCloud source URL rclone is
+# pointed at. If `occ migrate:to-ocis:init` ran with --insecure (-k), the app
+# stores that and passes rclone --no-check-certificate for both remotes on
+# every later files run, so anyone on the network path to either can be that
+# peer. The impact is CPU load on the app server across the files migration,
+# which runs one `rclone sync` per user and can take hours. No data is exposed.
+# Do not carry these into the next 11.0.x file under the same condition as
+# CVE-2026-84445 above.
 CVE-2026-78667
 CVE-2026-78669
 CVE-2026-97031
