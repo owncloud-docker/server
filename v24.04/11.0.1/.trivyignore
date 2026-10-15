@@ -9,13 +9,33 @@
 # (owncloud/files_pdfviewer#363).
 CVE-2024-4367
 
-# no fix released yet: google.golang.org/grpc v1.84.0-dev, reported from
+# not fixed in this bundle: google.golang.org/grpc v1.84.0-dev, reported from
 # apps/migrate_to_ocis/bin/rclone_linux_amd64 (migrate_to_ocis v3.0.2, which
-# bundles upstream rclone v1.75.1). The fixed v1.85.0-dev is on rclone master but
-# in no rclone release, so there is nothing for the app to rebundle. Not
-# reachable: the panic is in the xDS routing interceptor, installed only by
-# servers built with xds.NewGRPCServer(), and needs an inbound RPC carrying
-# neither :authority nor Host -- the app shells out to `rclone sync` and
-# `rclone obscure` and never serves gRPC. Drops out when rclone ships a release
-# with the fixed grpc (owncloud/migrate_to_ocis#74).
+# bundles upstream rclone v1.75.1). rclone v1.75.2 carries the fixed
+# v1.85.0-dev, but no released migrate_to_ocis bundles it yet. Not reachable:
+# the panic is in the xDS routing interceptor, installed only by servers built
+# with xds.NewGRPCServer(), and needs an inbound RPC carrying neither :authority
+# nor Host -- the app shells out to `rclone sync` and `rclone obscure` and never
+# serves gRPC. Do not carry this into the next 11.0.x file once its bundle ships
+# a migrate_to_ocis with rclone >= v1.75.2 (owncloud/migrate_to_ocis#74).
 CVE-2026-84445
+
+# not fixed in this bundle: Go standard library go1.26.8 and golang.org/x/net
+# v0.57.0, reported from the same apps/migrate_to_ocis/bin/rclone_linux_amd64
+# (rclone v1.75.1). rclone v1.75.2 is built with the fixed go1.26.9 and x/net
+# v0.60.0, but no released migrate_to_ocis bundles it yet.
+# CVE-2026-78667 (Range header parsing in FileServer/ServeContent/ServeFile) and
+# CVE-2026-97031 (ECH extension handling in a crypto/tls server) are server-side
+# only and not reachable: the app runs rclone purely as a client.
+# CVE-2026-78669 (HTTP/2 SETTINGS flood) does affect clients. It needs a
+# malicious HTTP/2 peer: the oCIS target or the ownCloud source URL rclone is
+# pointed at. If `occ migrate:to-ocis:init` ran with --insecure (-k), the app
+# stores that and passes rclone --no-check-certificate for both remotes on
+# every later files run, so anyone on the network path to either can be that
+# peer. The impact is CPU load on the app server across the files migration,
+# which runs one `rclone sync` per user and can take hours. No data is exposed.
+# Do not carry these into the next 11.0.x file under the same condition as
+# CVE-2026-84445 above.
+CVE-2026-78667
+CVE-2026-78669
+CVE-2026-97031
