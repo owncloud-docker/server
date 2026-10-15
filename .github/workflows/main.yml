@@ -38,6 +38,9 @@ jobs:
       docker-hub-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     strategy:
+      # Each release line builds, scans and publishes independently: a Trivy
+      # failure in one must not cancel the other's publish.
+      fail-fast: false
       matrix:
         release:
           - version: 10.16.6
