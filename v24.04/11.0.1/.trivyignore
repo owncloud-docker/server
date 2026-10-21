@@ -39,3 +39,15 @@ CVE-2026-84445
 CVE-2026-78667
 CVE-2026-78669
 CVE-2026-97031
+
+# not fixed in this bundle: Go standard library go1.26.8, reported from the same
+# apps/migrate_to_ocis/bin/rclone_linux_amd64 (rclone v1.75.1). Fixed in
+# go1.26.10, which no rclone release is built with yet (v1.75.2 uses go1.26.9).
+# GO-2026-6809 adds a crypto/x509 denylist of compromised intermediate CAs. rclone
+# is only a client here, so the exposure is a man-in-the-middle presenting a chain
+# through such an intermediate while an admin runs the files migration
+# (`occ migrate:to-ocis:migrate:files`, the only step where rclone connects). With
+# --insecure (-k) certificates are not verified at all, so the denylist would not
+# help there either. Do not carry this into the next 11.0.x file once its bundle
+# ships a migrate_to_ocis whose rclone is built with go >= 1.26.10.
+CVE-2026-111943
