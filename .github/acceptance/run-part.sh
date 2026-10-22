@@ -34,10 +34,12 @@ docker run -d --name "${db}" --network "${net}" \
   -e MARIADB_ROOT_PASSWORD=owncloud -e MARIADB_DATABASE=owncloud \
   -e MARIADB_USER=owncloud -e MARIADB_PASSWORD=owncloud \
   mariadb:10.11 --max-allowed-packet=128M --innodb-log-file-size=64M >/dev/null
+ready=false
 for _ in $(seq 60); do
-  docker exec "${db}" healthcheck.sh --connect --innodb_initialized >/dev/null 2>&1 && break
+  docker exec "${db}" healthcheck.sh --connect --innodb_initialized >/dev/null 2>&1 && ready=true && break
   sleep 2
 done
+[[ "${ready}" == true ]] || { echo "MariaDB did not become ready" >&2; exit 1; }
 
 docker run -d --name "${srv}" --network "${net}" \
   -e OWNCLOUD_DOMAIN="${srv}:8080" -e OWNCLOUD_TRUSTED_DOMAINS="${srv},localhost" \
@@ -45,17 +47,22 @@ docker run -d --name "${srv}" --network "${net}" \
   -e OWNCLOUD_DB_USERNAME=owncloud -e OWNCLOUD_DB_PASSWORD=owncloud \
   -e OWNCLOUD_ADMIN_USERNAME=admin -e OWNCLOUD_ADMIN_PASSWORD=admin \
   "${image}" >/dev/null
-# the image has no HEALTHCHECK; the entrypoint logs this once installation is done
+# the image has no HEALTHCHECK; the entrypoint logs this once installation is done.
+# Capture the logs first: under pipefail, grep -q closing the pipe early can fail it.
+ready=false
 for _ in $(seq 120); do
-  docker logs "${srv}" 2>&1 | grep -q 'Starting apache daemon' && break
+  logs=$(docker logs "${srv}" 2>&1)
+  [[ "${logs}" == *'Starting apache daemon'* ]] && ready=true && break
   sleep 3
 done
+[[ "${ready}" == true ]] || { echo "ownCloud server did not start" >&2; exit 1; }
 sleep 3
 
-docker cp "${TESTING_DIR}" "${srv}:/var/www/owncloud/apps/testing"
-docker exec -u 0 "${srv}" chown -R www-data:root /var/www/owncloud/apps/testing
-docker exec "${srv}" occ app:enable testing
-docker exec "${srv}" occ status
+docker cp "${TESTING_DIR}" "${srv}:/var/www/owncloud/apps/testing" &&
+  docker exec -u 0 "${srv}" chown -R www-data:root /var/www/owncloud/apps/testing &&
+  docker exec "${srv}" occ app:enable testing &&
+  docker exec "${srv}" occ status ||
+  { echo "installing the testing app failed" >&2; exit 1; }
 
 expected=()
 if [[ -n "${EXPECTED_FAILURES_FILE:-}" ]]; then

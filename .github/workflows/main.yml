@@ -11,8 +11,14 @@ on:
     - cron: 0 0 * * 0
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
+    # every other job needs lint, so this also keeps unrelated labels from re-running CI
+    if: github.event.action != 'labeled' || github.event.label.name == 'full-acceptance'
     uses: owncloud-docker/ubuntu/.github/workflows/lint-editorconfig.yml@master
 
   acceptance:
@@ -26,7 +32,8 @@ jobs:
       qa-sha256: ${{ matrix.release.qa-sha256 }}
       php: ${{ matrix.release.php }}
       # The weekly and manual runs, and PRs labelled full-acceptance, run the full
-      # API suite; everything else runs its @smokeTest subset.
+      # API suite; everything else runs its @smokeTest subset. The CLI suite always
+      # runs in full.
       full: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'full-acceptance') }}
 
     strategy:
