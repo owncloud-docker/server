@@ -53,6 +53,7 @@ ready=false
 for _ in $(seq 120); do
   logs=$(docker logs "${srv}" 2>&1)
   [[ "${logs}" == *'Starting apache daemon'* ]] && ready=true && break
+  [[ "$(docker inspect -f '{{.State.Running}}' "${srv}")" == true ]] || break
   sleep 3
 done
 [[ "${ready}" == true ]] || { echo "ownCloud server did not start" >&2; exit 1; }
