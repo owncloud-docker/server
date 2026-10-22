@@ -5,15 +5,48 @@ on:
     branches: [master]
     tags: ["*"]
   pull_request:
+    # labeled: adding the full-acceptance label starts a full acceptance run
+    types: [opened, synchronize, reopened, labeled]
   schedule:
     - cron: 0 0 * * 0
+  workflow_dispatch:
 
 jobs:
   lint:
     uses: owncloud-docker/ubuntu/.github/workflows/lint-editorconfig.yml@master
 
-  build:
+  acceptance:
+    name: acceptance (${{ matrix.release.version }})
     needs: lint
+    uses: ./.github/workflows/acceptance.yml
+    with:
+      version: ${{ matrix.release.version }}
+      base: ${{ matrix.release.base }}
+      tarball: ${{ matrix.release.tarball }}
+      qa-sha256: ${{ matrix.release.qa-sha256 }}
+      php: ${{ matrix.release.php }}
+      # The weekly and manual runs, and PRs labelled full-acceptance, run the full
+      # API suite; everything else runs its @smokeTest subset.
+      full: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'full-acceptance') }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - version: 10.16.6
+            tarball: https://github.com/owncloud/core/releases/download/v10.16.6/owncloud-complete-20261006.tar.bz2
+            qa-sha256: 5b1bfa2ffc9b0156bf1cee446e56744883b69415948f634baf2bfa4c2d0ea0df
+            base: v22.04
+            php: "7.4"
+          - version: 11.0.1
+            tarball: https://github.com/owncloud/core/releases/download/v11.0.1/owncloud-complete-20260925.tar.bz2
+            qa-sha256: 932006415aa75d7cc6161594997dab88cb1cef1960c62eef79d45436700942dc
+            base: v24.04
+            php: "8.3"
+
+  build:
+    # nothing is published unless the acceptance tests of both release lines pass
+    needs: [lint, acceptance]
     uses: owncloud-docker/ubuntu/.github/workflows/docker-build.yml@master
     with:
       docker-repo-name: owncloud/${{ github.event.repository.name }}

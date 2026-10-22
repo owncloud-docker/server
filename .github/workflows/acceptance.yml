@@ -1,0 +1,161 @@
+name: Acceptance Tests
+
+# Runs ownCloud core's acceptance tests (tests/acceptance/run.sh from the
+# release's -qa tarball) against the image built from this repository.
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "ownCloud release, e.g. 11.0.1"
+        required: true
+        type: string
+      base:
+        description: "Build context, e.g. v24.04"
+        required: true
+        type: string
+      tarball:
+        description: "owncloud-complete release tarball"
+        required: true
+        type: string
+      qa-sha256:
+        description: "sha256 of the matching -qa tarball"
+        required: true
+        type: string
+      php:
+        description: "PHP version of the test runner image owncloudci/php"
+        required: true
+        type: string
+      full:
+        description: "Run the full API suite instead of the @smokeTest subset"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  IMAGE: owncloud/server:acceptance
+  # owncloud/testing at a commit that supports ownCloud 10 and 11 and PHP 7.4 to 8.3;
+  # its last release predates PHP 8.3
+  TESTING_APP_COMMIT: 5875b15b91b4ba154dcee143bc67907229428a40
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      suites: ${{ steps.suites.outputs.suites }}
+    steps:
+      - id: suites
+        env:
+          FULL: ${{ inputs.full }}
+        run: |
+          base='~@skip&&~@skipOnDockerContainerTesting&&~@federation-app-required'
+          if [ "${FULL}" = true ]; then
+            api_parts=10 api_tags="${base}"
+          else
+            api_parts=2 api_tags="@smokeTest&&${base}"
+          fi
+          cli_parts=2
+          suites=$(
+            { for p in $(seq "${api_parts}"); do jq -nc --arg t "${api_tags}" --argjson p "$p" --argjson n "${api_parts}" '{type: "api", part: $p, parts: $n, tags: $t}'; done
+              for p in $(seq "${cli_parts}"); do jq -nc --arg t "${base}" --argjson p "$p" --argjson n "${cli_parts}" '{type: "cli", part: $p, parts: $n, tags: $t}'; done
+            } | jq -sc .
+          )
+          echo "suites=${suites}" >> "$GITHUB_OUTPUT"
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ inputs.base }}
+          file: ${{ inputs.base }}/Dockerfile.multiarch
+          platforms: linux/amd64
+          build-args: |
+            TARBALL_URL=${{ inputs.tarball }}
+          tags: ${{ env.IMAGE }}
+          outputs: type=docker,dest=${{ runner.temp }}/image.tar
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: acceptance-image-${{ inputs.version }}
+          path: ${{ runner.temp }}/image.tar
+          retention-days: 1
+          compression-level: 1
+
+  tests:
+    name: ${{ matrix.suite.type }} ${{ matrix.suite.part }}/${{ matrix.suite.parts }}
+    needs: [plan, image]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: ${{ fromJSON(needs.plan.outputs.suites) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: acceptance-image-${{ inputs.version }}
+          path: ${{ runner.temp }}
+
+      - name: Load image
+        run: docker load -i "${RUNNER_TEMP}/image.tar" && rm "${RUNNER_TEMP}/image.tar"
+
+      - name: Fetch the -qa tarball
+        env:
+          TARBALL: ${{ inputs.tarball }}
+          QA_SHA256: ${{ inputs.qa-sha256 }}
+        run: |
+          qa="${TARBALL%.tar.bz2}-qa.tar.bz2"
+          curl -sSfL --retry 3 -o "${RUNNER_TEMP}/qa.tar.bz2" "${qa}"
+          echo "${QA_SHA256}  ${RUNNER_TEMP}/qa.tar.bz2" | sha256sum -c
+          mkdir "${RUNNER_TEMP}/qa"
+          tar -xjf "${RUNNER_TEMP}/qa.tar.bz2" -C "${RUNNER_TEMP}/qa" --strip-components 1
+          # the release tarball ships its scripts 0644, and run.sh calls
+          # lint-expected-failures.sh directly
+          chmod +x "${RUNNER_TEMP}"/qa/tests/acceptance/*.sh
+
+      - name: Install Behat
+        env:
+          VERSION: ${{ inputs.version }}
+          PHP: ${{ inputs.php }}
+        # symfony/yaml 5.4.52 caps YAML collection aliases at 128, which the
+        # 10.16 behat.yml exceeds; Composer's advisory check blocks the older releases
+        run: |
+          mkdir -p "${RUNNER_TEMP}/qa/vendor-bin/behat"
+          curl -sSfL --retry 3 -o "${RUNNER_TEMP}/qa/vendor-bin/behat/composer.json" \
+            "https://raw.githubusercontent.com/owncloud/core/v${VERSION}/vendor-bin/behat/composer.json"
+          docker run --rm -v "${RUNNER_TEMP}/qa:/src" -w /src/vendor-bin/behat "owncloudci/php:${PHP}" \
+            bash -c "composer config audit.block-insecure false && composer require --no-update 'symfony/yaml:^5.4 <5.4.52' && composer install --no-progress"
+
+      - name: Fetch the testing app
+        run: |
+          mkdir "${RUNNER_TEMP}/testing"
+          curl -sSfL --retry 3 "https://github.com/owncloud/testing/archive/${TESTING_APP_COMMIT}.tar.gz" \
+            | tar -xz -C "${RUNNER_TEMP}/testing" --strip-components 1
+
+      - name: Run tests
+        env:
+          PHP: ${{ inputs.php }}
+          TYPE: ${{ matrix.suite.type }}
+          PART: ${{ matrix.suite.part }}
+          PARTS: ${{ matrix.suite.parts }}
+          TAGS: ${{ matrix.suite.tags }}
+          EXPECTED: .github/acceptance/expected-failures-${{ inputs.version }}-${{ case(inputs.full, 'full', 'smoke') }}.md
+        run: |
+          export QA_DIR="${RUNNER_TEMP}/qa" TESTING_DIR="${RUNNER_TEMP}/testing" LOG_DIR="${RUNNER_TEMP}/logs"
+          export EXPECTED_FAILURES_FILE="${GITHUB_WORKSPACE}/${EXPECTED}"
+          .github/acceptance/run-part.sh "${IMAGE}" "${PHP}" "${TYPE}" "${PART}" "${PARTS}" "${TAGS}"
+
+      - name: Upload server logs
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: acceptance-logs-${{ inputs.version }}-${{ matrix.suite.type }}-${{ matrix.suite.part }}
+          path: ${{ runner.temp }}/logs
+          retention-days: 7
