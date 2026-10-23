@@ -122,6 +122,15 @@ jobs:
           # the release tarball ships its scripts 0644, and run.sh calls
           # lint-expected-failures.sh directly
           chmod +x "${RUNNER_TEMP}"/qa/tests/acceptance/*.sh
+          # run.sh checks that each expected failure really failed with
+          # `grep ${SUITE_SCENARIO}$`, but newer Behat (11.0.1's) appends " (on line N)"
+          # to the failed path, so every listed scenario counts as an unexpected pass.
+          # Allow the suffix; still owncloud/core master's code as of 2026-10.
+          run="${RUNNER_TEMP}/qa/tests/acceptance/run.sh"
+          # shellcheck disable=SC2016 # ${SUITE_SCENARIO} is text in run.sh, not ours to expand
+          sed -i 's/grep ${SUITE_SCENARIO}\$ > \/dev\/null/grep -E "${SUITE_SCENARIO}( [(]on line [0-9]+[)])?$" > \/dev\/null/' "${run}"
+          # shellcheck disable=SC2016
+          grep -qF 'grep -E "${SUITE_SCENARIO}( [(]on line' "${run}"
 
       - name: Install Behat
         env:
