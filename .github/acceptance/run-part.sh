@@ -23,6 +23,7 @@ mkdir -p "${LOG_DIR}"
 cleanup() {
   docker logs "${srv}" >"${LOG_DIR}/server.log" 2>&1
   docker logs "${db}" >"${LOG_DIR}/database.log" 2>&1
+  docker logs "${redis}" >"${LOG_DIR}/redis.log" 2>&1
   docker rm -f "${srv}" "${db}" "${redis}" >/dev/null 2>&1
   docker network rm "${net}" >/dev/null 2>&1
 }
@@ -41,10 +42,16 @@ for _ in $(seq 60); do
 done
 [[ "${ready}" == true ]] || { echo "MariaDB did not become ready" >&2; exit 1; }
 
-# Redis for caching and file locking, as recommended for production. Without it
-# ownCloud locks in the database, and uploads into a local storage mount created
-# during a test fail with 423 Locked.
+# Redis for caching and file locking, as recommended for production. With the
+# image's default database locking, uploads into a local storage mount created
+# during a test failed with 423 Locked, differently from run to run.
 docker run -d --name "${redis}" --network "${net}" redis:7 >/dev/null
+ready=false
+for _ in $(seq 30); do
+  [[ "$(docker exec "${redis}" redis-cli ping 2>/dev/null)" == PONG ]] && ready=true && break
+  sleep 1
+done
+[[ "${ready}" == true ]] || { echo "Redis did not start" >&2; exit 1; }
 
 docker run -d --name "${srv}" --network "${net}" \
   -e OWNCLOUD_DOMAIN="${srv}:8080" -e OWNCLOUD_TRUSTED_DOMAINS="${srv},localhost" \
