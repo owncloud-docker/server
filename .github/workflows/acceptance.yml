@@ -47,10 +47,7 @@ jobs:
         env:
           FULL: ${{ inputs.full }}
         run: |
-          # @local_storage: uploads into a local mount created during the test get 423
-          # Locked, and which scenarios fail changes from run to run, so no
-          # expected-failures list can hold them. Excluded until that is solved.
-          base='~@skip&&~@skipOnDockerContainerTesting&&~@federation-app-required&&~@local_storage'
+          base='~@skip&&~@skipOnDockerContainerTesting&&~@federation-app-required'
           if [ "${FULL}" = true ]; then
             api_parts=10 api_tags="${base}"
           else

@@ -17,13 +17,13 @@ set -uo pipefail
 
 image=$1 php=$2 type=$3 part=$4 parts=$5 tags=$6
 : "${QA_DIR:?}" "${TESTING_DIR:?}" "${LOG_DIR:?}"
-net=acceptance db=acceptance-db srv=acceptance-server
+net=acceptance db=acceptance-db redis=acceptance-redis srv=acceptance-server
 mkdir -p "${LOG_DIR}"
 
 cleanup() {
   docker logs "${srv}" >"${LOG_DIR}/server.log" 2>&1
   docker logs "${db}" >"${LOG_DIR}/database.log" 2>&1
-  docker rm -f "${srv}" "${db}" >/dev/null 2>&1
+  docker rm -f "${srv}" "${db}" "${redis}" >/dev/null 2>&1
   docker network rm "${net}" >/dev/null 2>&1
 }
 trap cleanup EXIT
@@ -41,11 +41,17 @@ for _ in $(seq 60); do
 done
 [[ "${ready}" == true ]] || { echo "MariaDB did not become ready" >&2; exit 1; }
 
+# Redis for caching and file locking, as recommended for production. Without it
+# ownCloud locks in the database, and uploads into a local storage mount created
+# during a test fail with 423 Locked.
+docker run -d --name "${redis}" --network "${net}" redis:7 >/dev/null
+
 docker run -d --name "${srv}" --network "${net}" \
   -e OWNCLOUD_DOMAIN="${srv}:8080" -e OWNCLOUD_TRUSTED_DOMAINS="${srv},localhost" \
   -e OWNCLOUD_DB_TYPE=mysql -e OWNCLOUD_DB_HOST="${db}" -e OWNCLOUD_DB_NAME=owncloud \
   -e OWNCLOUD_DB_USERNAME=owncloud -e OWNCLOUD_DB_PASSWORD=owncloud \
   -e OWNCLOUD_ADMIN_USERNAME=admin -e OWNCLOUD_ADMIN_PASSWORD=admin \
+  -e OWNCLOUD_REDIS_ENABLED=true -e OWNCLOUD_REDIS_HOST="${redis}" \
   "${image}" >/dev/null
 # the image has no HEALTHCHECK; the entrypoint logs this once installation is done.
 # Capture the logs first: under pipefail, grep -q closing the pipe early can fail it.
