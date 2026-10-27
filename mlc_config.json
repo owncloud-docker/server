@@ -1,0 +1,7 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://github\\.com/owncloud/core/blob/master/tests/acceptance/features/"
+    }
+  ]
+}
