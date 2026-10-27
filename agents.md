@@ -29,6 +29,7 @@ GitHub Actions.
 - `.github/dependabot.yml` — weekly GitHub Actions dependency updates
 - `.renovaterc.json` — Renovate preset for Docker digest updates
 - `.editorconfig` — formatting rules (2-space indent, LF, trailing newline)
+- `mlc_config.json` — markdown-link-check config for the Docker Hub description job; skips links to core's acceptance feature files, which `lint-expected-failures.sh` requires to point at core's master
 - `CHANGELOG.md` — flat, date-based changelog at repo root
 - `LICENSE` — MIT
 
