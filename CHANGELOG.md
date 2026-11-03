@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-03
+
+* Added
+  * Publish the floating `11.1` tag for the 11.x image; `11.0` stays on 11.0.1
+* Changed
+  * Update 11.0.1 to 11.1.0 built from the GitHub release tarball
+
 ## 2026-10-06
 
 * Changed
