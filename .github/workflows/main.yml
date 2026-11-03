@@ -36,9 +36,9 @@ jobs:
             qa-sha256: 97371a5b1e1f3fd334aea42e3c67419f002b26260539a15e14e2672471bafb05
             base: v22.04
             php: "7.4"
-          - version: 11.0.1
-            tarball: https://github.com/owncloud/core/releases/download/v11.0.1/owncloud-complete-20260925.tar.bz2
-            qa-sha256: 932006415aa75d7cc6161594997dab88cb1cef1960c62eef79d45436700942dc
+          - version: 11.1.0
+            tarball: https://github.com/owncloud/core/releases/download/v11.1.0/owncloud-complete-20261103.tar.bz2
+            qa-sha256: 3c063d72422938c71f2ce53900b0d719ab418f49a9b5dda65fafc76630b2e45b
             base: v24.04
             php: "8.3"
 
@@ -83,12 +83,12 @@ jobs:
               10
               latest
             smoke-version-jq: ".versionstring"
-          - version: 11.0.1
-            tarball: https://github.com/owncloud/core/releases/download/v11.0.1/owncloud-complete-20260925.tar.bz2
+          - version: 11.1.0
+            tarball: https://github.com/owncloud/core/releases/download/v11.1.0/owncloud-complete-20261103.tar.bz2
             base: v24.04
-            trivy-ignore: v24.04/11.0.1/.trivyignore
+            trivy-ignore: v24.04/11.1.0/.trivyignore
             extra-tags: |
-              11.0
+              11.1
               11
             smoke-version-jq: ".versionstring"
 
