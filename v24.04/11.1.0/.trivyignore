@@ -21,5 +21,6 @@ CVE-2024-4367
 # 11.1.0 in owncloud/server-release's spec check and in migrate_to_ocis's own
 # scan (owncloud/migrate_to_ocis#80), both until 2026-11-30. Do not carry this
 # into the next 11.x file once its bundle ships a migrate_to_ocis whose rclone
-# is built with go >= 1.26.10.
-CVE-2026-111943
+# is built with go >= 1.26.10. The exp: date makes this image's scan fail on the
+# same day the other two acceptances lapse.
+CVE-2026-111943 exp:2026-11-30
