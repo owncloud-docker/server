@@ -9,6 +9,13 @@ on:
     - cron: 0 0 * * 0
   workflow_dispatch:
 
+# A new push to a pull request cancels its older runs, which would otherwise hold
+# the organization's runners. Every other run (master, tags, schedule, manual)
+# gets a group of its own, so none is cancelled or waits for another.
+concurrency:
+  group: ${{ github.workflow }}-${{ case(github.event_name == 'pull_request', github.ref, github.run_id) }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     uses: owncloud-docker/ubuntu/.github/workflows/lint-editorconfig.yml@master

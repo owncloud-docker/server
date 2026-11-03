@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Run one part of ownCloud core's acceptance tests against a server image.
 #
-# usage: run-part.sh <image> <php> <type> <part> <parts> <tags>
-#   image  server image under test, e.g. owncloud/server:test
-#   php    PHP version of the test runner (owncloudci/php:<php>), 7.4 or 8.3
-#   type   suite type for run.sh: api or cli
-#   part   part to run, 1..parts (run.sh --part)
-#   tags   Behat tag filter
+# usage: run-part.sh <image> <php> <type> <suites> <tags>
+#   image   server image under test, e.g. owncloud/server:test
+#   php     PHP version of the test runner (owncloudci/php:<php>), 7.4 or 8.3
+#   type    suite type for run.sh: api or cli
+#   suites  comma-separated suites to run (run.sh --suites), see plan-slices.sh
+#   tags    Behat tag filter
 #
 # environment:
 #   QA_DIR                  extracted owncloud-complete-*-qa tarball with Behat installed
@@ -15,7 +15,7 @@
 #   LOG_DIR                 where to write the server and database logs
 set -uo pipefail
 
-image=$1 php=$2 type=$3 part=$4 parts=$5 tags=$6
+image=$1 php=$2 type=$3 suites=$4 tags=$5
 : "${QA_DIR:?}" "${TESTING_DIR:?}" "${LOG_DIR:?}"
 net=acceptance db=acceptance-db redis=acceptance-redis srv=acceptance-server
 mkdir -p "${LOG_DIR}"
@@ -91,4 +91,4 @@ docker run --rm --network "${net}" -v "${QA_DIR}:/src" -w /src "${expected[@]}" 
   -e REGULAR_USER_PASSWORD='AaBb2Cc7Dd!' -e SUB_ADMIN_PASSWORD='AaBb2Cc8Dd!' \
   -e PLAIN_OUTPUT=true \
   "owncloudci/php:${php}" \
-  bash tests/acceptance/run.sh --remote --type "${type}" --tags "${tags}" --part "${part}" "${parts}"
+  bash tests/acceptance/run.sh --remote --type "${type}" --tags "${tags}" --suites "${suites}"

@@ -43,22 +43,31 @@ jobs:
     outputs:
       suites: ${{ steps.suites.outputs.suites }}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - id: suites
         env:
           FULL: ${{ inputs.full }}
+          TARBALL: ${{ inputs.tarball }}
+          QA_SHA256: ${{ inputs.qa-sha256 }}
+          # how long a slice of the suites should take, in minutes
+          SMOKE_SLICE_MINUTES: 25
+          FULL_SLICE_MINUTES: 30
         run: |
+          qa="${TARBALL%.tar.bz2}-qa.tar.bz2"
+          curl -sSfL --retry 3 -o "${RUNNER_TEMP}/qa.tar.bz2" "${qa}"
+          echo "${QA_SHA256}  ${RUNNER_TEMP}/qa.tar.bz2" | sha256sum -c
+          # the suites are the directories directly below tests/acceptance/features
+          tar -tjf "${RUNNER_TEMP}/qa.tar.bz2" \
+            | sed -nE 's#^[^/]+/tests/acceptance/features/((api|cli)[^/]*)/.*#\1#p' \
+            | sort -u > "${RUNNER_TEMP}/suites"
           base='~@skip&&~@skipOnDockerContainerTesting&&~@federation-app-required'
           if [ "${FULL}" = true ]; then
-            api_parts=10 api_tags="${base}"
+            mode=full minutes="${FULL_SLICE_MINUTES}" api_tags="${base}"
           else
-            api_parts=2 api_tags="@smokeTest&&${base}"
+            mode=smoke minutes="${SMOKE_SLICE_MINUTES}" api_tags="@smokeTest&&${base}"
           fi
-          cli_parts=2
-          suites=$(
-            { for p in $(seq "${api_parts}"); do jq -nc --arg t "${api_tags}" --argjson p "$p" --argjson n "${api_parts}" '{type: "api", part: $p, parts: $n, tags: $t}'; done
-              for p in $(seq "${cli_parts}"); do jq -nc --arg t "${base}" --argjson p "$p" --argjson n "${cli_parts}" '{type: "cli", part: $p, parts: $n, tags: $t}'; done
-            } | jq -sc .
-          )
+          suites=$(.github/acceptance/plan-slices.sh "${RUNNER_TEMP}/suites" "${mode}" "${minutes}" "${api_tags}" "${base}")
           echo "suites=${suites}" >> "$GITHUB_OUTPUT"
 
   image:
@@ -88,7 +97,7 @@ jobs:
           compression-level: 1
 
   tests:
-    name: ${{ matrix.suite.type }} ${{ matrix.suite.part }}/${{ matrix.suite.parts }}
+    name: ${{ matrix.suite.type }} ${{ matrix.suite.slice }}/${{ matrix.suite.slices }}
     needs: [plan, image]
     runs-on: ubuntu-latest
     strategy:
@@ -152,19 +161,18 @@ jobs:
         env:
           PHP: ${{ inputs.php }}
           TYPE: ${{ matrix.suite.type }}
-          PART: ${{ matrix.suite.part }}
-          PARTS: ${{ matrix.suite.parts }}
+          SUITES: ${{ matrix.suite.suites }}
           TAGS: ${{ matrix.suite.tags }}
           EXPECTED: .github/acceptance/expected-failures-${{ inputs.version }}-${{ case(inputs.full, 'full', 'smoke') }}.md
         run: |
           export QA_DIR="${RUNNER_TEMP}/qa" TESTING_DIR="${RUNNER_TEMP}/testing" LOG_DIR="${RUNNER_TEMP}/logs"
           export EXPECTED_FAILURES_FILE="${GITHUB_WORKSPACE}/${EXPECTED}"
-          .github/acceptance/run-part.sh "${IMAGE}" "${PHP}" "${TYPE}" "${PART}" "${PARTS}" "${TAGS}"
+          .github/acceptance/run-part.sh "${IMAGE}" "${PHP}" "${TYPE}" "${SUITES}" "${TAGS}"
 
       - name: Upload server logs
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: acceptance-logs-${{ inputs.version }}-${{ matrix.suite.type }}-${{ matrix.suite.part }}
+          name: acceptance-logs-${{ inputs.version }}-${{ matrix.suite.type }}-${{ matrix.suite.slice }}
           path: ${{ runner.temp }}/logs
           retention-days: 7
