@@ -11,9 +11,10 @@ CVE-2024-4367
 
 # not fixed in this bundle: Go standard library go1.26.9, reported from
 # apps/migrate_to_ocis/bin/rclone_linux_amd64 (migrate_to_ocis v3.0.3, which
-# bundles upstream rclone v1.75.2). Fixed in go1.26.10 / 1.27.3, which no rclone
-# release is built with yet. GO-2026-6809 adds a crypto/x509 denylist of
-# compromised intermediate CAs. rclone is only a client here, so the exposure is
+# bundles upstream rclone v1.75.2). Fixed in go1.26.10 / 1.27.3; rclone v1.76.0
+# is built with go1.27.3, but no migrate_to_ocis release bundles it yet.
+# GO-2026-6809 adds a crypto/x509 denylist of compromised intermediate CAs.
+# rclone is only a client here, so the exposure is
 # a man-in-the-middle presenting a chain through such an intermediate while an
 # admin runs the files migration (`occ migrate:to-ocis:migrate:files`, the only
 # step where rclone connects). With --insecure (-k) certificates are not
@@ -27,11 +28,12 @@ CVE-2026-111943 exp:2026-11-30
 
 # not fixed in this bundle: golang.org/x/net v0.60.0, reported from the same
 # apps/migrate_to_ocis/bin/rclone_linux_amd64. Fixed in x/net 0.62.0, which
-# upstream rclone v1.76.0 ships, but no migrate_to_ocis release bundles that yet.
-# Expires together with CVE-2026-111943 above.
+# upstream rclone v1.76.0 ships, but no migrate_to_ocis release bundles it yet.
+# Expires on the same date as CVE-2026-111943 above.
 CVE-2026-78661 exp:2026-11-30
 
 # not fixed in this bundle: Go standard library go1.26.9, reported from the same
 # binary. Fixed in go1.26.11 / 1.27.4, which no rclone release is built with yet
-# (v1.76.0 is built with go1.27.3). Expires together with CVE-2026-111943 above.
+# (v1.76.0 is built with go1.27.3). Expires on the same date as CVE-2026-111943
+# above.
 CVE-2026-97054 exp:2026-11-30
