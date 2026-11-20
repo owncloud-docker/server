@@ -1,4 +1,4 @@
-# Scenarios of ownCloud core 10.16.7's acceptance tests that are expected to fail against this
+# Scenarios of ownCloud core 10.16.8's acceptance tests that are expected to fail against this
 # image (full run). run.sh fails the job on any other failure, and on a listed
 # scenario that passes. One entry per line, as in core's own lists:
 # `- [apiSuite/file.feature:12](https://github.com/owncloud/core/blob/master/tests/acceptance/features/apiSuite/file.feature#L12)`
@@ -7,7 +7,7 @@
 
 # Found in this repository's CI; they depend on how the image is set up.
 # 10.16-only: this feature is gone from core's master, so its master link is a 404;
-# the scenario is in the v10.16.7 tag.
+# the scenario is in the v10.16.8 tag.
 - [cliDbConversion/dbConversion.feature:30](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliDbConversion/dbConversion.feature#L30)
 - [cliMain/configKey.feature:81](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliMain/configKey.feature#L81)
 - [cliManageApps/appsPath.feature:18](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliManageApps/appsPath.feature#L18)
