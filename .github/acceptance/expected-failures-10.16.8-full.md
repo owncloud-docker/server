@@ -16,6 +16,10 @@
 - [cliProvisioning/resetUserPassword.feature:19](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliProvisioning/resetUserPassword.feature#L19)
 - [cliProvisioning/resetUserPasswordOc10Issue36985.feature:8](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliProvisioning/resetUserPasswordOc10Issue36985.feature#L8)
 
+# Stale in 10.16.8's tests: the scenario still expects 16 repair steps, but 10.16.8
+# registers a 17th (UpdateCertificateStore). Fix for master in owncloud/core#41965.
+- [cliMain/maintenance.feature:9](https://github.com/owncloud/core/blob/master/tests/acceptance/features/cliMain/maintenance.feature#L9)
+
 ## API
 
 # From local full runs: these failed in the suite and fail again on their own against
