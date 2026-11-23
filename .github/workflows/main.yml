@@ -38,9 +38,9 @@ jobs:
       fail-fast: false
       matrix:
         release:
-          - version: 10.16.7
-            tarball: https://github.com/owncloud/core/releases/download/v10.16.7/owncloud-complete-20261103.tar.bz2
-            qa-sha256: 97371a5b1e1f3fd334aea42e3c67419f002b26260539a15e14e2672471bafb05
+          - version: 10.16.8
+            tarball: https://github.com/owncloud/core/releases/download/v10.16.8/owncloud-complete-20261120.tar.bz2
+            qa-sha256: de354f16a70511be9043ba3e680069d89e0b8756571f66fe86ec51178ccb6935
             base: v22.04
             php: "7.4"
           - version: 11.1.0
@@ -81,10 +81,10 @@ jobs:
       fail-fast: false
       matrix:
         release:
-          - version: 10.16.7
-            tarball: https://github.com/owncloud/core/releases/download/v10.16.7/owncloud-complete-20261103.tar.bz2
+          - version: 10.16.8
+            tarball: https://github.com/owncloud/core/releases/download/v10.16.8/owncloud-complete-20261120.tar.bz2
             base: v22.04
-            trivy-ignore: v22.04/10.16.7/.trivyignore
+            trivy-ignore: v22.04/10.16.8/.trivyignore
             extra-tags: |
               10.16
               10
